@@ -1,32 +1,34 @@
 name: Import data in production
 on:
   push:
-    branches: 
+    branches:
       - master
   schedule:
     - cron: "0 4 * * *"
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [8.x, 10.x, 12.x]
-
     steps:
-    - uses: actions/checkout@v1
+      - uses: actions/checkout@v1
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Use Node.js 13.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 13.x
 
-    - name: yarn install
-      run: yarn install
+      - name: yarn install
+        run: yarn install
 
-    - name: yarn start
-      run: yarn start
-      env:
-        FAUNADB_TOKEN: ${{ secrets.FAUNADB_TOKEN_PRODUCTION }}
+      - name: yarn start
+        run: yarn start
+        env:
+          FAUNADB_TOKEN: ${{ secrets.FAUNADB_TOKEN_PRODUCTION }}
+
+      - name: Notify slack
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        uses: pullreminders/slack-action@master
+        with:
+          args: '{\"channel\":\"C4H19LCN9\",\"text\":\"Data successfully imported in FaunaDB :sunglasses::tada:\"}'
