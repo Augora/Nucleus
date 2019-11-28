@@ -1,0 +1,27 @@
+{
+  "name": "FaunaDB-driver-js",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "faunadb": "^2.9.4"
+  },
+  "devDependencies": {
+    "@pongsatt/graphql-schema-typescript": "^1.0.25",
+    "@types/node": "^12.12.14",
+    "apollo-boost": "^0.4.4",
+    "cross-fetch": "^3.0.4",
+    "get-graphql-schema": "^2.1.2",
+    "graphql": "^14.5.8",
+    "graphql-tag": "^2.10.1",
+    "moment": "^2.24.0",
+    "rxjs": "^6.5.3",
+    "ts-node": "^8.5.2",
+    "typescript": "^3.7.2"
+  },
+  "scripts": {
+    "start": "ts-node ./src/index.ts",
+    "gen": "get-graphql-schema -h 'Authorization=Basic Zm5BRGR6RVN2ckFDRXR2SFp6d1Z6ZTRuUUJTbUpzMzlmN3V5Zl9HUTpBdWdvcmE6c2VydmVy' https://graphql.fauna.com/graphql > ./Types/Internal/Schema.graphql && graphql-schema-typescript generate-ts ./Types/Internal/Schema.graphql --output ./Types/Internal/Schemas.d.ts"
+  }
+}

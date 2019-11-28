@@ -1,0 +1,82 @@
+enum GroupeSigle {
+  GDR
+  LFI
+  LR
+  LREM
+  LT
+  MODEM
+  NI
+  NG
+  SOC
+  UAI
+}
+
+enum Sexe {
+  F
+  H
+}
+
+type AncienMandat {
+  DateDeDebut: String
+  DateDeFin: String
+  Intitule: String
+  Depute: Depute!
+}
+
+type AutreMandat {
+  Localite: String
+  Institution: String
+  Intitule: String
+  Depute: Depute!
+}
+
+# type Activite {
+#   date_debut: String
+#   date_fin: String
+#   numero_de_semaine: Int
+#   presences_commission: Int
+#   presences_hemicycle: Int
+#   participations_commission: Int
+#   participations_hemicycle: Int
+#   questions: Int
+#   vacances: Int
+#   Depute: Depute!
+# }
+
+type Depute {
+  Slug: String! @unique @index
+  Nom: String
+  NomDeFamille: String
+  Prenom: String
+  Sexe: Sexe
+  DateDeNaissance: String
+  LieuDeNaissance: String
+  NumeroDepartement: String
+  NomCirconscription: String
+  NumeroCirconscription: Int
+  DebutDuMandat: String
+  SigleGroupePolitique: GroupeSigle
+  parti_ratt_financier: String
+  Profession: String
+  PlaceEnHemicycle: String
+  URLAssembleeNationnale: String
+  IDAssembleeNationnale: String
+  URLNosdeputes: String
+  URLNosdeputesAPI: String
+  NombreMandats: Int
+  Twitter: String
+  SitesWeb: [String]
+  Emails: [String]
+  Adresses: [String]
+  Collaborateurs: [String]
+  AnciensMandats: [AncienMandat] @relation
+  AutresMandats: [AutreMandat] @relation
+  # Activites: [Activite] @relation
+}
+
+type Query {
+  Deputes: [Depute!]
+  DeputesEnMandat: [Depute!]
+  Depute(Slug: String!): Depute!
+  # Activite(slug: String!): [Activite!]!
+}
