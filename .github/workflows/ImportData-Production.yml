@@ -1,0 +1,32 @@
+name: Import data in production
+on:
+  push:
+    branches: 
+      - master
+  schedule:
+    - cron: "0 4 * * *"
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [8.x, 10.x, 12.x]
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: yarn install
+      run: yarn install
+
+    - name: yarn start
+      run: yarn start
+      env:
+        FAUNADB_TOKEN: ${{ secrets.FAUNADB_TOKEN_PRODUCTION }}
