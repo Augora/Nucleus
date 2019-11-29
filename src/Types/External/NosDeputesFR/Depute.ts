@@ -58,4 +58,29 @@ namespace Types.External.NosDeputesFR {
     nb_mandats: number;
     twitter: string;
   }
+
+  export interface Activite {
+    periode: string;
+    fin: boolean;
+    labels: { [key: string]: string };
+    vacances: { [key: string]: number };
+    date_debut: Date;
+    date_debut_parl: Date;
+    date_fin: Date;
+    n_presences: NP;
+    n_participations: NP;
+    n_questions: { [key: string]: number };
+    presences_medi: PresencesMedi;
+  }
+
+  export interface NP {
+    commission: { [key: string]: number };
+    hemicycle: { [key: string]: number };
+  }
+
+  export interface PresencesMedi {
+    commission: { [key: string]: number | string };
+    hemicycle: { [key: string]: number | string };
+    total: { [key: string]: number | string };
+  }
 }

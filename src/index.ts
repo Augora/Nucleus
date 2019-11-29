@@ -11,6 +11,7 @@ import {
 } from "./Tools/Refs";
 import { manageAutresMandatsByDeputeID } from "./Tools/AutresMandat";
 import { manageAnciensMandatsByDeputeID } from "./Tools/AnciensMandat";
+import { manageActivitesByDeputeID } from "./Tools/Activites";
 
 import "./Types/External/NosDeputesFR/Depute";
 
@@ -58,7 +59,8 @@ axios
                         am => am.mandat.split(" / ")[2].length > 0
                       ),
                       client
-                    )
+                    ),
+                    manageActivitesByDeputeID(ret.ref.id, ret.data.Slug, client)
                   ]);
                 })
                 .catch(e => console.error(e));
@@ -81,6 +83,11 @@ axios
                         ret.data.Slug,
                         localDepute.anciens_mandats,
                         client
+                      ),
+                      manageActivitesByDeputeID(
+                        ret.ref.id,
+                        ret.data.Slug,
+                        client
                       )
                     ]);
                   })
@@ -90,7 +97,7 @@ axios
               }
               return e;
             });
-        }, 20)
+        }, 10)
       )
       .subscribe(f => f);
   });

@@ -65,7 +65,7 @@ export function manageAnciensMandatsByDeputeID(
         })
       );
       const anciensMandatsToDeletePromise = Promise.all(
-        anciensMandatsToDelete.forEach(am_id => {
+        anciensMandatsToDelete.map(am_id => {
           return client
             .query(deleteAncienMandatByID(am_id))
             .then((ret: any) => {

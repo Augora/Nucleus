@@ -30,18 +30,18 @@ type AutreMandat {
   Depute: Depute!
 }
 
-# type Activite {
-#   date_debut: String
-#   date_fin: String
-#   numero_de_semaine: Int
-#   presences_commission: Int
-#   presences_hemicycle: Int
-#   participations_commission: Int
-#   participations_hemicycle: Int
-#   questions: Int
-#   vacances: Int
-#   Depute: Depute!
-# }
+type Activite {
+  DateDeDebut: String
+  DateDeFin: String
+  NumeroDeSemaine: Int
+  PresencesEnCommission: Int
+  PresenceEnHemicycle: Int
+  ParticipationsEnCommission: Int
+  ParticipationEnHemicycle: Int
+  Question: Int
+  Vacances: Int
+  Depute: Depute!
+}
 
 type Depute {
   Slug: String! @unique @index
@@ -71,7 +71,7 @@ type Depute {
   Collaborateurs: [String]
   AnciensMandats: [AncienMandat] @relation
   AutresMandats: [AutreMandat] @relation
-  # Activites: [Activite] @relation
+  Activites: [Activite] @relation
 }
 
 type Query {

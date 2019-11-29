@@ -59,10 +59,33 @@ export function getAnciensMandatByDeputeID(id: string) {
     query.Lambda("X", query.Get(query.Var("X")))
   );
 }
+
 export function deleteAncienMandatByID(id: string) {
   return query.Delete(query.Ref(query.Collection("AncienMandat"), id));
 }
 
 export function convertToTimeQuery(time: string) {
   return query.Time(time);
+}
+
+export function getActivitesByDeputeID(id: string) {
+  return query.Map(
+    query.Paginate(
+      query.Match(
+        query.Index("activite_Depute_by_depute"),
+        query.Ref(query.Collection("Depute"), id)
+      )
+    ),
+    query.Lambda("X", query.Get(query.Var("X")))
+  );
+}
+
+export function createActivite(data) {
+  return query.Create(query.Collection("Activite"), {
+    data
+  });
+}
+
+export function deleteActiviteByID(id: string) {
+  return query.Delete(query.Ref(query.Collection("Activite"), id));
 }
