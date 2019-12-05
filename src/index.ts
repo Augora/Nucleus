@@ -22,7 +22,7 @@ const client = new faunadb.Client({
 const FILTER_ON_FABIEN_MATRAS = false;
 
 axios
-  .get("https://www.nosdeputes.fr/deputes/enmandat/json")
+  .get("https://www.nosdeputes.fr/deputes/json")
   .then(response =>
     response.data.deputes.filter(d => {
       if (FILTER_ON_FABIEN_MATRAS) {
