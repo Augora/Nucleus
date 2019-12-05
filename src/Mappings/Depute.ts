@@ -56,8 +56,14 @@ export function MapActivites(activites: Types.External.NosDeputesFR.Activite) {
   return Object.keys(activites.labels).map(weekNumber => {
     const weekNumberAsInt = parseInt(weekNumber);
     return {
-      DateDeDebut: moment(activites.date_debut, "yyyy-MM-dd").format(),
-      DateDeFin: moment(activites.date_fin, "yyyy-MM-dd").format(),
+      DateDeDebut: moment(activites.date_fin, "yyyy-MM-dd")
+        .startOf("isoWeek")
+        .subtract(weekNumberAsInt - 1, "w")
+        .format(),
+      DateDeFin: moment(activites.date_fin, "yyyy-MM-dd")
+        .startOf("isoWeek")
+        .subtract(weekNumberAsInt, "w")
+        .format(),
       NumeroDeSemaine: weekNumberAsInt,
       PresencesEnCommission: activites.n_presences.commission[weekNumber],
       PresenceEnHemicycle: activites.n_presences.hemicycle[weekNumber],
