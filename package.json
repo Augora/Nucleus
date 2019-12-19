@@ -17,7 +17,7 @@
     "graphql-tag": "^2.10.1",
     "moment": "^2.24.0",
     "rxjs": "^6.5.3",
-    "ts-node": "^8.5.2",
+    "ts-node": "^8.5.4",
     "typescript": "^3.7.2"
   },
   "scripts": {
