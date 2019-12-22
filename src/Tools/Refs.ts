@@ -17,6 +17,7 @@ export function updateDeputeByRef(deputeRef: String, data) {
     data
   });
 }
+
 export function createDepute(data) {
   return query.Create(query.Collection("Depute"), { data });
 }
@@ -88,4 +89,10 @@ export function createActivite(data) {
 
 export function deleteActiviteByID(id: string) {
   return query.Delete(query.Ref(query.Collection("Activite"), id));
+}
+
+export function updateActiviteByRef(deputeRef: String, data) {
+  return query.Update(query.Ref(query.Collection("Activite"), deputeRef), {
+    data
+  });
 }

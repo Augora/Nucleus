@@ -1,4 +1,4 @@
-import faunadb from "faunadb";
+import faunadb, { values } from "faunadb";
 import axios from "axios";
 import { from } from "rxjs";
 import { mergeMap } from "rxjs/operators";
@@ -7,7 +7,8 @@ import {
   getActivitesByDeputeID,
   getDeputeRefByDeputeSlug,
   createActivite,
-  deleteActiviteByID
+  deleteActiviteByID,
+  updateActiviteByRef
 } from "./Refs";
 import { MapActivites } from "../Mappings/Depute";
 
@@ -18,7 +19,7 @@ export function manageActivitesByDeputeID(
 ) {
   client
     .query(getActivitesByDeputeID(id))
-    .then((ret: any) => ret.data)
+    .then((ret: values.Document<any>) => ret.data)
     .then(rd_acts => {
       axios
         .get(
@@ -27,48 +28,49 @@ export function manageActivitesByDeputeID(
         .then(response => {
           const { data } = response;
           const ld_acts = MapActivites(data);
+
+          const activitiesToUpdate = rd_acts
+            .filter(rd_act => {
+              return (
+                ld_acts.find(
+                  ld_act =>
+                    rd_act.data.NumeroDeSemaine === ld_act.NumeroDeSemaine &&
+                    (ld_act.NumeroDeSemaine !== rd_act.data.NumeroDeSemaine ||
+                      ld_act.ParticipationEnHemicycle !==
+                        rd_act.data.ParticipationEnHemicycle ||
+                      ld_act.ParticipationsEnCommission !==
+                        rd_act.data.ParticipationsEnCommission ||
+                      ld_act.PresenceEnHemicycle !==
+                        rd_act.data.PresenceEnHemicycle ||
+                      ld_act.PresencesEnCommission !==
+                        rd_act.data.PresencesEnCommission ||
+                      ld_act.Question !== rd_act.data.Question ||
+                      ld_act.Vacances !== rd_act.data.Vacances)
+                ) !== undefined
+              );
+            })
+            .map(rd_act => {
+              const ld_act = ld_acts.find(
+                ld_act => rd_act.data.NumeroDeSemaine === ld_act.NumeroDeSemaine
+              );
+              return Object.assign({}, rd_act, { data: ld_act });
+            });
           const activitesToCreate = ld_acts.filter(ld_act => {
             return (
               rd_acts
                 .map(rd_acts => rd_acts.data)
-                .find(rd_act => {
-                  return (
-                    ld_act.DateDeDebut === rd_act.DateDeDebut &&
-                    ld_act.DateDeFin === rd_act.DateDeFin &&
-                    ld_act.NumeroDeSemaine === rd_act.NumeroDeSemaine &&
-                    ld_act.ParticipationEnHemicycle ===
-                      rd_act.ParticipationEnHemicycle &&
-                    ld_act.ParticipationsEnCommission ===
-                      rd_act.ParticipationsEnCommission &&
-                    ld_act.PresenceEnHemicycle === rd_act.PresenceEnHemicycle &&
-                    ld_act.PresencesEnCommission ===
-                      rd_act.PresencesEnCommission &&
-                    ld_act.Question === rd_act.Question &&
-                    ld_act.Vacances === rd_act.Vacances
-                  );
-                }) === undefined
+                .find(
+                  rd_act => ld_act.NumeroDeSemaine === rd_act.NumeroDeSemaine
+                ) === undefined
             );
           });
           const activitesToDelete = rd_acts
             .filter(rd_act => {
               return (
-                ld_acts.find(ld_act => {
-                  return (
-                    ld_act.DateDeDebut === rd_act.data.DateDeDebut &&
-                    ld_act.DateDeFin === rd_act.data.DateDeFin &&
-                    ld_act.NumeroDeSemaine === rd_act.data.NumeroDeSemaine &&
-                    ld_act.ParticipationEnHemicycle ===
-                      rd_act.data.ParticipationEnHemicycle &&
-                    ld_act.ParticipationsEnCommission ===
-                      rd_act.data.ParticipationsEnCommission &&
-                    ld_act.PresenceEnHemicycle ===
-                      rd_act.data.PresenceEnHemicycle &&
-                    ld_act.PresencesEnCommission ===
-                      rd_act.data.PresencesEnCommission &&
-                    ld_act.Question === rd_act.data.Question &&
-                    ld_act.Vacances === rd_act.data.Vacances
-                  );
-                }) === undefined
+                ld_acts.find(
+                  ld_act =>
+                    ld_act.NumeroDeSemaine === rd_act.data.NumeroDeSemaine
+                ) === undefined
               );
             })
             .map(act => act.ref.id);
@@ -84,7 +86,7 @@ export function manageActivitesByDeputeID(
                     )
                   )
                   .then((ret: any) => {
-                    console.log("Inserted activite:", ret.data);
+                    console.log("Inserted activity:", ret.data);
                   })
                   .catch(e => console.error(e));
               }, 1)
@@ -96,15 +98,26 @@ export function manageActivitesByDeputeID(
                 return client
                   .query(deleteActiviteByID(act_id))
                   .then((ret: any) => {
-                    console.log("Deleted activite:", ret.data);
+                    console.log("Deleted activity:", ret.data);
                   })
                   .catch(e => console.error(e));
               }, 1)
             )
             .toPromise();
+          const activitiesToUpdatePromise = from(activitiesToUpdate).pipe(
+            mergeMap((act: any) => {
+              return client
+                .query(updateActiviteByRef(act.ref.id, act.data))
+                .then((ret: any) => {
+                  console.log("Deleted activity:", ret.data);
+                })
+                .catch(e => console.error(e));
+            }, 1)
+          );
           return Promise.all([
             activitesToCreatePromise,
-            activitesToDeletePromise
+            activitesToDeletePromise,
+            activitiesToUpdatePromise
           ]);
         });
     });
