@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "@pongsatt/graphql-schema-typescript": "^1.0.25",
-    "@types/node": "^12.12.14",
+    "@types/node": "^12.12.21",
     "apollo-boost": "^0.4.4",
     "cross-fetch": "^3.0.4",
     "get-graphql-schema": "^2.1.2",
