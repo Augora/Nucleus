@@ -1,5 +1,4 @@
 import { query } from "faunadb";
-import { QueryDocumentKeys } from "graphql/language/visitor";
 
 export function getDeputeRefBySlug(slug: String) {
   return query.Get(query.Match(query.Index("unique_Depute_Slug"), slug));
@@ -69,12 +68,15 @@ export function convertToTimeQuery(time: string) {
   return query.Time(time);
 }
 
-export function getActivitesByDeputeID(id: string) {
+export function getActivitesByDeputeSlug(slug: string) {
   return query.Map(
     query.Paginate(
       query.Match(
         query.Index("activite_Depute_by_depute"),
-        query.Ref(query.Collection("Depute"), id)
+        query.Select(
+          "ref",
+          query.Get(query.Match(query.Index("unique_Depute_Slug"), slug))
+        )
       )
     ),
     query.Lambda("X", query.Get(query.Var("X")))
@@ -87,12 +89,27 @@ export function createActivite(data) {
   });
 }
 
-export function deleteActiviteByID(id: string) {
-  return query.Delete(query.Ref(query.Collection("Activite"), id));
+export function updateActiviteByRef(
+  deputeSlug: String,
+  weekNumber: Number,
+  data: Types.Canonical.Activite
+) {
+  return query.Update(
+    query.Select(
+      "ref",
+      query.Get(
+        query.Join(
+          query.Match(query.Index("unique_Depute_Slug"), deputeSlug),
+          query.Match(query.Index("act_by_weekNumber"), weekNumber)
+        )
+      )
+    ),
+    {
+      data
+    }
+  );
 }
 
-export function updateActiviteByRef(deputeRef: String, data) {
-  return query.Update(query.Ref(query.Collection("Activite"), deputeRef), {
-    data
-  });
+export function deleteActiviteByID(id: string) {
+  return query.Delete(query.Ref(query.Collection("Activite"), id));
 }

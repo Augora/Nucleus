@@ -14,6 +14,7 @@ import { manageAnciensMandatsByDeputeID } from "./Tools/AnciensMandat";
 import { manageActivitesByDeputeID } from "./Tools/Activites";
 
 import "./Types/External/NosDeputesFR/Depute";
+import "./Types/Canonical/Activity";
 
 const client = new faunadb.Client({
   secret: process.env.FAUNADB_TOKEN
@@ -26,7 +27,7 @@ axios
   .then(response =>
     response.data.deputes.filter(d => {
       if (FILTER_ON_FABIEN_MATRAS) {
-        return d.depute.slug === "catherine-fabre";
+        return d.depute.slug === "cedric-roussel";
       } else {
         return true;
       }
@@ -46,21 +47,21 @@ axios
                 .then((ret: any) => {
                   console.log("Updated", ret.data.Slug);
                   return Promise.all([
-                    manageAutresMandatsByDeputeID(
-                      ret.ref.id,
-                      ret.data.Slug,
-                      localDepute.autres_mandats,
-                      client
-                    ),
-                    manageAnciensMandatsByDeputeID(
-                      ret.ref.id,
-                      ret.data.Slug,
-                      localDepute.anciens_mandats.filter(
-                        am => am.mandat.split(" / ")[2].length > 0
-                      ),
-                      client
-                    ),
-                    manageActivitesByDeputeID(ret.ref.id, ret.data.Slug, client)
+                    // manageAutresMandatsByDeputeID(
+                    //   ret.ref.id,
+                    //   ret.data.Slug,
+                    //   localDepute.autres_mandats,
+                    //   client
+                    // ),
+                    // manageAnciensMandatsByDeputeID(
+                    //   ret.ref.id,
+                    //   ret.data.Slug,
+                    //   localDepute.anciens_mandats.filter(
+                    //     am => am.mandat.split(" / ")[2].length > 0
+                    //   ),
+                    //   client
+                    // ),
+                    manageActivitesByDeputeID(ret.data.Slug, client)
                   ]);
                 })
                 .catch(e => console.error(e));
@@ -84,11 +85,7 @@ axios
                         localDepute.anciens_mandats,
                         client
                       ),
-                      manageActivitesByDeputeID(
-                        ret.ref.id,
-                        ret.data.Slug,
-                        client
-                      )
+                      manageActivitesByDeputeID(ret.data.Slug, client)
                     ]);
                   })
                   .catch(e => console.error(e));
