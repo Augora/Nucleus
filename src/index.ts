@@ -19,7 +19,7 @@ const client = new faunadb.Client({
   secret: process.env.FAUNADB_TOKEN
 });
 
-const FILTER_ON_FABIEN_MATRAS = true;
+const FILTER_ON_FABIEN_MATRAS = false;
 
 axios
   .get("https://www.nosdeputes.fr/deputes/json")
