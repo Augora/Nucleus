@@ -1,115 +1,126 @@
 import { query } from "faunadb";
+const {
+  Get,
+  Match,
+  Index,
+  Select,
+  Update,
+  Ref,
+  Collection,
+  Create,
+  Map,
+  Paginate,
+  Lambda,
+  Var,
+  Delete
+} = query;
 
-export function getDeputeRefBySlug(slug: String) {
-  return query.Get(query.Match(query.Index("unique_Depute_Slug"), slug));
+export function getDeputeBySlug(slug: String) {
+  return Get(Match(Index("unique_Depute_Slug"), slug));
 }
 
 export function getDeputeRefByDeputeSlug(slug: String) {
-  return query.Select(
-    "ref",
-    query.Get(query.Match(query.Index("unique_Depute_Slug"), slug))
-  );
+  return Select("ref", Get(Match(Index("unique_Depute_Slug"), slug)));
 }
 
 export function updateDeputeByRef(deputeRef: String, data) {
-  return query.Update(query.Ref(query.Collection("Depute"), deputeRef), {
+  return Update(Ref(Collection("Depute"), deputeRef), {
     data
   });
 }
 
 export function createDepute(data) {
-  return query.Create(query.Collection("Depute"), { data });
+  return Create(Collection("Depute"), { data });
 }
 
 export function createAutreMandat(data) {
-  return query.Create(query.Collection("AutreMandat"), {
+  return Create(Collection("AutreMandat"), {
     data
   });
 }
 
 export function getAutresMandatByDeputeID(id: string) {
-  return query.Map(
-    query.Paginate(
-      query.Match(
-        query.Index("autreMandat_Depute_by_depute"),
-        query.Ref(query.Collection("Depute"), id)
+  return Map(
+    Paginate(
+      Match(
+        Index("autreMandat_Depute_by_depute"),
+        Ref(Collection("Depute"), id)
       )
     ),
-    query.Lambda("X", query.Get(query.Var("X")))
+    Lambda("X", Get(Var("X")))
   );
 }
 export function deleteAutreMandatByID(id: string) {
-  return query.Delete(query.Ref(query.Collection("AutreMandat"), id));
+  return Delete(Ref(Collection("AutreMandat"), id));
 }
 
 export function createAncienMandat(data) {
-  return query.Create(query.Collection("AncienMandat"), {
+  return Create(Collection("AncienMandat"), {
     data
   });
 }
 
 export function getAnciensMandatByDeputeID(id: string) {
-  return query.Map(
-    query.Paginate(
-      query.Match(
-        query.Index("ancienMandat_Depute_by_depute"),
-        query.Ref(query.Collection("Depute"), id)
+  return Map(
+    Paginate(
+      Match(
+        Index("ancienMandat_Depute_by_depute"),
+        Ref(Collection("Depute"), id)
       )
     ),
-    query.Lambda("X", query.Get(query.Var("X")))
+    Lambda("X", Get(Var("X")))
   );
 }
 
 export function deleteAncienMandatByID(id: string) {
-  return query.Delete(query.Ref(query.Collection("AncienMandat"), id));
-}
-
-export function convertToTimeQuery(time: string) {
-  return query.Time(time);
+  return Delete(Ref(Collection("AncienMandat"), id));
 }
 
 export function getActivitesByDeputeSlug(slug: string) {
-  return query.Map(
-    query.Paginate(
-      query.Match(
-        query.Index("activite_Depute_by_depute"),
-        query.Select(
-          "ref",
-          query.Get(query.Match(query.Index("unique_Depute_Slug"), slug))
-        )
+  return Map(
+    Paginate(
+      Match(
+        Index("activite_Depute_by_depute"),
+        Select("ref", Get(Match(Index("unique_Depute_Slug"), slug)))
       )
     ),
-    query.Lambda("X", query.Get(query.Var("X")))
+    Lambda("X", Get(Var("X")))
   );
 }
 
 export function createActivite(data) {
-  return query.Create(query.Collection("Activite"), {
+  return Create(Collection("Activite"), {
     data
   });
 }
 
-export function updateActiviteByRef(
+export function updateActiviteByDeputeSlugAndWeekNumber(
   deputeSlug: String,
   weekNumber: Number,
   data: Types.Canonical.Activite
 ) {
-  return query.Update(
-    query.Select(
-      "ref",
-      query.Get(
-        query.Join(
-          query.Match(query.Index("unique_Depute_Slug"), deputeSlug),
-          query.Match(query.Index("act_by_weekNumber"), weekNumber)
-        )
-      )
+  return Map(
+    Paginate(
+      Match(Index("act_Activite_by_DeputeSlugAndWeekNumber"), [
+        getDeputeRefByDeputeSlug(deputeSlug),
+        weekNumber
+      ])
     ),
-    {
-      data
-    }
+    Lambda("X", Update(Var("X"), { data }))
   );
 }
 
-export function deleteActiviteByID(id: string) {
-  return query.Delete(query.Ref(query.Collection("Activite"), id));
+export function deleteActiviteByDeputeSlugAndWeekNumber(
+  deputeSlug: String,
+  weekNumber: Number
+) {
+  return Map(
+    Paginate(
+      Match(Index("act_Activite_by_DeputeSlugAndWeekNumber"), [
+        getDeputeRefByDeputeSlug(deputeSlug),
+        weekNumber
+      ])
+    ),
+    Lambda("X", Delete(Var("X")))
+  );
 }

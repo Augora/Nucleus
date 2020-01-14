@@ -6,8 +6,8 @@ import { mergeMap } from "rxjs/operators";
 import {
   getActivitesByDeputeSlug,
   createActivite,
-  deleteActiviteByID,
-  updateActiviteByRef
+  deleteActiviteByDeputeSlugAndWeekNumber,
+  updateActiviteByDeputeSlugAndWeekNumber
 } from "./Refs";
 import { MapActivites, areTheSameActivites } from "../Mappings/Depute";
 import { CompareLists, Action, DiffType } from "../Tools/Comparison";
@@ -49,7 +49,7 @@ export function manageActivitesByDeputeID(
                   console.log(action.Data);
                   return client
                     .query(
-                      updateActiviteByRef(
+                      updateActiviteByDeputeSlugAndWeekNumber(
                         slug,
                         action.Data.NumeroDeSemaine,
                         action.Data
@@ -57,6 +57,18 @@ export function manageActivitesByDeputeID(
                     )
                     .then((ret: any) => {
                       console.log("Updated activity:", ret.data);
+                    });
+                } else if (action.Action === Action.Remove) {
+                  console.log(action.Data);
+                  return client
+                    .query(
+                      deleteActiviteByDeputeSlugAndWeekNumber(
+                        slug,
+                        action.Data.NumeroDeSemaine
+                      )
+                    )
+                    .then((ret: any) => {
+                      console.log("Deleted activity:", ret.data);
                     });
                 }
               }, 1)

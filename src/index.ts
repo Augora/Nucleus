@@ -4,11 +4,7 @@ import { from } from "rxjs";
 import { mergeMap } from "rxjs/operators";
 
 import { MapDepute } from "./Mappings/Depute";
-import {
-  getDeputeRefBySlug,
-  updateDeputeByRef,
-  createDepute
-} from "./Tools/Refs";
+import { getDeputeBySlug, updateDeputeByRef, createDepute } from "./Tools/Refs";
 import { manageAutresMandatsByDeputeID } from "./Tools/AutresMandat";
 import { manageAnciensMandatsByDeputeID } from "./Tools/AnciensMandat";
 import { manageActivitesByDeputeID } from "./Tools/Activites";
@@ -20,7 +16,7 @@ const client = new faunadb.Client({
   secret: process.env.FAUNADB_TOKEN
 });
 
-const FILTER_ON_FABIEN_MATRAS = true;
+const FILTER_ON_FABIEN_MATRAS = false;
 
 axios
   .get("https://www.nosdeputes.fr/deputes/json")
@@ -40,27 +36,27 @@ axios
           const localDepute: Types.External.NosDeputesFR.Depute = d.depute;
           const mappedDepute = MapDepute(localDepute);
           return client
-            .query(getDeputeRefBySlug(localDepute.slug))
+            .query(getDeputeBySlug(localDepute.slug))
             .then((ret: any) => {
               return client
                 .query(updateDeputeByRef(ret.ref.id, mappedDepute))
                 .then((ret: any) => {
                   console.log("Updated", ret.data.Slug);
                   return Promise.all([
-                    // manageAutresMandatsByDeputeID(
-                    //   ret.ref.id,
-                    //   ret.data.Slug,
-                    //   localDepute.autres_mandats,
-                    //   client
-                    // ),
-                    // manageAnciensMandatsByDeputeID(
-                    //   ret.ref.id,
-                    //   ret.data.Slug,
-                    //   localDepute.anciens_mandats.filter(
-                    //     am => am.mandat.split(" / ")[2].length > 0
-                    //   ),
-                    //   client
-                    // ),
+                    manageAutresMandatsByDeputeID(
+                      ret.ref.id,
+                      ret.data.Slug,
+                      localDepute.autres_mandats,
+                      client
+                    ),
+                    manageAnciensMandatsByDeputeID(
+                      ret.ref.id,
+                      ret.data.Slug,
+                      localDepute.anciens_mandats.filter(
+                        am => am.mandat.split(" / ")[2].length > 0
+                      ),
+                      client
+                    ),
                     manageActivitesByDeputeID(ret.data.Slug, client)
                   ]);
                 })
