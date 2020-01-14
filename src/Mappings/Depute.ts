@@ -52,7 +52,9 @@ export function MapAncienMandat(
   };
 }
 
-export function MapActivites(activites: Types.External.NosDeputesFR.Activite) {
+export function MapActivites(
+  activites: Types.External.NosDeputesFR.Activite
+): Types.Canonical.Activite[] {
   return Object.keys(activites.labels).map(weekNumber => {
     const weekNumberAsInt = parseInt(weekNumber);
     return {
@@ -75,4 +77,19 @@ export function MapActivites(activites: Types.External.NosDeputesFR.Activite) {
       Vacances: activites.vacances[weekNumber]
     };
   });
+}
+
+export function areTheSameActivites(
+  actA: Types.Canonical.Activite,
+  actB: Types.Canonical.Activite
+): Boolean {
+  return (
+    actA.NumeroDeSemaine === actB.NumeroDeSemaine &&
+    actA.ParticipationEnHemicycle === actB.ParticipationEnHemicycle &&
+    actA.ParticipationsEnCommission === actB.ParticipationsEnCommission &&
+    actA.PresenceEnHemicycle === actB.PresenceEnHemicycle &&
+    actA.PresencesEnCommission === actB.PresencesEnCommission &&
+    actA.Question === actB.Question &&
+    actA.Vacances === actB.Vacances
+  );
 }

@@ -4,16 +4,13 @@ import { from } from "rxjs";
 import { mergeMap } from "rxjs/operators";
 
 import { MapDepute } from "./Mappings/Depute";
-import {
-  getDeputeRefBySlug,
-  updateDeputeByRef,
-  createDepute
-} from "./Tools/Refs";
+import { getDeputeBySlug, updateDeputeByRef, createDepute } from "./Tools/Refs";
 import { manageAutresMandatsByDeputeID } from "./Tools/AutresMandat";
 import { manageAnciensMandatsByDeputeID } from "./Tools/AnciensMandat";
 import { manageActivitesByDeputeID } from "./Tools/Activites";
 
 import "./Types/External/NosDeputesFR/Depute";
+import "./Types/Canonical/Activity";
 
 const client = new faunadb.Client({
   secret: process.env.FAUNADB_TOKEN
@@ -26,7 +23,7 @@ axios
   .then(response =>
     response.data.deputes.filter(d => {
       if (FILTER_ON_FABIEN_MATRAS) {
-        return d.depute.slug === "catherine-fabre";
+        return d.depute.slug === "cedric-roussel";
       } else {
         return true;
       }
@@ -39,7 +36,7 @@ axios
           const localDepute: Types.External.NosDeputesFR.Depute = d.depute;
           const mappedDepute = MapDepute(localDepute);
           return client
-            .query(getDeputeRefBySlug(localDepute.slug))
+            .query(getDeputeBySlug(localDepute.slug))
             .then((ret: any) => {
               return client
                 .query(updateDeputeByRef(ret.ref.id, mappedDepute))
@@ -60,7 +57,7 @@ axios
                       ),
                       client
                     ),
-                    manageActivitesByDeputeID(ret.ref.id, ret.data.Slug, client)
+                    manageActivitesByDeputeID(ret.data.Slug, client)
                   ]);
                 })
                 .catch(e => console.error(e));
@@ -84,11 +81,7 @@ axios
                         localDepute.anciens_mandats,
                         client
                       ),
-                      manageActivitesByDeputeID(
-                        ret.ref.id,
-                        ret.data.Slug,
-                        client
-                      )
+                      manageActivitesByDeputeID(ret.data.Slug, client)
                     ]);
                   })
                   .catch(e => console.error(e));
