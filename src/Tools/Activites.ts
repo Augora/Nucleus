@@ -7,7 +7,8 @@ import {
   getActivitesByDeputeSlug,
   createActivite,
   deleteActiviteByDeputeSlugAndWeekNumber,
-  updateActiviteByDeputeSlugAndWeekNumber
+  updateActiviteByDeputeSlugAndWeekNumber,
+  getDeputeRefByDeputeSlug
 } from "./Refs";
 import { MapActivites, areTheSameActivites } from "../Mappings/Depute";
 import { CompareLists, Action, DiffType } from "../Tools/Comparison";
@@ -41,7 +42,13 @@ export function manageActivitesByDeputeID(
                 console.log(action);
                 if (action.Action === Action.Create) {
                   return client
-                    .query(createActivite(action.Data))
+                    .query(
+                      createActivite(
+                        Object.assign({}, action.Data, {
+                          Depute: getDeputeRefByDeputeSlug(slug)
+                        })
+                      )
+                    )
                     .then((ret: any) => {
                       console.log("Inserted activity:", ret.data);
                     });
