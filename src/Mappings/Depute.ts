@@ -67,14 +67,20 @@ export function MapActivites(
         .subtract(weekNumberAsInt, "w")
         .format(),
       NumeroDeSemaine: weekNumberAsInt,
-      PresencesEnCommission: activites.n_presences.commission[weekNumber],
-      PresenceEnHemicycle: activites.n_presences.hemicycle[weekNumber],
-      ParticipationsEnCommission:
-        activites.n_participations.commission[weekNumber],
-      ParticipationEnHemicycle:
-        activites.n_participations.hemicycle[weekNumber],
-      Question: activites.n_questions[weekNumber],
-      Vacances: activites.vacances[weekNumber]
+      PresencesEnCommission: Math.ceil(
+        activites.n_presences.commission[weekNumber]
+      ),
+      PresenceEnHemicycle: Math.ceil(
+        activites.n_presences.hemicycle[weekNumber]
+      ),
+      ParticipationsEnCommission: Math.ceil(
+        activites.n_participations.commission[weekNumber]
+      ),
+      ParticipationEnHemicycle: Math.ceil(
+        activites.n_participations.hemicycle[weekNumber]
+      ),
+      Question: Math.ceil(activites.n_questions[weekNumber]),
+      Vacances: Math.ceil(activites.vacances[weekNumber])
     };
   });
 }
