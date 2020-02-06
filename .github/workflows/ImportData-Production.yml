@@ -1,8 +1,5 @@
 name: Import data in production
 on:
-  push:
-    branches:
-      - master
   schedule:
     - cron: "0 4 * * *"
 
