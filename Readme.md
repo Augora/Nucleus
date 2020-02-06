@@ -1,12 +1,10 @@
 # Nucleus
-
 > Nucleus: central part about which other parts are grouped or gathered; core:
 
 ## Description
 
-## Pricing
+Ce projet a pour but d'agréger les données d'une à plusieurs API pour les stockées dans la solution [FaunaDB](https://fauna.com/).
+Nous utilisons les données des API suivantes :
+- [NosDeputes.fr](https://www.nosdeputes.fr/)
 
-$0.18 per GB per month
-$0.05 per 100K reads
-$0.2 per 100K writes
-$0.10 per GB per day
+FaunaDB nous permet de redistribuer ces données sous forme d'API GraphQL.
