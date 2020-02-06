@@ -65,6 +65,7 @@ type Depute {
   URLNosdeputesAPI: String
   NombreMandats: Int
   Twitter: String
+  EstEnMandat: Boolean
   SitesWeb: [String]
   Emails: [String]
   Adresses: [String]
@@ -76,7 +77,8 @@ type Depute {
 
 type Query {
   Deputes: [Depute!]
-  DeputesEnMandat: [Depute!]
+  DeputesEnMandat(EstEnMandat: Boolean): [Depute!]
   Depute(Slug: String!): Depute!
-  # Activite(slug: String!): [Activite!]!
+  GroupesParlementaires: [String!] @resolver(name: "GroupesParlementaires")
+  Activite(Slug: String!): [Activite!]!
 }

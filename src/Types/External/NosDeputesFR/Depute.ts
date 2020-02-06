@@ -57,6 +57,7 @@ namespace Types.External.NosDeputesFR {
     url_nosdeputes_api: string;
     nb_mandats: number;
     twitter: string;
+    ancien_depute?: number;
   }
 
   export interface Activite {

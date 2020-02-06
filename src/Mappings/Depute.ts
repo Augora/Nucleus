@@ -23,6 +23,7 @@ export function MapDepute(depute: Types.External.NosDeputesFR.Depute) {
     URLNosdeputesAPI: depute.url_nosdeputes_api,
     NombreMandats: depute.nb_mandats,
     Twitter: depute.twitter,
+    EstEnMandat: depute.ancien_depute !== 1,
     SitesWeb: depute.sites_web.map(s => s.site),
     Emails: depute.emails.map(e => e.email),
     Adresses: depute.adresses.map(a => a.adresse),
