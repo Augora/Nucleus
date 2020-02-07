@@ -1,6 +1,8 @@
 import moment from "moment";
 
-export function MapDepute(depute: Types.External.NosDeputesFR.Depute) {
+export function MapDepute(
+  depute: Types.External.NosDeputesFR.Depute
+): Types.Canonical.Depute {
   return {
     Slug: depute.slug,
     Nom: depute.nom,
@@ -99,4 +101,11 @@ export function areTheSameActivites(
     actA.Question === actB.Question &&
     actA.Vacances === actB.Vacances
   );
+}
+
+export function areTheSameDeputes(
+  depA: Types.Canonical.Depute,
+  depB: Types.Canonical.Depute
+): Boolean {
+  return depA.Slug === depB.Slug;
 }

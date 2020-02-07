@@ -15,6 +15,13 @@ const {
   Delete
 } = query;
 
+export function getDeputes() {
+  return Map(
+    Paginate(Match(Index("Deputes")), { size: 1000 }),
+    Lambda("X", Get(Var("X")))
+  );
+}
+
 export function getDeputeBySlug(slug: String) {
   return Get(Match(Index("unique_Depute_Slug"), slug));
 }
