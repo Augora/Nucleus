@@ -3,7 +3,12 @@ import axios from "axios";
 import { from, merge } from "rxjs";
 import { mergeMap } from "rxjs/operators";
 
-import { getDeputes } from "./Refs";
+import {
+  getDeputes,
+  createDepute,
+  updateDeputeByRef,
+  getDeputeRefByDeputeSlug
+} from "./Refs";
 import { MapDepute, areTheSameDeputes } from "../Mappings/Depute";
 import { CompareLists, Action, DiffType } from "../Tools/Comparison";
 
@@ -34,32 +39,23 @@ export function manageDeputes(client: faunadb.Client) {
                 console.log(action);
                 if (action.Action === Action.Create) {
                   console.log("Create:", action.Data);
-                  return Promise.resolve();
-                  // return client
-                  //   .query(
-                  //     createActivite(
-                  //       Object.assign({}, action.Data, {
-                  //         Depute: getDeputeRefByDeputeSlug(slug)
-                  //       })
-                  //     )
-                  //   )
-                  //   .then((ret: any) => {
-                  //     console.log("Inserted activity:", ret.data);
-                  //   });
+                  return client
+                    .query(createDepute(action.Data))
+                    .then((ret: any) => {
+                      console.log("Inserted depute:", ret.data);
+                    });
                 } else if (action.Action === Action.Update) {
                   console.log("Update:", action.Data);
-                  return Promise.resolve();
-                  // return client
-                  //   .query(
-                  //     updateActiviteByDeputeSlugAndWeekNumber(
-                  //       slug,
-                  //       action.Data.NumeroDeSemaine,
-                  //       action.Data
-                  //     )
-                  //   )
-                  //   .then((ret: any) => {
-                  //     console.log("Updated activity:", ret.data);
-                  //   });
+                  return client
+                    .query(
+                      updateDeputeByRef(
+                        getDeputeRefByDeputeSlug(action.Data.Slug),
+                        action.Data
+                      )
+                    )
+                    .then((ret: any) => {
+                      console.log("Updated activity:", ret.data);
+                    });
                 } else if (action.Action === Action.Remove) {
                   console.log("Remove:", action.Data);
                   return Promise.resolve();
