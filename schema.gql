@@ -16,6 +16,14 @@ enum Sexe {
   H
 }
 
+type GroupeParlementaire {
+  Sigle: String! @unique @index
+  NomComplet: String
+  Couleur: String
+  URLImage: String
+  Ordre: Number
+}
+
 type AncienMandat {
   DateDeDebut: String
   DateDeFin: String
