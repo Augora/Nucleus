@@ -22,6 +22,7 @@ type GroupeParlementaire {
   Couleur: String
   URLImage: String
   Ordre: Number
+  Deputes: [Depute!] @relation
 }
 
 type AncienMandat {
@@ -78,6 +79,7 @@ type Depute {
   Emails: [String]
   Adresses: [String]
   Collaborateurs: [String]
+  GroupeParlementaire: GroupeParlementaire!
   AnciensMandats: [AncienMandat] @relation
   AutresMandats: [AutreMandat] @relation
   Activites: [Activite] @relation
