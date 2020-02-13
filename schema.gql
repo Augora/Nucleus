@@ -21,7 +21,7 @@ type GroupeParlementaire {
   NomComplet: String
   Couleur: String
   URLImage: String
-  Ordre: Number
+  Ordre: Int
   Deputes: [Depute!] @relation
 }
 
@@ -75,6 +75,7 @@ type Depute {
   NombreMandats: Int
   Twitter: String
   EstEnMandat: Boolean
+  Age: Int
   SitesWeb: [String]
   Emails: [String]
   Adresses: [String]
@@ -86,9 +87,10 @@ type Depute {
 }
 
 type Query {
+  Depute(Slug: String!): Depute!
   Deputes: [Depute!]
   DeputesEnMandat(EstEnMandat: Boolean): [Depute!]
-  Depute(Slug: String!): Depute!
+  GroupeParlementaire(Sigle: String!): GroupeParlementaire
   GroupesParlementaires: [String!] @resolver(name: "GroupesParlementaires")
-  Activite(Slug: String!): [Activite!]!
+  # Activite(Slug: String!): [Activite!]!
 }

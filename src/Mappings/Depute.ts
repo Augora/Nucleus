@@ -24,6 +24,7 @@ export function MapDepute(depute: Types.External.NosDeputesFR.Depute) {
     NombreMandats: depute.nb_mandats,
     Twitter: depute.twitter,
     EstEnMandat: depute.ancien_depute !== 1,
+    Age: parseInt(moment(depute.date_naissance).fromNow(true)),
     SitesWeb: depute.sites_web.map(s => s.site),
     Emails: depute.emails.map(e => e.email),
     Adresses: depute.adresses.map(a => a.adresse),
