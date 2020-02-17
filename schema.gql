@@ -91,6 +91,9 @@ type Query {
   Deputes: [Depute!]
   DeputesEnMandat(EstEnMandat: Boolean): [Depute!]
   GroupeParlementaire(Sigle: String!): GroupeParlementaire
-  GroupesParlementaires: [String!] @resolver(name: "GroupesParlementaires")
+  GroupesParlementaires: [String!]
+    @resolver(name: "GroupesParlementaires")
+    @deprecated(reason: "Please use GroupesParlementairesDetails instead.")
+  GroupesParlementairesDetails: [GroupeParlementaire!]
   # Activite(Slug: String!): [Activite!]!
 }
