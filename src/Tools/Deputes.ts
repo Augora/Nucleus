@@ -47,28 +47,14 @@ export function manageDeputes(client: faunadb.Client) {
                 } else if (action.Action === Action.Update) {
                   console.log("Update:", action.Data);
                   return client
-                    .query(
-                      updateDeputeByRef(
-                        getDeputeRefByDeputeSlug(action.Data.Slug),
-                        action.Data
-                      )
-                    )
+                    .query(updateDeputeByRef(action.Data))
                     .then((ret: any) => {
                       console.log("Updated activity:", ret.data);
                     });
                 } else if (action.Action === Action.Remove) {
                   console.log("Remove:", action.Data);
+                  // ToDo: Think about this kind of cases.
                   return Promise.resolve();
-                  // return client
-                  //   .query(
-                  //     deleteActiviteByDeputeSlugAndWeekNumber(
-                  //       slug,
-                  //       action.Data.NumeroDeSemaine
-                  //     )
-                  //   )
-                  //   .then((ret: any) => {
-                  //     console.log("Deleted activity:", ret.data);
-                  //   });
                 } else if (action.Action === Action.None) {
                   console.log("None:", action.Data);
                   return Promise.resolve();

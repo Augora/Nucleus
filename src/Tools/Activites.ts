@@ -1,6 +1,6 @@
 import faunadb, { values } from "faunadb";
 import axios from "axios";
-import { from, merge } from "rxjs";
+import { from } from "rxjs";
 import { mergeMap } from "rxjs/operators";
 
 import {

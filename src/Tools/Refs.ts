@@ -30,10 +30,11 @@ export function getDeputeRefByDeputeSlug(slug: String) {
   return Select("ref", Get(Match(Index("unique_Depute_Slug"), slug)));
 }
 
-export function updateDeputeByRef(deputeRef: String, data) {
-  return Update(Ref(Collection("Depute"), deputeRef), {
-    data
-  });
+export function updateDeputeByRef(data) {
+  return Map(
+    Paginate(Match(Index("unique_Depute_Slug"), data.Slug)),
+    Lambda("X", Update(Var("X"), { data }))
+  );
 }
 
 export function createDepute(data) {
