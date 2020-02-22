@@ -137,3 +137,17 @@ export function areTheSameDeputes(
     _.difference(depA.Collaborateurs, depB.Collaborateurs).length === 0
   );
 }
+
+export function MapAdresse(adresse: string): Types.Canonical.Adresse {
+  const CPRegex = /\ ([0-9]{5})\ /;
+  const [AdresseComplete, Telephone] = _.split(adresse, " Téléphone : ");
+  const TelephoneCleaned = Telephone
+    ? _.replace(Telephone, /[\.\ ]+/g, "")
+    : Telephone;
+  const CodePostal = CPRegex.exec(adresse)[1];
+  return {
+    AdresseComplete,
+    CodePostal,
+    Telephone: TelephoneCleaned
+  };
+}

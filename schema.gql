@@ -43,19 +43,25 @@ type Activite {
   Depute: Depute!
 }
 
+type Adresse {
+  AdresseComplete: String
+  CodePostal: String
+  Telephone: String
+  Depute: Depute!
+}
+
 type Depute {
+  # Attributes
   Slug: String! @unique @index
   Nom: String
   NomDeFamille: String
   Prenom: String
-  Sexe: Sexe
   DateDeNaissance: String
   LieuDeNaissance: String
   NumeroDepartement: String
   NomCirconscription: String
   NumeroCirconscription: Int
   DebutDuMandat: String
-  SigleGroupePolitique: GroupeSigle
   parti_ratt_financier: String
   Profession: String
   PlaceEnHemicycle: String
@@ -66,10 +72,17 @@ type Depute {
   NombreMandats: Int
   Twitter: String
   EstEnMandat: Boolean
+  SigleGroupePolitique: GroupeSigle
+  Sexe: Sexe
+
+  # Arrays
   SitesWeb: [String]
   Emails: [String]
-  Adresses: [String]
   Collaborateurs: [String]
+  Adresses: [String]
+
+  # Relations
+  AdressesDetails: [Adresse] @relation
   AnciensMandats: [AncienMandat] @relation
   AutresMandats: [AutreMandat] @relation
   Activites: [Activite] @relation
@@ -80,5 +93,5 @@ type Query {
   DeputesEnMandat(EstEnMandat: Boolean): [Depute!]
   Depute(Slug: String!): Depute!
   GroupesParlementaires: [String!] @resolver(name: "GroupesParlementaires")
-  Activite(Slug: String!): [Activite!]!
+  # Activite(Slug: String!): [Activite!]!
 }
