@@ -4,26 +4,21 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@types/lodash": "^4.14.149",
     "axios": "^0.19.2",
     "faunadb": "^2.11.1",
-    "lodash": "^4.17.15"
-  },
-  "devDependencies": {
-    "@pongsatt/graphql-schema-typescript": "^1.0.25",
-    "@types/jest": "^25.1.1",
-    "@types/node": "^13.7.0",
-    "apollo-boost": "^0.4.7",
-    "cross-fetch": "^3.0.4",
-    "get-graphql-schema": "^2.1.2",
-    "graphql": "^14.6.0",
-    "graphql-tag": "^2.10.3",
+    "lodash": "^4.17.15",
     "jest": "^25.1.0",
     "moment": "^2.24.0",
     "rxjs": "^6.5.4",
     "ts-jest": "^25.2.0",
     "ts-node": "^8.6.2",
-    "typescript": "^3.7.4"
+    "typescript": "^3.7.4",
+    "cross-fetch": "^3.0.4"
+  },
+  "devDependencies": {
+    "@types/jest": "^25.1.1",
+    "@types/lodash": "^4.14.149",
+    "@types/node": "^13.7.0"
   },
   "scripts": {
     "start": "ts-node ./src/index.ts",
