@@ -84,7 +84,7 @@ export function deleteAncienMandatByID(id: string) {
   return Delete(Ref(Collection("AncienMandat"), id));
 }
 
-export function getActivitesByDeputeSlug(slug: string) {
+export function getActivitesByDeputeSlug(slug: String) {
   return Map(
     Paginate(
       Match(
