@@ -16,6 +16,15 @@ enum Sexe {
   H
 }
 
+type GroupeParlementaire {
+  Sigle: String! @unique @index
+  NomComplet: String
+  Couleur: String
+  URLImage: String
+  Ordre: Int
+  Deputes: [Depute!] @relation
+}
+
 type AncienMandat {
   DateDeDebut: String
   DateDeFin: String
@@ -72,6 +81,7 @@ type Depute {
   NombreMandats: Int
   Twitter: String
   EstEnMandat: Boolean
+  Age: Int
   SigleGroupePolitique: GroupeSigle
   Sexe: Sexe
 
@@ -83,15 +93,20 @@ type Depute {
 
   # Relations
   AdressesDetails: [Adresse] @relation
+  GroupeParlementaire: GroupeParlementaire!
   AnciensMandats: [AncienMandat] @relation
   AutresMandats: [AutreMandat] @relation
   Activites: [Activite] @relation
 }
 
 type Query {
+  Depute(Slug: String!): Depute!
   Deputes: [Depute!]
   DeputesEnMandat(EstEnMandat: Boolean): [Depute!]
-  Depute(Slug: String!): Depute!
-  GroupesParlementaires: [String!] @resolver(name: "GroupesParlementaires")
+  GroupeParlementaire(Sigle: String!): GroupeParlementaire
+  GroupesParlementaires: [String!]
+    @resolver(name: "GroupesParlementaires")
+    @deprecated(reason: "Please use GroupesParlementairesDetails instead.")
+  GroupesParlementairesDetails: [GroupeParlementaire!]
   # Activite(Slug: String!): [Activite!]!
 }

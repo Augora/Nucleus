@@ -33,7 +33,16 @@ export function getDeputeRefByDeputeSlug(slug: String) {
 export function updateDeputeByRef(data) {
   return Map(
     Paginate(Match(Index("unique_Depute_Slug"), data.Slug)),
-    Lambda("X", Update(Var("X"), { data }))
+    Lambda(
+      "X",
+      Update(Var("X"), {
+        data: Object.assign({}, data, {
+          GroupeParlementaire: getGroupeParlementaireRefBySigle(
+            data.SigleGroupePolitique
+          )
+        })
+      })
+    )
   );
 }
 
@@ -131,4 +140,8 @@ export function deleteActiviteByDeputeSlugAndWeekNumber(
     ),
     Lambda("X", Delete(Var("X")))
   );
+}
+
+function getGroupeParlementaireRefBySigle(sigle: String) {
+  return Select("ref", Get(Match(Index("GroupeParlementaire"), sigle)));
 }
