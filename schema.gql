@@ -82,7 +82,7 @@ type Depute {
   Twitter: String
   EstEnMandat: Boolean
   Age: Int
-  SigleGroupePolitique: GroupeSigle
+  SigleGroupePolitique: GroupeSigle @deprecated
   Sexe: Sexe
 
   # Arrays
