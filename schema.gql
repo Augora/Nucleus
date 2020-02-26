@@ -84,6 +84,7 @@ type Depute {
   Age: Int
   SigleGroupePolitique: GroupeSigle
   Sexe: Sexe
+  URLPhotoAssembleeNationnale: String
 
   # Arrays
   SitesWeb: [String]

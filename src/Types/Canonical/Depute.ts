@@ -23,6 +23,7 @@ namespace Types.Canonical {
     Twitter: String;
     EstEnMandat: Boolean;
     Age: Number;
+    URLPhotoAssembleeNationnale: String;
     SitesWeb: String[];
     Emails: String[];
     Adresses: String[];

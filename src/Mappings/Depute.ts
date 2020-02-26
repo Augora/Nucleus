@@ -28,6 +28,7 @@ export function MapDepute(
     Twitter: depute.twitter,
     EstEnMandat: depute.ancien_depute !== 1,
     Age: moment().diff(depute.date_naissance, "years", false),
+    URLPhotoAssembleeNationnale: `http://www2.assemblee-nationale.fr/static/tribun/15/photos/${depute.id_an}.jpg`,
     SitesWeb: depute.sites_web.map(s => s.site),
     Emails: depute.emails.map(e => e.email),
     Adresses: depute.adresses.map(a => a.adresse),
