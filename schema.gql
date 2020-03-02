@@ -87,6 +87,7 @@ type Depute {
   Age: Int
   SigleGroupePolitique: GroupeSigle @deprecated
   Sexe: Sexe
+  URLPhotoAssembleeNationnale: String
 
   # Arrays
   SitesWeb: [String]
