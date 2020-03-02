@@ -1,95 +1,89 @@
 import faunadb, { values } from "faunadb";
-import axios from "axios";
-import { from } from "rxjs";
+import { from, concat } from "rxjs";
 import { mergeMap } from "rxjs/operators";
 
 import {
-  getActivitesByDeputeSlug,
-  createActivite,
-  deleteActiviteByDeputeSlugAndWeekNumber,
-  updateActiviteByDeputeSlugAndWeekNumber,
-  getDeputeRefByDeputeSlug
+  getAdressesByDeputeSlug,
+  getAdresses,
+  createAdresse,
+  updateAdresse,
+  createAdresseDeputeRelationLink,
+  removeAdresseDeputeRelationLink,
 } from "./Refs";
-import { MapActivites, areTheSameActivites } from "../Mappings/Depute";
+import { MapAdresse, areTheSameAdresses } from "../Mappings/Depute";
 import { CompareLists, Action, DiffType } from "../Tools/Comparison";
 
 export function manageAdressesByDeputeID(
-  slug: string,
+  slug: String,
   client: faunadb.Client,
   adresses: String[]
 ) {
   return client
-    .query(getActivitesByDeputeSlug(slug))
-    .then((ret: values.Document<values.Document<Types.Canonical.Activite>[]>) =>
+    .query(getAdresses())
+    .then((ret: values.Document<values.Document<Types.Canonical.Adresse>[]>) =>
       ret.data.map(e => e.data)
     )
-    .then(rd_acts => {
-      return axios
-        .get(
-          `https://www.nosdeputes.fr/${slug}/graphes/lastyear/total?questions=true&format=json`
-        )
-        .then(response => {
-          const { data } = response;
-          const ld_acts = MapActivites(data);
-          const res = CompareLists(
-            ld_acts,
-            rd_acts,
-            areTheSameActivites,
-            "NumeroDeSemaine"
-          );
-          return from(res)
-            .pipe(
-              mergeMap((action: DiffType<Types.Canonical.Activite>) => {
-                console.log(action);
-                if (action.Action === Action.Create) {
-                  return client
-                    .query(
-                      createActivite(
-                        Object.assign({}, action.Data, {
-                          Depute: getDeputeRefByDeputeSlug(slug)
-                        })
-                      )
+    .then(all_ads => {
+      const ld_ads = adresses.map(ad => MapAdresse(ad));
+      const res = CompareLists(ld_ads, all_ads, areTheSameAdresses, "AdresseComplete");
+      return concat(
+        from(res)
+          .pipe(
+            mergeMap((action: DiffType<Types.Canonical.Adresse>) => {
+              if (action.Action === Action.Create) {
+                console.log("Creating adresse:", action.Data);
+                return client.query(createAdresse(action.Data))
+                  .then((ret: any) => {
+                    console.log("Created adresse:", ret.data);
+                  });
+              } else if (action.Action === Action.Update) {
+                console.log("Updating adresse:", action.Data);
+                return client
+                  .query(
+                    updateAdresse(
+                      action.Data
                     )
-                    .then((ret: any) => {
-                      console.log("Inserted activity:", ret.data);
-                    });
-                } else if (action.Action === Action.Update) {
-                  console.log(action.Data);
-                  return client
-                    .query(
-                      updateActiviteByDeputeSlugAndWeekNumber(
-                        slug,
-                        action.Data.NumeroDeSemaine,
-                        action.Data
+                  )
+                  .then((ret: any) => {
+                    console.log("Updated adresse:", ret.data);
+                  });
+              } else {
+                //Nothing to do
+                return Promise.resolve();
+              }
+            }, 1)
+          ),
+        from(client.query(getAdressesByDeputeSlug(slug)).then((ret: values.Document<values.Document<Types.Canonical.Adresse>[]>) =>
+          ret.data.map(e => e.data)
+        ).then(rd_ads => CompareLists(ld_ads, rd_ads, areTheSameAdresses, "AdresseComplete")))
+          .pipe(
+            mergeMap((actions: DiffType<Types.Canonical.Adresse>[]) => {
+              return from(actions)
+                .pipe(mergeMap((action: DiffType<Types.Canonical.Adresse>) => {
+                  if (action.Action === Action.Create) {
+                    console.log("Creating adresse link:", action.Data);
+                    return client.query(createAdresseDeputeRelationLink(slug, action.Data.AdresseComplete))
+                      .then((ret: any) => {
+                        console.log("Created adresse link:", ret);
+                      });
+                  } else if (action.Action === Action.Remove) {
+                    console.log("Removing adresse link:", action.Data);
+                    return client
+                      .query(
+                        removeAdresseDeputeRelationLink(
+                          slug,
+                          action.Data.AdresseComplete
+                        )
                       )
-                    )
-                    .then((ret: any) => {
-                      console.log("Updated activity:", ret.data);
-                    });
-                } else if (action.Action === Action.Remove) {
-                  console.log(action.Data);
-                  return client
-                    .query(
-                      deleteActiviteByDeputeSlugAndWeekNumber(
-                        slug,
-                        action.Data.NumeroDeSemaine
-                      )
-                    )
-                    .then((ret: any) => {
-                      console.log("Deleted activity:", ret.data);
-                    });
-                }
-              }, 1)
-            )
-            .subscribe(f => f);
-        });
+                      .then((ret: any) => {
+                        console.log("Removed adresse link:", ret.data);
+                      });
+                  } else {
+                    //Nothing to do
+                    return Promise.resolve();
+                  }
+                }, 1));
+            }, 1))
+      ).subscribe(f => f);
     })
-    .catch(err => {
-      console.error(
-        "Something went wrong while retriving activities from",
-        slug,
-        ":",
-        err
-      );
-    });
 }

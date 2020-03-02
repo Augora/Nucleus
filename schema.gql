@@ -26,17 +26,19 @@ type GroupeParlementaire {
 }
 
 type AncienMandat {
+  AncienMandatComplet: String! @unique @index
   DateDeDebut: String
   DateDeFin: String
   Intitule: String
-  Depute: Depute!
+  Deputes: [Depute!] @relation
 }
 
 type AutreMandat {
+  AutreMandatComplet: String! @unique @index
   Localite: String
   Institution: String
   Intitule: String
-  Depute: Depute!
+  Deputes: [Depute!] @relation
 }
 
 type Activite {
@@ -53,10 +55,11 @@ type Activite {
 }
 
 type Adresse {
-  AdresseComplete: String
+  AdresseComplete: String! @unique @index
+  Adresse: String
   CodePostal: String
   Telephone: String
-  Depute: Depute!
+  Deputes: [Depute!] @relation
 }
 
 type Depute {
@@ -89,14 +92,14 @@ type Depute {
   SitesWeb: [String]
   Emails: [String]
   Collaborateurs: [String]
-  Adresses: [String]
+  Adresses: [String] @deprecated
 
   # Relations
-  AdressesDetails: [Adresse] @relation
   GroupeParlementaire: GroupeParlementaire!
-  AnciensMandats: [AncienMandat] @relation
-  AutresMandats: [AutreMandat] @relation
   Activites: [Activite] @relation
+  AdressesDetails: [Adresse!] @relation
+  AnciensMandats: [AncienMandat!] @relation
+  AutresMandats: [AutreMandat!] @relation
 }
 
 type Query {
@@ -108,5 +111,6 @@ type Query {
     @resolver(name: "GroupesParlementaires")
     @deprecated(reason: "Please use GroupesParlementairesDetails instead.")
   GroupesParlementairesDetails: [GroupeParlementaire!]
-  # Activite(Slug: String!): [Activite!]!
+  Adresse(AdresseComplete: String!): Adresse!
+  Adresses: [Adresse!]
 }

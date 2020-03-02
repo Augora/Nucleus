@@ -30,7 +30,7 @@ export function MapDepute(
     Age: parseInt(moment(depute.date_naissance).fromNow(true)),
     SitesWeb: depute.sites_web.map(s => s.site),
     Emails: depute.emails.map(e => e.email),
-    Adresses: depute.adresses.map(a => a.adresse),
+    Adresses: depute.adresses.map(a => a.adresse).filter(a => !a.startsWith("Sur rendez-vous") && !a.startsWith("Varsovie/Konstancin") && !a.startsWith("Allemagne et Autriche")),
     Collaborateurs: depute.collaborateurs.map(c => c.collaborateur)
   };
 }
@@ -139,16 +139,24 @@ export function areTheSameDeputes(
   );
 }
 
-export function MapAdresse(adresse: string): Types.Canonical.Adresse {
+export function MapAdresse(adresse: String): Types.Canonical.Adresse {
   const CPRegex = /\ ([0-9]{5})\ /;
-  const [AdresseComplete, Telephone] = _.split(adresse, " Téléphone : ");
+  const [Adresse, Telephone] = _.split(adresse.valueOf(), " Téléphone : ");
   const TelephoneCleaned = Telephone
     ? _.replace(Telephone, /[\.\ ]+/g, "")
     : Telephone;
-  const CodePostal = CPRegex.exec(adresse)[1];
+  const CodePostal = CPRegex.exec(adresse.valueOf()).length > 0 ? CPRegex.exec(adresse.valueOf())[1] : undefined;
   return {
-    AdresseComplete,
+    Adresse,
     CodePostal,
+    AdresseComplete: adresse,
     Telephone: TelephoneCleaned
   };
+}
+
+export function areTheSameAdresses(adA: Types.Canonical.Adresse, adB: Types.Canonical.Adresse): Boolean {
+  return adA.AdresseComplete === adB.AdresseComplete
+    && adA.Adresse === adB.Adresse
+    && adA.CodePostal === adB.CodePostal
+    && adA.Telephone === adB.Telephone;
 }

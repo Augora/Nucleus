@@ -7,6 +7,7 @@ import { getDeputes, createDepute, updateDeputeByRef } from "./Refs";
 import { MapDepute, areTheSameDeputes } from "../Mappings/Depute";
 import { CompareLists, Action, DiffType } from "../Tools/Comparison";
 import { manageActivitesByDeputeID } from "./Activites";
+import { manageAdressesByDeputeID } from "./Adresse";
 
 export function manageDeputes(client: faunadb.Client) {
   return client
@@ -40,7 +41,8 @@ export function manageDeputes(client: faunadb.Client) {
                     .then((ret: any) => {
                       console.log("Inserted depute:", ret.data);
                       return Promise.all([
-                        manageActivitesByDeputeID(action.Data.Slug, client)
+                        manageActivitesByDeputeID(action.Data.Slug, client),
+                        manageAdressesByDeputeID(action.Data.Slug, client, action.Data.Adresses)
                       ]);
                     });
                 } else if (action.Action === Action.Update) {
@@ -50,7 +52,8 @@ export function manageDeputes(client: faunadb.Client) {
                     .then((ret: any) => {
                       console.log("Updated depute:", ret.data);
                       return Promise.all([
-                        manageActivitesByDeputeID(action.Data.Slug, client)
+                        manageActivitesByDeputeID(action.Data.Slug, client),
+                        manageAdressesByDeputeID(action.Data.Slug, client, action.Data.Adresses)
                       ]);
                     });
                 } else if (action.Action === Action.Remove) {
@@ -60,7 +63,8 @@ export function manageDeputes(client: faunadb.Client) {
                 } else if (action.Action === Action.None) {
                   // console.log("None:", action.Data);
                   return Promise.all([
-                    // manageActivitesByDeputeID(action.Data.Slug, client)
+                    manageActivitesByDeputeID(action.Data.Slug, client),
+                    manageAdressesByDeputeID(action.Data.Slug, client, action.Data.Adresses)
                   ]);
                 }
               }, 1)

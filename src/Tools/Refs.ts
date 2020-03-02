@@ -12,7 +12,8 @@ const {
   Paginate,
   Lambda,
   Var,
-  Delete
+  Delete,
+  Documents
 } = query;
 
 export function getDeputes() {
@@ -145,3 +146,66 @@ export function deleteActiviteByDeputeSlugAndWeekNumber(
 function getGroupeParlementaireRefBySigle(sigle: String) {
   return Select("ref", Get(Match(Index("GroupeParlementaire"), sigle)));
 }
+
+export function getAdresses() {
+  return Map(
+    Paginate(Documents(Collection("Adresse")), { size: 1000 }),
+    Lambda("X", Get(Var("X")))
+  );
+}
+
+export function getAdressesByDeputeSlug(slug: String) {
+  return Map(
+    Paginate(
+      Match(
+        Index("adresse_Deputes_by_depute"),
+        Select("ref", Get(Match(Index("unique_Depute_Slug"), slug)))
+      )
+    ),
+    Lambda("X", Get(Var("X")))
+  );
+}
+
+export function getAdressByAdresseComplete(adresseComplete: String) {
+  return Get(Match(Index("unique_Adresse_AdresseComplete"), adresseComplete));
+}
+
+export function createAdresse(data: Types.Canonical.Adresse) {
+  return Create(Collection("Adresse"), {
+    data
+  });
+}
+
+export function updateAdresse(data: Types.Canonical.Adresse) {
+  return Map(
+    Paginate(Match(Index("unique_Adresse_AdresseComplete"), data.AdresseComplete)),
+    Lambda(
+      "X",
+      Update(Var("X"), {
+        data,
+      })
+    )
+  );
+}
+
+export function createAdresseDeputeRelationLink(slug: String, adresseComplete: String) {
+  return Create(Collection("adresse_Deputes"), {
+    data: {
+      adresseID: Select("ref", Get(Match(Index("unique_Adresse_AdresseComplete"), adresseComplete))),
+      deputeID: Select("ref", Get(Match(Index("unique_Depute_Slug"), slug))),
+    }
+  });
+}
+
+export function removeAdresseDeputeRelationLink(slug: String, adresseComplete: String) {
+  return Map(
+    Paginate(
+      Match(Index("adresse_Deputes_by_adresse_and_depute"), [
+        Select("ref", Get(Match(Index("unique_Adresse_AdresseComplete"), adresseComplete))),
+        Select("ref", Get(Match(Index("unique_Depute_Slug"), slug))),
+      ])
+    ),
+    Lambda("X", Delete(Var("X")))
+  );
+}
+
