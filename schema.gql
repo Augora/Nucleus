@@ -26,17 +26,19 @@ type GroupeParlementaire {
 }
 
 type AncienMandat {
+  AncienMandatComplet: String! @unique @index
   DateDeDebut: String
   DateDeFin: String
   Intitule: String
-  Depute: Depute!
+  Deputes: [Depute!] @relation
 }
 
 type AutreMandat {
+  AutreMandatComplet: String! @unique @index
   Localite: String
   Institution: String
   Intitule: String
-  Depute: Depute!
+  Deputes: [Depute!] @relation
 }
 
 type Activite {
@@ -52,19 +54,26 @@ type Activite {
   Depute: Depute!
 }
 
+type Adresse {
+  AdresseComplete: String! @unique @index
+  Adresse: String
+  CodePostal: String
+  Telephone: String
+  Deputes: [Depute!] @relation
+}
+
 type Depute {
+  # Attributes
   Slug: String! @unique @index
   Nom: String
   NomDeFamille: String
   Prenom: String
-  Sexe: Sexe
   DateDeNaissance: String
   LieuDeNaissance: String
   NumeroDepartement: String
   NomCirconscription: String
   NumeroCirconscription: Int
   DebutDuMandat: String
-  SigleGroupePolitique: GroupeSigle
   parti_ratt_financier: String
   Profession: String
   PlaceEnHemicycle: String
@@ -76,14 +85,22 @@ type Depute {
   Twitter: String
   EstEnMandat: Boolean
   Age: Int
+  SigleGroupePolitique: GroupeSigle @deprecated
+  Sexe: Sexe
+  URLPhotoAssembleeNationnale: String
+
+  # Arrays
   SitesWeb: [String]
   Emails: [String]
-  Adresses: [String]
   Collaborateurs: [String]
+  Adresses: [String] @deprecated
+
+  # Relations
   GroupeParlementaire: GroupeParlementaire!
-  AnciensMandats: [AncienMandat] @relation
-  AutresMandats: [AutreMandat] @relation
   Activites: [Activite] @relation
+  AdressesDetails: [Adresse!] @relation
+  AnciensMandats: [AncienMandat!] @relation
+  AutresMandats: [AutreMandat!] @relation
 }
 
 type Query {
@@ -95,5 +112,6 @@ type Query {
     @resolver(name: "GroupesParlementaires")
     @deprecated(reason: "Please use GroupesParlementairesDetails instead.")
   GroupesParlementairesDetails: [GroupeParlementaire!]
-  # Activite(Slug: String!): [Activite!]!
+  Adresse(AdresseComplete: String!): Adresse!
+  Adresses: [Adresse!]
 }

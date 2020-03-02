@@ -1,6 +1,9 @@
 import moment from "moment";
+import _ from "lodash";
 
-export function MapDepute(depute: Types.External.NosDeputesFR.Depute) {
+export function MapDepute(
+  depute: Types.External.NosDeputesFR.Depute
+): Types.Canonical.Depute {
   return {
     Slug: depute.slug,
     Nom: depute.nom,
@@ -25,9 +28,10 @@ export function MapDepute(depute: Types.External.NosDeputesFR.Depute) {
     Twitter: depute.twitter,
     EstEnMandat: depute.ancien_depute !== 1,
     Age: moment().diff(depute.date_naissance, "years", false),
+    URLPhotoAssembleeNationnale: `http://www2.assemblee-nationale.fr/static/tribun/15/photos/${depute.id_an}.jpg`,
     SitesWeb: depute.sites_web.map(s => s.site),
     Emails: depute.emails.map(e => e.email),
-    Adresses: depute.adresses.map(a => a.adresse),
+    Adresses: depute.adresses.map(a => a.adresse).filter(a => !a.startsWith("Sur rendez-vous") && !a.startsWith("Varsovie/Konstancin") && !a.startsWith("Allemagne et Autriche")),
     Collaborateurs: depute.collaborateurs.map(c => c.collaborateur)
   };
 }
@@ -100,4 +104,60 @@ export function areTheSameActivites(
     actA.Question === actB.Question &&
     actA.Vacances === actB.Vacances
   );
+}
+
+export function areTheSameDeputes(
+  depA: Types.Canonical.Depute,
+  depB: Types.Canonical.Depute
+): Boolean {
+  return (
+    depA.Slug === depB.Slug &&
+    depA.Nom === depB.Nom &&
+    depA.NomDeFamille === depB.NomDeFamille &&
+    depA.Prenom === depB.Prenom &&
+    depA.Sexe === depB.Sexe &&
+    depA.DateDeNaissance === depB.DateDeNaissance &&
+    depA.LieuDeNaissance === depB.LieuDeNaissance &&
+    depA.NumeroDepartement === depB.NumeroDepartement &&
+    depA.NomCirconscription === depB.NomCirconscription &&
+    depA.NumeroCirconscription === depB.NumeroCirconscription &&
+    depA.DebutDuMandat === depB.DebutDuMandat &&
+    depA.SigleGroupePolitique === depB.SigleGroupePolitique &&
+    depA.parti_ratt_financier === depB.parti_ratt_financier &&
+    // depA.Profession === depB.Profession &&
+    depA.PlaceEnHemicycle === depB.PlaceEnHemicycle &&
+    depA.URLAssembleeNationnale === depB.URLAssembleeNationnale &&
+    depA.IDAssembleeNationnale === depB.IDAssembleeNationnale &&
+    depA.URLNosdeputes === depB.URLNosdeputes &&
+    depA.URLNosdeputesAPI === depB.URLNosdeputesAPI &&
+    depA.NombreMandats === depB.NombreMandats &&
+    depA.Twitter === depB.Twitter &&
+    depA.EstEnMandat === depB.EstEnMandat &&
+    _.difference(depA.SitesWeb, depB.SitesWeb).length === 0 &&
+    _.difference(depA.Emails, depB.Emails).length === 0 &&
+    _.difference(depA.Adresses, depB.Adresses).length === 0 &&
+    _.difference(depA.Collaborateurs, depB.Collaborateurs).length === 0
+  );
+}
+
+export function MapAdresse(adresse: String): Types.Canonical.Adresse {
+  const CPRegex = /\ ([0-9]{5})\ /;
+  const [Adresse, Telephone] = _.split(adresse.valueOf(), " Téléphone : ");
+  const TelephoneCleaned = Telephone
+    ? _.replace(Telephone, /[\.\ ]+/g, "")
+    : Telephone;
+  const CodePostal = CPRegex.exec(adresse.valueOf()).length > 0 ? CPRegex.exec(adresse.valueOf())[1] : undefined;
+  return {
+    Adresse,
+    CodePostal,
+    AdresseComplete: adresse,
+    Telephone: TelephoneCleaned
+  };
+}
+
+export function areTheSameAdresses(adA: Types.Canonical.Adresse, adB: Types.Canonical.Adresse): Boolean {
+  return adA.AdresseComplete === adB.AdresseComplete
+    && adA.Adresse === adB.Adresse
+    && adA.CodePostal === adB.CodePostal
+    && adA.Telephone === adB.Telephone;
 }

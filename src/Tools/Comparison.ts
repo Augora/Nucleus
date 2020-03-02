@@ -27,7 +27,8 @@ export function CompareLists<T>(
   newList: T[],
   previousList: T[],
   areTheSameFunction: (elemA: T, elemB: T) => Boolean,
-  pathToID: string
+  pathToID: string,
+  shouldReturnNones: Boolean = false
 ): DiffType<T>[] {
   const normalizedNewList = NormalizeArrayToObject(newList, pathToID);
   const normalizedPreviousList = NormalizeArrayToObject(previousList, pathToID);
@@ -54,7 +55,7 @@ export function CompareLists<T>(
         };
       }
     })
-    .filter(i => i.Action !== Action.None);
+    .filter(i => shouldReturnNones || i.Action !== Action.None);
   const RemoveItems = previousList
     .map(itemInPreviousList => {
       const itemInNewList =

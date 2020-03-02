@@ -1,6 +1,6 @@
 import faunadb, { values } from "faunadb";
 import axios from "axios";
-import { from, merge } from "rxjs";
+import { from } from "rxjs";
 import { mergeMap } from "rxjs/operators";
 
 import {
@@ -14,7 +14,7 @@ import { MapActivites, areTheSameActivites } from "../Mappings/Depute";
 import { CompareLists, Action, DiffType } from "../Tools/Comparison";
 
 export function manageActivitesByDeputeID(
-  slug: string,
+  slug: String,
   client: faunadb.Client
 ) {
   return client
@@ -80,7 +80,7 @@ export function manageActivitesByDeputeID(
                 }
               }, 1)
             )
-            .subscribe(f => f);
+            .toPromise();
         });
     })
     .catch(err => {
