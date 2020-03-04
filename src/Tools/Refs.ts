@@ -48,7 +48,13 @@ export function updateDeputeByRef(data) {
 }
 
 export function createDepute(data) {
-  return Create(Collection("Depute"), { data });
+  return Create(Collection("Depute"), {
+    data: Object.assign({}, data, {
+      GroupeParlementaire: getGroupeParlementaireRefBySigle(
+        data.SigleGroupePolitique
+      )
+    })
+  });
 }
 
 export function createAutreMandat(data) {
