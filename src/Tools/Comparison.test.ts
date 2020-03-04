@@ -91,14 +91,6 @@ describe("CompareLists function", () => {
     expect(res[0].Action).toBe(Action.Create);
   });
 
-  it("should compare empty with 1 item, return one diff ", () => {
-    const listA = [{ id: "a" }];
-    const listB = [];
-    const res = CompareLists<SampleData>(listA, listB, compareFunction, "id");
-    expect(res.length).toBe(1);
-    expect(res[0].Action).toBe(Action.Create);
-  });
-
   it("should compare 2 identical lists, return no diff ", () => {
     const listA = [{ id: "a" }];
     const listB = [{ id: "a" }];
