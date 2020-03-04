@@ -178,34 +178,47 @@ export function createAdresse(data: Types.Canonical.Adresse) {
 
 export function updateAdresse(data: Types.Canonical.Adresse) {
   return Map(
-    Paginate(Match(Index("unique_Adresse_AdresseComplete"), data.AdresseComplete)),
+    Paginate(
+      Match(Index("unique_Adresse_AdresseComplete"), data.AdresseComplete)
+    ),
     Lambda(
       "X",
       Update(Var("X"), {
-        data,
+        data
       })
     )
   );
 }
 
-export function createAdresseDeputeRelationLink(slug: String, adresseComplete: String) {
+export function createAdresseDeputeRelationLink(
+  slug: String,
+  adresseComplete: String
+) {
   return Create(Collection("adresse_Deputes"), {
     data: {
-      adresseID: Select("ref", Get(Match(Index("unique_Adresse_AdresseComplete"), adresseComplete))),
-      deputeID: Select("ref", Get(Match(Index("unique_Depute_Slug"), slug))),
+      adresseID: Select(
+        "ref",
+        Get(Match(Index("unique_Adresse_AdresseComplete"), adresseComplete))
+      ),
+      deputeID: Select("ref", Get(Match(Index("unique_Depute_Slug"), slug)))
     }
   });
 }
 
-export function removeAdresseDeputeRelationLink(slug: String, adresseComplete: String) {
+export function removeAdresseDeputeRelationLink(
+  slug: String,
+  adresseComplete: String
+) {
   return Map(
     Paginate(
       Match(Index("adresse_Deputes_by_adresse_and_depute"), [
-        Select("ref", Get(Match(Index("unique_Adresse_AdresseComplete"), adresseComplete))),
-        Select("ref", Get(Match(Index("unique_Depute_Slug"), slug))),
+        Select(
+          "ref",
+          Get(Match(Index("unique_Adresse_AdresseComplete"), adresseComplete))
+        ),
+        Select("ref", Get(Match(Index("unique_Depute_Slug"), slug)))
       ])
     ),
     Lambda("X", Delete(Var("X")))
   );
 }
-

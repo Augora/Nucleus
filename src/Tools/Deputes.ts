@@ -1,6 +1,6 @@
 import faunadb, { values } from "faunadb";
 import axios from "axios";
-import { from, merge } from "rxjs";
+import { from } from "rxjs";
 import { mergeMap } from "rxjs/operators";
 
 import { getDeputes, createDepute, updateDeputeByRef } from "./Refs";
@@ -20,8 +20,6 @@ export function manageDeputes(client: faunadb.Client) {
         .get(`https://www.nosdeputes.fr/deputes/json`)
         .then(res => res.data.deputes.map(d => d.depute))
         .then(deputes => {
-          // console.log("Number of deputes on NosDeputes.fr:", deputes.length);
-          // console.log("Number of deputes on FaunaDB:", rd_acts.length);
           const ld_acts = deputes.map(d => MapDepute(d));
           const res = CompareLists(
             ld_acts,
@@ -33,38 +31,50 @@ export function manageDeputes(client: faunadb.Client) {
           return from(res)
             .pipe(
               mergeMap((action: DiffType<Types.Canonical.Depute>) => {
-                // console.log(action);
                 if (action.Action === Action.Create) {
-                  // console.log("Create:", action.Data);
                   return client
                     .query(createDepute(action.Data))
                     .then((ret: any) => {
                       console.log("Inserted depute:", ret.data);
                       return Promise.all([
                         manageActivitesByDeputeID(action.Data.Slug, client),
-                        manageAdressesByDeputeID(action.Data.Slug, client, action.Data.Adresses)
+                        manageAdressesByDeputeID(
+                          action.Data.Slug,
+                          client,
+                          action.Data.Adresses
+                        )
                       ]);
                     });
                 } else if (action.Action === Action.Update) {
-                  // console.log("Update:", action.Data);
                   return client
                     .query(updateDeputeByRef(action.Data))
                     .then((ret: any) => {
-                      console.log("Updated depute:", ret.data);
+                      console.log(
+                        "Updated depute:",
+                        action.Data,
+                        "to",
+                        ret.data
+                      );
                       return Promise.all([
                         manageActivitesByDeputeID(action.Data.Slug, client),
-                        manageAdressesByDeputeID(action.Data.Slug, client, action.Data.Adresses)
+                        manageAdressesByDeputeID(
+                          action.Data.Slug,
+                          client,
+                          action.Data.Adresses
+                        )
                       ]);
                     });
                 } else if (action.Action === Action.Remove) {
-                  // console.log("Remove:", action.Data);
                   // TODO: Think about this kind of cases.
                   return Promise.resolve();
                 } else if (action.Action === Action.None) {
-                  // console.log("None:", action.Data);
                   return Promise.all([
                     manageActivitesByDeputeID(action.Data.Slug, client),
-                    manageAdressesByDeputeID(action.Data.Slug, client, action.Data.Adresses)
+                    manageAdressesByDeputeID(
+                      action.Data.Slug,
+                      client,
+                      action.Data.Adresses
+                    )
                   ]);
                 }
               }, 1)
