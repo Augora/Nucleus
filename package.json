@@ -12,13 +12,12 @@
     "rxjs": "^6.5.4",
     "ts-jest": "^25.2.0",
     "ts-node": "^8.6.2",
-    "typescript": "^3.7.4",
-    "cross-fetch": "^3.0.4"
+    "typescript": "^3.7.4"
   },
   "devDependencies": {
     "@types/jest": "^25.1.1",
-    "@types/lodash": "^4.14.149",
-    "@types/node": "^13.7.0"
+    "@types/node": "^13.7.0",
+    "@types/lodash": "^4.14.149"
   },
   "scripts": {
     "start": "ts-node ./src/index.ts",
