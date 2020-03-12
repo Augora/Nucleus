@@ -6,8 +6,11 @@ import { mergeMap } from "rxjs/operators";
 import { getDeputes, createDepute, updateDeputeByRef } from "./Refs";
 import { MapDepute, areTheSameDeputes } from "../Mappings/Depute";
 import { CompareLists, Action, DiffType } from "../Tools/Comparison";
-import { manageActivitesByDeputeID } from "./Activites";
-import { manageAdressesByDeputeID } from "./Adresse";
+import { manageActivites } from "./Activites";
+import { manageAdresses } from "./Adresse";
+import { manageAnciensMandats } from "./AnciensMandat";
+import { types } from "util";
+import { CombineLatestOperator } from "rxjs/internal/observable/combineLatest";
 
 export function manageDeputes(client: faunadb.Client) {
   return client
@@ -19,7 +22,7 @@ export function manageDeputes(client: faunadb.Client) {
       return axios
         .get(`https://www.nosdeputes.fr/deputes/json`)
         .then(res => res.data.deputes.map(d => d.depute))
-        .then(deputes => {
+        .then((deputes: Types.External.NosDeputesFR.Depute[]) => {
           const ld_acts = deputes.map(d => MapDepute(d));
           const res = CompareLists(
             ld_acts,
@@ -31,17 +34,28 @@ export function manageDeputes(client: faunadb.Client) {
           return from(res)
             .pipe(
               mergeMap((action: DiffType<Types.Canonical.Depute>) => {
+                console.log("Processing", action.Data.Slug);
+                const currentDeputeFromAPI = deputes.find(
+                  d => d.slug === action.Data.Slug
+                );
                 if (action.Action === Action.Create) {
                   return client
                     .query(createDepute(action.Data))
                     .then((ret: any) => {
                       console.log("Inserted depute:", ret.data);
                       return Promise.all([
-                        manageActivitesByDeputeID(action.Data.Slug, client),
-                        manageAdressesByDeputeID(
+                        manageActivites(action.Data.Slug, client),
+                        manageAdresses(
                           action.Data.Slug,
                           client,
                           action.Data.Adresses
+                        ),
+                        manageAnciensMandats(
+                          action.Data.Slug,
+                          client,
+                          currentDeputeFromAPI.anciens_mandats.map(
+                            am => am.mandat
+                          )
                         )
                       ]);
                     });
@@ -56,11 +70,18 @@ export function manageDeputes(client: faunadb.Client) {
                         ret.data
                       );
                       return Promise.all([
-                        manageActivitesByDeputeID(action.Data.Slug, client),
-                        manageAdressesByDeputeID(
+                        manageActivites(action.Data.Slug, client),
+                        manageAdresses(
                           action.Data.Slug,
                           client,
                           action.Data.Adresses
+                        ),
+                        manageAnciensMandats(
+                          action.Data.Slug,
+                          client,
+                          currentDeputeFromAPI.anciens_mandats.map(
+                            am => am.mandat
+                          )
                         )
                       ]);
                     });
@@ -68,12 +89,20 @@ export function manageDeputes(client: faunadb.Client) {
                   // TODO: Think about this kind of cases.
                   return Promise.resolve();
                 } else if (action.Action === Action.None) {
+                  console.log("Nothing to do on", action.Data.Slug);
                   return Promise.all([
-                    manageActivitesByDeputeID(action.Data.Slug, client),
-                    manageAdressesByDeputeID(
+                    manageActivites(action.Data.Slug, client),
+                    manageAdresses(
                       action.Data.Slug,
                       client,
                       action.Data.Adresses
+                    ),
+                    manageAnciensMandats(
+                      action.Data.Slug,
+                      client,
+                      currentDeputeFromAPI.anciens_mandats
+                        .map(am => am.mandat)
+                        .filter(am => am.split(" / ")[1] !== "")
                     )
                   ]);
                 }

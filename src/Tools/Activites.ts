@@ -13,10 +13,7 @@ import {
 import { MapActivites, areTheSameActivites } from "../Mappings/Depute";
 import { CompareLists, Action, DiffType } from "../Tools/Comparison";
 
-export function manageActivitesByDeputeID(
-  slug: String,
-  client: faunadb.Client
-) {
+export function manageActivites(slug: String, client: faunadb.Client) {
   return client
     .query(getActivitesByDeputeSlug(slug))
     .then((ret: values.Document<values.Document<Types.Canonical.Activite>[]>) =>

@@ -31,7 +31,14 @@ export function MapDepute(
     URLPhotoAssembleeNationnale: `http://www2.assemblee-nationale.fr/static/tribun/15/photos/${depute.id_an}.jpg`,
     SitesWeb: depute.sites_web.map(s => s.site),
     Emails: depute.emails.map(e => e.email),
-    Adresses: depute.adresses.map(a => a.adresse).filter(a => !a.startsWith("Sur rendez-vous") && !a.startsWith("Varsovie/Konstancin") && !a.startsWith("Allemagne et Autriche")),
+    Adresses: depute.adresses
+      .map(a => a.adresse)
+      .filter(
+        a =>
+          !a.startsWith("Sur rendez-vous") &&
+          !a.startsWith("Varsovie/Konstancin") &&
+          !a.startsWith("Allemagne et Autriche")
+      ),
     Collaborateurs: depute.collaborateurs.map(c => c.collaborateur)
   };
 }
@@ -48,13 +55,14 @@ export function MapAutreMandat(
 }
 
 export function MapAncienMandat(
-  autreMandat: Types.External.NosDeputesFR.AncienMandat
-) {
-  const splittedMandat = autreMandat.mandat.split(" / ");
+  ancienMandat: String
+): Types.Canonical.AncienMandat {
+  const [dateDebut, dateFin, intitule] = ancienMandat.split(" / ");
   return {
-    DateDeDebut: moment(splittedMandat[0], "dd/MM/yyyy").format(),
-    DateDeFin: moment(splittedMandat[1], "dd/MM/yyyy").format(),
-    Intitule: splittedMandat[2]
+    AncienMandatComplet: ancienMandat,
+    DateDeDebut: moment(dateDebut, "dd/MM/yyyy").format(),
+    DateDeFin: moment(dateFin, "dd/MM/yyyy").format(),
+    Intitule: intitule
   };
 }
 
@@ -146,7 +154,10 @@ export function MapAdresse(adresse: String): Types.Canonical.Adresse {
   const TelephoneCleaned = Telephone
     ? _.replace(Telephone, /[\.\ ]+/g, "")
     : Telephone;
-  const CodePostal = CPRegex.exec(adresse.valueOf()).length > 0 ? CPRegex.exec(adresse.valueOf())[1] : undefined;
+  const CodePostal =
+    CPRegex.exec(adresse.valueOf()).length > 0
+      ? CPRegex.exec(adresse.valueOf())[1]
+      : undefined;
   return {
     Adresse,
     CodePostal,
@@ -155,9 +166,26 @@ export function MapAdresse(adresse: String): Types.Canonical.Adresse {
   };
 }
 
-export function areTheSameAdresses(adA: Types.Canonical.Adresse, adB: Types.Canonical.Adresse): Boolean {
-  return adA.AdresseComplete === adB.AdresseComplete
-    && adA.Adresse === adB.Adresse
-    && adA.CodePostal === adB.CodePostal
-    && adA.Telephone === adB.Telephone;
+export function areTheSameAdresses(
+  adA: Types.Canonical.Adresse,
+  adB: Types.Canonical.Adresse
+): Boolean {
+  return (
+    adA.AdresseComplete === adB.AdresseComplete &&
+    adA.Adresse === adB.Adresse &&
+    adA.CodePostal === adB.CodePostal &&
+    adA.Telephone === adB.Telephone
+  );
+}
+
+export function areTheSameAnciensMandats(
+  amA: Types.Canonical.AncienMandat,
+  amB: Types.Canonical.AncienMandat
+): Boolean {
+  return (
+    amA.AncienMandatComplet === amB.AncienMandatComplet &&
+    amA.DateDeDebut === amB.DateDeDebut &&
+    amA.DateDeFin === amB.DateDeFin &&
+    amA.Intitule === amB.Intitule
+  );
 }

@@ -13,7 +13,7 @@ import {
 import { MapAdresse, areTheSameAdresses } from "../Mappings/Depute";
 import { CompareLists, Action, DiffType } from "../Tools/Comparison";
 
-export function manageAdressesByDeputeID(
+export function manageAdresses(
   slug: String,
   client: faunadb.Client,
   adresses: String[]
@@ -22,6 +22,7 @@ export function manageAdressesByDeputeID(
   return concat(
     from(ld_ads).pipe(
       mergeMap((adresse: Types.Canonical.Adresse) => {
+        console.log("Processing", adresse);
         return client
           .query(getAdressByAdresseComplete(adresse.AdresseComplete))
           .then((ret: values.Document<Types.Canonical.Adresse>) => ret.data)
@@ -31,6 +32,8 @@ export function manageAdressesByDeputeID(
               return client.query(updateAdresse(adresse)).then((ret: any) => {
                 console.log("Updated adresse:", ret);
               });
+            } else {
+              console.log("Nothing to do on", adresse);
             }
           })
           .catch(e => {
@@ -81,11 +84,12 @@ export function manageAdressesByDeputeID(
                 });
             } else {
               //Nothing to do
+              console.log("Nothing to do at all on :", action.Data);
               return Promise.resolve();
             }
           }, 1)
         );
       }, 1)
     )
-  ).subscribe(f => f);
+  ).toPromise();
 }

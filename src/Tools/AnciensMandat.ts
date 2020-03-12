@@ -1,83 +1,123 @@
-import faunadb from "faunadb";
+import faunadb, { values } from "faunadb";
+import { from, concat } from "rxjs";
+import { mergeMap } from "rxjs/operators";
 
 import {
-  getDeputeRefByDeputeSlug,
+  getAncienMandatByAncienMandatComplet,
+  updateAncienMandat,
   createAncienMandat,
-  getAnciensMandatByDeputeID,
-  deleteAncienMandatByID
+  getAnciensMandatByDeputeSlug,
+  createAncienMandatDeputeRelationLink,
+  removeAncienMandatDeputeRelationLink
 } from "./Refs";
-import { MapAncienMandat } from "../Mappings/Depute";
+import { MapAncienMandat, areTheSameAnciensMandats } from "../Mappings/Depute";
+import { CompareLists, Action, DiffType } from "../Tools/Comparison";
 
-export function manageAnciensMandatsByDeputeID(
-  id: string,
-  slug: string,
-  anciensMandats: Types.External.NosDeputesFR.AncienMandat[],
-  client: faunadb.Client
+export function manageAnciensMandats(
+  slug: String,
+  client: faunadb.Client,
+  anciensMandats: String[]
 ) {
-  return client
-    .query(getAnciensMandatByDeputeID(id))
-    .then((ret: any) => ret.data)
-    .then(ams => {
-      const anciensMandatsToCreate = anciensMandats
-        .map(am => MapAncienMandat(am))
-        .filter(ld_am => {
-          return (
-            ams
-              .map(rd_am => rd_am.data)
-              .find(rd_am => {
-                return (
-                  rd_am.DateDeDebut === ld_am.DateDeDebut &&
-                  rd_am.DateDeFin === ld_am.DateDeFin &&
-                  rd_am.Intitule === ld_am.Intitule
-                );
-              }) === undefined
-          );
-        });
-      const anciensMandatsToDelete = ams
-        .filter(rd_am => {
-          return (
-            anciensMandats
-              .map(am => MapAncienMandat(am))
-              .find(ld_am => {
-                return (
-                  rd_am.data.DateDeDebut === ld_am.DateDeDebut &&
-                  rd_am.data.DateDeFin === ld_am.DateDeFin &&
-                  rd_am.data.Intitule === ld_am.Intitule
-                );
-              }) === undefined
-          );
-        })
-        .map(am => am.ref.id);
-      const anciensMandatsToCreatePromise = Promise.all(
-        anciensMandatsToCreate.map(am => {
-          return client
-            .query(
-              createAncienMandat(
-                Object.assign({}, am, {
-                  Depute: getDeputeRefByDeputeSlug(slug)
-                })
-              )
+  const ld_ams = anciensMandats.map(am => MapAncienMandat(am));
+  return concat(
+    from(ld_ams).pipe(
+      mergeMap((ancienMandat: Types.Canonical.AncienMandat) => {
+        console.log("start", ancienMandat);
+        return client
+          .query(
+            getAncienMandatByAncienMandatComplet(
+              ancienMandat.AncienMandatComplet
             )
-            .then((ret: any) => {
-              console.log("Inserted mandat:", ret.data);
-            })
-            .catch(e => console.error(e));
+          )
+          .then(
+            (ret: values.Document<Types.Canonical.AncienMandat>) => ret.data
+          )
+          .then(ancienMandatFromFauna => {
+            if (
+              !areTheSameAnciensMandats(ancienMandat, ancienMandatFromFauna)
+            ) {
+              console.log(
+                "Updating ancien mandat:",
+                ancienMandatFromFauna,
+                "to",
+                ancienMandat
+              );
+              return client
+                .query(updateAncienMandat(ancienMandat))
+                .then((ret: any) => {
+                  console.log("Updated ancien mandat:", ret);
+                });
+            } else {
+              console.log("nothing to do", ancienMandat);
+              return Promise.resolve();
+            }
+          })
+          .catch(e => {
+            console.error(e);
+            console.log("Creating ancien mandat:", ancienMandat);
+            return client
+              .query(createAncienMandat(ancienMandat))
+              .then((ret: any) => {
+                console.log("Created ancien mandat:", ret);
+              });
+          });
+      }, 1)
+    ),
+    from(
+      client
+        .query(getAnciensMandatByDeputeSlug(slug))
+        .then(
+          (
+            ret: values.Document<
+              values.Document<Types.Canonical.AncienMandat>[]
+            >
+          ) => ret.data.map(e => e.data)
+        )
+        .then(rd_ams => {
+          console.log(ld_ams, rd_ams);
+          return CompareLists(
+            ld_ams,
+            rd_ams,
+            areTheSameAnciensMandats,
+            "AncienMandatComplet"
+          );
         })
-      );
-      const anciensMandatsToDeletePromise = Promise.all(
-        anciensMandatsToDelete.map(am_id => {
-          return client
-            .query(deleteAncienMandatByID(am_id))
-            .then((ret: any) => {
-              console.log("Deleted mandat:", ret.data);
-            })
-            .catch(e => console.error(e));
-        })
-      );
-      return Promise.all([
-        anciensMandatsToCreatePromise,
-        anciensMandatsToDeletePromise
-      ]);
-    })
-    .catch(e => e);
+    ).pipe(
+      mergeMap((actions: DiffType<Types.Canonical.AncienMandat>[]) => {
+        return from(actions).pipe(
+          mergeMap((action: DiffType<Types.Canonical.AncienMandat>) => {
+            if (action.Action === Action.Create) {
+              console.log("Creating ancien mandat link:", action.Data);
+              return client
+                .query(
+                  createAncienMandatDeputeRelationLink(
+                    slug,
+                    action.Data.AncienMandatComplet
+                  )
+                )
+                .then((ret: any) => {
+                  console.log("Created ancien mandat link:", ret);
+                });
+            } else if (action.Action === Action.Remove) {
+              console.log("Removing ancien mandat link:", action.Data);
+              return client
+                .query(
+                  removeAncienMandatDeputeRelationLink(
+                    slug,
+                    action.Data.AncienMandatComplet
+                  )
+                )
+                .then((ret: any) => {
+                  console.log("Removed ancien mandat link:", ret.data);
+                });
+            } else {
+              //Nothing to do
+              console.log("nothing to do at all.");
+              return Promise.resolve();
+            }
+          }, 1)
+        );
+      }, 1)
+    )
+  ).toPromise();
 }
