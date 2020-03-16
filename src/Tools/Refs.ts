@@ -5,7 +5,6 @@ const {
   Index,
   Select,
   Update,
-  Ref,
   Collection,
   Create,
   Map,
@@ -57,25 +56,88 @@ export function createDepute(data) {
   });
 }
 
-export function createAutreMandat(data) {
+export function createAutreMandat(data: Types.Canonical.AutreMandat) {
   return Create(Collection("AutreMandat"), {
     data
   });
 }
 
-export function getAutresMandatByDeputeID(id: string) {
+export function updateAutreMandat(data: Types.Canonical.AutreMandat) {
+  return Map(
+    Paginate(
+      Match(
+        Index("unique_AutreMandat_AutreMandatComplet"),
+        data.AutreMandatComplet
+      )
+    ),
+    Lambda(
+      "X",
+      Update(Var("X"), {
+        data
+      })
+    )
+  );
+}
+
+export function getAutreMandatByAncienMandatComplet(ancienMandat: String) {
+  return Get(
+    Match(Index("unique_AutreMandat_AutreMandatComplet"), ancienMandat)
+  );
+}
+
+export function getAutresMandatByDeputeSlug(slug: String) {
   return Map(
     Paginate(
       Match(
         Index("autreMandat_Depute_by_depute"),
-        Ref(Collection("Depute"), id)
+        getDeputeRefByDeputeSlug(slug)
       )
     ),
     Lambda("X", Get(Var("X")))
   );
 }
-export function deleteAutreMandatByID(id: string) {
-  return Delete(Ref(Collection("AutreMandat"), id));
+
+export function createAutreMandatDeputeRelationLink(
+  slug: String,
+  ancienMandatComplet: String
+) {
+  return Create(Collection("autreMandat_Deputes"), {
+    data: {
+      ancienMandatID: Select(
+        "ref",
+        Get(
+          Match(
+            Index("unique_AutreMandat_AutreMandatComplet"),
+            ancienMandatComplet
+          )
+        )
+      ),
+      deputeID: Select("ref", Get(Match(Index("unique_Depute_Slug"), slug)))
+    }
+  });
+}
+
+export function removeAutreMandatDeputeRelationLink(
+  slug: String,
+  ancienMandatComplet: String
+) {
+  return Map(
+    Paginate(
+      Match(Index("autreMandat_Deputes_by_autreMandat_and_depute"), [
+        Select(
+          "ref",
+          Get(
+            Match(
+              Index("unique_AutreMandat_AutreMandatComplet"),
+              ancienMandatComplet
+            )
+          )
+        ),
+        Select("ref", Get(Match(Index("unique_Depute_Slug"), slug)))
+      ])
+    ),
+    Lambda("X", Delete(Var("X")))
+  );
 }
 
 export function createAncienMandat(data: Types.Canonical.AncienMandat) {
@@ -145,7 +207,7 @@ export function removeAncienMandatDeputeRelationLink(
 ) {
   return Map(
     Paginate(
-      Match(Index("ancienMandat_Deputes_by_adresse_and_depute"), [
+      Match(Index("ancienMandat_Deputes_by_ancienMandat_and_depute"), [
         Select(
           "ref",
           Get(

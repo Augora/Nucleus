@@ -9,8 +9,7 @@ import { CompareLists, Action, DiffType } from "../Tools/Comparison";
 import { manageActivites } from "./Activites";
 import { manageAdresses } from "./Adresse";
 import { manageAnciensMandats } from "./AnciensMandat";
-import { types } from "util";
-import { CombineLatestOperator } from "rxjs/internal/observable/combineLatest";
+import { manageAutresMandats } from "./AutresMandat";
 
 export function manageDeputes(client: faunadb.Client) {
   return client
@@ -56,6 +55,13 @@ export function manageDeputes(client: faunadb.Client) {
                           currentDeputeFromAPI.anciens_mandats.map(
                             am => am.mandat
                           )
+                        ),
+                        manageAutresMandats(
+                          action.Data.Slug,
+                          client,
+                          currentDeputeFromAPI.autres_mandats.map(
+                            am => am.mandat
+                          )
                         )
                       ]);
                     });
@@ -82,6 +88,13 @@ export function manageDeputes(client: faunadb.Client) {
                           currentDeputeFromAPI.anciens_mandats.map(
                             am => am.mandat
                           )
+                        ),
+                        manageAutresMandats(
+                          action.Data.Slug,
+                          client,
+                          currentDeputeFromAPI.autres_mandats.map(
+                            am => am.mandat
+                          )
                         )
                       ]);
                     });
@@ -103,6 +116,11 @@ export function manageDeputes(client: faunadb.Client) {
                       currentDeputeFromAPI.anciens_mandats
                         .map(am => am.mandat)
                         .filter(am => am.split(" / ")[1] !== "")
+                    ),
+                    manageAutresMandats(
+                      action.Data.Slug,
+                      client,
+                      currentDeputeFromAPI.autres_mandats.map(am => am.mandat)
                     )
                   ]);
                 }

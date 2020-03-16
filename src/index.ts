@@ -6,6 +6,7 @@ import "./Types/Canonical/Activity";
 import "./Types/Canonical/Depute";
 import "./Types/Canonical/Adresse";
 import "./Types/Canonical/AncienMandat";
+import "./Types/Canonical/AutreMandat";
 
 const client = new faunadb.Client({
   secret: process.env.FAUNADB_TOKEN,

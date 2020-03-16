@@ -1,82 +1,115 @@
-import faunadb from "faunadb";
+import faunadb, { values } from "faunadb";
+import { from, concat } from "rxjs";
+import { mergeMap } from "rxjs/operators";
 
 import {
-  getDeputeRefByDeputeSlug,
+  getAutreMandatByAncienMandatComplet,
+  updateAutreMandat,
   createAutreMandat,
-  getAutresMandatByDeputeID,
-  deleteAutreMandatByID
+  getAutresMandatByDeputeSlug,
+  createAutreMandatDeputeRelationLink,
+  removeAutreMandatDeputeRelationLink
 } from "./Refs";
-import { MapAutreMandat } from "../Mappings/Depute";
+import { MapAutreMandat, areTheSameAutresMandats } from "../Mappings/Depute";
+import { CompareLists, Action, DiffType } from "../Tools/Comparison";
 
-export function manageAutresMandatsByDeputeID(
-  id: string,
-  slug: string,
-  autresMandats: Types.External.NosDeputesFR.AutreMandat[],
-  client: faunadb.Client
+export function manageAutresMandats(
+  slug: String,
+  client: faunadb.Client,
+  autresMandats: String[]
 ) {
-  return client
-    .query(getAutresMandatByDeputeID(id))
-    .then((ret: any) => ret.data)
-    .then(ams => {
-      const autresMandatsToCreate = autresMandats.filter(ld_am => {
-        return (
-          ams
-            .map(rd_am => rd_am.data)
-            .find(rd_am => {
-              return (
-                [rd_am.Localite, rd_am.Institution, rd_am.Intitule].join(
-                  " / "
-                ) === ld_am.mandat
+  const ld_ams = autresMandats.map(am => MapAutreMandat(am));
+  return concat(
+    from(ld_ams).pipe(
+      mergeMap((autreMandat: Types.Canonical.AutreMandat) => {
+        console.log("start", autreMandat);
+        return client
+          .query(
+            getAutreMandatByAncienMandatComplet(autreMandat.AutreMandatComplet)
+          )
+          .then((ret: values.Document<Types.Canonical.AutreMandat>) => ret.data)
+          .then(autreMandatFromFauna => {
+            if (!areTheSameAutresMandats(autreMandat, autreMandatFromFauna)) {
+              console.log(
+                "Updating autre mandat:",
+                autreMandatFromFauna,
+                "to",
+                autreMandat
               );
-            }) === undefined
-        );
-      });
-      const autresMandatsToDelete = ams
-        .filter(rd_am => {
-          return (
-            autresMandats.find(ld_am => {
-              return (
-                [
-                  rd_am.data.Localite,
-                  rd_am.data.Institution,
-                  rd_am.data.Intitule
-                ].join(" / ") === ld_am.mandat
-              );
-            }) === undefined
+              return client
+                .query(updateAutreMandat(autreMandat))
+                .then((ret: any) => {
+                  console.log("Updated autre mandat:", ret);
+                });
+            } else {
+              console.log("nothing to do", autreMandat);
+              return Promise.resolve();
+            }
+          })
+          .catch(e => {
+            console.error(e);
+            console.log("Creating autre mandat:", autreMandat);
+            return client
+              .query(createAutreMandat(autreMandat))
+              .then((ret: any) => {
+                console.log("Created autre mandat:", ret);
+              });
+          });
+      }, 1)
+    ),
+    from(
+      client
+        .query(getAutresMandatByDeputeSlug(slug))
+        .then(
+          (
+            ret: values.Document<values.Document<Types.Canonical.AutreMandat>[]>
+          ) => ret.data.map(e => e.data)
+        )
+        .then(rd_ams => {
+          console.log(ld_ams, rd_ams);
+          return CompareLists(
+            ld_ams,
+            rd_ams,
+            areTheSameAutresMandats,
+            "AutreMandatComplet"
           );
         })
-        .map(am => am.ref.id);
-      const autresMandatsToCreatePromise = Promise.all(
-        autresMandatsToCreate.map(am => {
-          const mappedAutreMandat = MapAutreMandat(am);
-          return client
-            .query(
-              createAutreMandat(
-                Object.assign({}, mappedAutreMandat, {
-                  Depute: getDeputeRefByDeputeSlug(slug)
-                })
-              )
-            )
-            .then((ret: any) => {
-              console.log("Inserted mandat:", ret.data);
-            })
-            .catch(e => console.error(e));
-        })
-      );
-      const autresMandatsToDeletePromise = Promise.all(
-        autresMandatsToDelete.map(am_id => {
-          return client
-            .query(deleteAutreMandatByID(am_id))
-            .then((ret: any) => {
-              console.log("Deleted mandat:", ret.data);
-            })
-            .catch(e => console.error(e));
-        })
-      );
-      return Promise.all([
-        autresMandatsToDeletePromise,
-        autresMandatsToCreatePromise
-      ]);
-    })
-    .catch(e => e);
+    ).pipe(
+      mergeMap((actions: DiffType<Types.Canonical.AutreMandat>[]) => {
+        return from(actions).pipe(
+          mergeMap((action: DiffType<Types.Canonical.AutreMandat>) => {
+            if (action.Action === Action.Create) {
+              console.log("Creating autre mandat link:", action.Data);
+              return client
+                .query(
+                  createAutreMandatDeputeRelationLink(
+                    slug,
+                    action.Data.AutreMandatComplet
+                  )
+                )
+                .then((ret: any) => {
+                  console.log("Created autre mandat link:", ret);
+                });
+            } else if (action.Action === Action.Remove) {
+              console.log("Removing autre mandat link:", action.Data);
+              return client
+                .query(
+                  removeAutreMandatDeputeRelationLink(
+                    slug,
+                    action.Data.AutreMandatComplet
+                  )
+                )
+                .then((ret: any) => {
+                  console.log("Removed autre mandat link:", ret.data);
+                });
+            } else {
+              //Nothing to do
+              console.log("nothing to do at all.");
+              return Promise.resolve();
+            }
+          }, 1)
+        );
+      }, 1)
+    )
+  ).toPromise();
 }

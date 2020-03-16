@@ -44,13 +44,14 @@ export function MapDepute(
 }
 
 export function MapAutreMandat(
-  autreMandat: Types.External.NosDeputesFR.AutreMandat
-) {
-  const splittedMandat = autreMandat.mandat.split(" / ");
+  autreMandat: String
+): Types.Canonical.AutreMandat {
+  const [Localite, Institution, Intitule] = autreMandat.split(" / ");
   return {
-    Localite: splittedMandat[0],
-    Institution: splittedMandat[1],
-    Intitule: splittedMandat[2]
+    AutreMandatComplet: autreMandat,
+    Localite,
+    Institution,
+    Intitule
   };
 }
 
@@ -187,5 +188,17 @@ export function areTheSameAnciensMandats(
     amA.DateDeDebut === amB.DateDeDebut &&
     amA.DateDeFin === amB.DateDeFin &&
     amA.Intitule === amB.Intitule
+  );
+}
+
+export function areTheSameAutresMandats(
+  amA: Types.Canonical.AutreMandat,
+  amB: Types.Canonical.AutreMandat
+): Boolean {
+  return (
+    amA.AutreMandatComplet === amB.AutreMandatComplet &&
+    amA.Institution === amB.Institution &&
+    amA.Intitule === amB.Intitule &&
+    amA.Localite === amB.Localite
   );
 }
