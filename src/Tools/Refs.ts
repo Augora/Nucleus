@@ -89,7 +89,7 @@ export function getAutresMandatByDeputeSlug(slug: String) {
   return Map(
     Paginate(
       Match(
-        Index("autreMandat_Depute_by_depute"),
+        Index("autreMandat_Deputes_by_depute"),
         getDeputeRefByDeputeSlug(slug)
       )
     ),
@@ -103,7 +103,7 @@ export function createAutreMandatDeputeRelationLink(
 ) {
   return Create(Collection("autreMandat_Deputes"), {
     data: {
-      ancienMandatID: Select(
+      autreMandatID: Select(
         "ref",
         Get(
           Match(
