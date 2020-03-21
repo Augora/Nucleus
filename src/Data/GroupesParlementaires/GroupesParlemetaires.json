@@ -1,79 +1,65 @@
 [
   {
-    "Sigle": "LFI",
-    "NomComplet": "La France insoumise",
-    "Couleur": "hsl(11, 66%, 47%)",
-    "URLImage": "",
-    "Ordre": 0
-  },
-  {
     "Sigle": "GDR",
     "NomComplet": "Gauche démocrate et républicaine",
     "Couleur": "hsl(0, 100%, 43%)",
     "URLImage": "",
+    "Ordre": 0
+  },
+  {
+    "Sigle": "LFI",
+    "NomComplet": "La France insoumise",
+    "Couleur": "hsl(11, 66%, 47%)",
+    "URLImage": "",
     "Ordre": 1
-  },
-  {
-    "Sigle": "LT",
-    "NomComplet": "Libertés et Territoires",
-    "Couleur": "hsl(0, 0%, 50%)",
-    "URLImage": "",
-    "Ordre": 2
-  },
-  {
-    "Sigle": "NG",
-    "NomComplet": "Non inscrits",
-    "Couleur": "hsl(0, 0%, 80%)",
-    "URLImage": "",
-    "Ordre": 3
-  },
-  {
-    "Sigle": "NI",
-    "NomComplet": "Non inscrits",
-    "Couleur": "hsl(0, 0%, 80%)",
-    "URLImage": "",
-    "Ordre": 4
   },
   {
     "Sigle": "SOC",
     "NomComplet": "Socialistes et apparentés",
     "Couleur": "hsl(354, 84%, 43%)",
     "URLImage": "",
-    "Ordre": 5
+    "Ordre": 2
   },
   {
     "Sigle": "LREM",
     "NomComplet": "La République En Marche",
     "Couleur": "hsl(199, 100%, 58%)",
     "URLImage": "",
-    "Ordre": 6
+    "Ordre": 3
+  },
+  {
+    "Sigle": "LT",
+    "NomComplet": "Libertés et Territoires",
+    "Couleur": "hsl(0, 0%, 50%)",
+    "URLImage": "",
+    "Ordre": 4
   },
   {
     "Sigle": "MODEM",
     "NomComplet": "Mouvement Démocrate et apparentés",
     "Couleur": "hsl(25, 81%, 54%)",
     "URLImage": "",
-    "Ordre": 7
+    "Ordre": 5
   },
   {
     "Sigle": "UAI",
     "NomComplet": "UDI, Agir et Indépendants",
     "Couleur": "hsl(194, 81%, 55%)",
     "URLImage": "",
-    "Ordre": 8
-  },
-  {
-    "Sigle": "UDI",
-    "NomComplet": "Union des démocrates et indépendants",
-    "Couleur": "hsl(261, 29%, 48%)",
-    "URLImage": "",
-    "Ordre": 9
+    "Ordre": 6
   },
   {
     "Sigle": "LR",
     "NomComplet": "Les Républicains",
     "Couleur": "hsl(223, 45%, 23%)",
     "URLImage": "",
-    "Ordre": 10
+    "Ordre": 7
+  },
+  {
+    "Sigle": "NI",
+    "NomComplet": "Non inscrits",
+    "Couleur": "hsl(0, 0%, 80%)",
+    "URLImage": "",
+    "Ordre": 8
   }
 ]
