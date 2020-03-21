@@ -1,30 +1,6 @@
 namespace Types.External.NosDeputesFR {
-  export interface SiteWeb {
-    site: string;
-  }
-
-  export interface Email {
-    email: string;
-  }
-
-  export interface Adresse {
-    adresse: string;
-  }
-
-  export interface Collaborateur {
-    collaborateur: string;
-  }
-
-  export interface AutreMandat {
-    mandat: string;
-  }
-
-  export interface AncienAutreMandat {
-    mandat: string;
-  }
-
-  export interface AncienMandat {
-    mandat: string;
+  export interface DeputeWrapper {
+    depute: Depute;
   }
 
   export interface Depute {
@@ -39,15 +15,20 @@ namespace Types.External.NosDeputesFR {
     nom_circo: string;
     num_circo: number;
     mandat_debut: string;
+    groupe: Groupe;
     groupe_sigle: string;
     parti_ratt_financier: string;
-    sites_web: SiteWeb[];
+    responsabilites: GroupesParlementaire[];
+    responsabilites_extra_parlementaires: GroupesParlementaire[];
+    groupes_parlementaires: GroupesParlementaire[];
+    historique_responsabilites: GroupesParlementaire[];
+    sites_web: SitesWeb[];
     emails: Email[];
-    adresses: Adresse[];
+    adresses: Adress[];
     collaborateurs: Collaborateur[];
-    autres_mandats: AutreMandat[];
-    anciens_autres_mandats: AncienAutreMandat[];
-    anciens_mandats: AncienMandat[];
+    autres_mandats: SMandat[];
+    anciens_autres_mandats: any[];
+    anciens_mandats: SMandat[];
     profession: string;
     place_en_hemicycle: string;
     url_an: string;
@@ -60,28 +41,34 @@ namespace Types.External.NosDeputesFR {
     ancien_depute?: number;
   }
 
-  export interface Activite {
-    periode: string;
-    fin: boolean;
-    labels: { [key: string]: string };
-    vacances: { [key: string]: number };
-    date_debut: Date;
-    date_debut_parl: Date;
-    date_fin: Date;
-    n_presences: NP;
-    n_participations: NP;
-    n_questions: { [key: string]: number };
-    presences_medi: PresencesMedi;
+  export interface Adress {
+    adresse: string;
   }
 
-  export interface NP {
-    commission: { [key: string]: number };
-    hemicycle: { [key: string]: number };
+  export interface SMandat {
+    mandat: string;
   }
 
-  export interface PresencesMedi {
-    commission: { [key: string]: number | string };
-    hemicycle: { [key: string]: number | string };
-    total: { [key: string]: number | string };
+  export interface Collaborateur {
+    collaborateur: string;
+  }
+
+  export interface Email {
+    email: string;
+  }
+
+  export interface Groupe {
+    organisme: string;
+    fonction: string;
+    debut_fonction: string;
+    fin_fonction?: string;
+  }
+
+  export interface GroupesParlementaire {
+    responsabilite: Groupe;
+  }
+
+  export interface SitesWeb {
+    site: string;
   }
 }

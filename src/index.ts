@@ -1,6 +1,5 @@
-import faunadb from "faunadb";
-
-import { manageDeputes } from "./Tools/Deputes";
+import { ManageDeputes } from "./Depute/Manager";
+import "./Types/External/NosDeputesFR/Deputes";
 import "./Types/External/NosDeputesFR/Depute";
 import "./Types/Canonical/Activity";
 import "./Types/Canonical/Depute";
@@ -8,9 +7,4 @@ import "./Types/Canonical/Adresse";
 import "./Types/Canonical/AncienMandat";
 import "./Types/Canonical/AutreMandat";
 
-const client = new faunadb.Client({
-  secret: process.env.FAUNADB_TOKEN,
-  timeout: 60
-});
-
-manageDeputes(client).then(() => console.log("The end."));
+ManageDeputes().then(() => console.log("The end."));

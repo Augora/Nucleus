@@ -17,6 +17,8 @@ namespace Types.Canonical {
     PlaceEnHemicycle: String;
     URLAssembleeNationnale: String;
     IDAssembleeNationnale: String;
+    URLAssembleeNationale: String;
+    IDAssembleeNationale: String;
     URLNosdeputes: String;
     URLNosdeputesAPI: String;
     NombreMandats: Number;
@@ -24,6 +26,7 @@ namespace Types.Canonical {
     EstEnMandat: Boolean;
     Age: Number;
     URLPhotoAssembleeNationnale: String;
+    URLPhotoAugora: String;
     SitesWeb: String[];
     Emails: String[];
     Adresses: String[];
