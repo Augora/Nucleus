@@ -19,7 +19,7 @@ jobs:
         run: yarn install
 
       - name: yarn start
-        run: yarn start > logs.txt
+        run: yarn start
         env:
           FAUNADB_TOKEN: ${{ secrets.FAUNADB_TOKEN_PRODUCTION }}
 
@@ -27,7 +27,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: logs
-          path: logs.txt
+          path: logs
 
       - name: Notify slack
         env:
