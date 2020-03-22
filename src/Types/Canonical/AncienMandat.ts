@@ -1,8 +1,8 @@
 namespace Types.Canonical {
   export interface AncienMandat {
-    AncienMandatComplet: String;
-    DateDeDebut: String;
-    DateDeFin: String;
-    Intitule: String;
+    AncienMandatComplet: string
+    DateDeDebut: string
+    DateDeFin: string
+    Intitule: string
   }
 }

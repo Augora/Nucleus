@@ -1,8 +1,8 @@
 namespace Types.Canonical {
   export interface Adresse {
-    AdresseComplete: String;
-    Adresse: String;
-    CodePostal: String;
-    Telephone: String;
+    AdresseComplete: string
+    Adresse: string
+    CodePostal: string
+    Telephone: string
   }
 }

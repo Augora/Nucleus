@@ -1,8 +1,8 @@
 namespace Types.Canonical {
   export interface AutreMandat {
-    AutreMandatComplet: String;
-    Localite: String;
-    Institution: String;
-    Intitule: String;
+    AutreMandatComplet: string
+    Localite: string
+    Institution: string
+    Intitule: string
   }
 }

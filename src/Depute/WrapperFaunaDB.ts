@@ -1,7 +1,7 @@
-import { GetProvidedFaunaDBClient } from "../Common/FaunaDBClient";
-import { GetLogger } from "../Common/Logger";
+import { GetProvidedFaunaDBClient } from '../Common/FaunaDBClient'
+import { GetLogger } from '../Common/Logger'
 
-import { query, values } from "faunadb";
+import { query, values } from 'faunadb'
 const {
   Get,
   Match,
@@ -14,26 +14,26 @@ const {
   Paginate,
   Lambda,
   Var,
-  Documents
-} = query;
+  Documents,
+} = query
 
 export function GetDeputesFromFaunaDB() {
   return GetProvidedFaunaDBClient().query<
     values.Document<values.Document<Types.Canonical.Depute>[]>
   >(
     Map(
-      Paginate(Documents(Collection("Depute")), { size: 1000 }),
-      Lambda("X", Get(Var("X")))
+      Paginate(Documents(Collection('Depute')), { size: 1000 }),
+      Lambda('X', Get(Var('X')))
     )
-  );
+  )
 }
 
-export function getDeputeBySlug(slug: String) {
-  return Get(Match(Index("unique_Depute_Slug"), slug));
+export function getDeputeBySlug(slug: string) {
+  return Get(Match(Index('unique_Depute_Slug'), slug))
 }
 
-export function getDeputeRefByDeputeSlug(slug: String) {
-  return Select("ref", Get(Match(Index("unique_Depute_Slug"), slug)));
+export function getDeputeRefByDeputeSlug(slug: string) {
+  return Select('ref', Get(Match(Index('unique_Depute_Slug'), slug)))
 }
 
 export function UpdateDepute(data) {
@@ -41,23 +41,23 @@ export function UpdateDepute(data) {
     values.Document<values.Document<Types.Canonical.Depute>[]>
   >(
     Map(
-      Paginate(Match(Index("unique_Depute_Slug"), data.Slug)),
+      Paginate(Match(Index('unique_Depute_Slug'), data.Slug)),
       Lambda(
-        "X",
-        Update(Var("X"), {
+        'X',
+        Update(Var('X'), {
           data: Object.assign({}, data, {
             GroupeParlementaire: getGroupeParlementaireRefBySigle(
               data.SigleGroupePolitique
-            )
-          })
+            ),
+          }),
         })
       )
     )
-  );
+  )
 }
 
-function getGroupeParlementaireRefBySigle(sigle: String) {
-  return Select("ref", Get(Match(Index("GroupeParlementaire"), sigle)));
+function getGroupeParlementaireRefBySigle(sigle: string) {
+  return Select('ref', Get(Match(Index('GroupeParlementaire'), sigle)))
 }
 
 export function CreateDepute(
@@ -66,12 +66,12 @@ export function CreateDepute(
   return GetProvidedFaunaDBClient().query<
     values.Document<Types.Canonical.Depute>
   >(
-    Create(Collection("Depute"), {
+    Create(Collection('Depute'), {
       data: Object.assign({}, data, {
         GroupeParlementaire: getGroupeParlementaireRefBySigle(
           data.SigleGroupePolitique
-        )
-      })
+        ),
+      }),
     })
-  );
+  )
 }

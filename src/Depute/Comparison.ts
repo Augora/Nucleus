@@ -1,9 +1,9 @@
-import _ from "lodash";
+import _ from 'lodash'
 
 export function AreTheSameDeputes(
   depA: Types.Canonical.Depute,
   depB: Types.Canonical.Depute
-): Boolean {
+): boolean {
   return (
     depA.Slug === depB.Slug &&
     depA.Nom === depB.Nom &&
@@ -34,5 +34,5 @@ export function AreTheSameDeputes(
     _.difference(depA.Emails, depB.Emails).length === 0 &&
     _.difference(depA.Adresses, depB.Adresses).length === 0 &&
     _.difference(depA.Collaborateurs, depB.Collaborateurs).length === 0
-  );
+  )
 }

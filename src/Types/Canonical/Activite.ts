@@ -1,13 +1,13 @@
 namespace Types.Canonical {
   export interface Activite {
-    DateDeDebut: String;
-    DateDeFin: String;
-    NumeroDeSemaine: Number;
-    PresencesEnCommission: Number;
-    PresenceEnHemicycle: Number;
-    ParticipationsEnCommission: Number;
-    ParticipationEnHemicycle: Number;
-    Question: Number;
-    Vacances: Number;
+    DateDeDebut: string
+    DateDeFin: string
+    NumeroDeSemaine: number
+    PresencesEnCommission: number
+    PresenceEnHemicycle: number
+    ParticipationsEnCommission: number
+    ParticipationEnHemicycle: number
+    Question: number
+    Vacances: number
   }
 }

@@ -14,11 +14,11 @@ import {
   GetDeputesFromNosDeputesFR,
   GetDeputesBySlugFromNosDeputesFR
 } from "./WrapperNosDeputesFR";
-// import { manageActivites } from "../Tools/Activites";
-// import { manageAdresses } from "../Tools/Adresse";
-// import { manageAnciensMandats } from "../Tools/AnciensMandat";
-// import { manageAutresMandats } from "../Tools/AutresMandat";
-// import { GetProvidedFaunaDBClient } from "../Common/FaunaDBClient";
+import { manageActivites } from "../Tools/Activites";
+import { manageAdresses } from "../Tools/Adresse";
+import { manageAnciensMandats } from "../Tools/AnciensMandat";
+import { manageAutresMandats } from "../Tools/AutresMandat";
+import { GetProvidedFaunaDBClient } from "../Common/FaunaDBClient";
 
 export async function ManageDeputes() {
   const simpleDeputesFromNosDeputesFR = await GetDeputesFromNosDeputesFR();
@@ -56,22 +56,22 @@ export async function ManageDeputes() {
           return CreateDepute(action.Data).then((ret: any) => {
             GetLogger().info("Inserted depute:", ret.data);
             return Promise.all([
-              // manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
-              // manageAdresses(
-              //   action.Data.Slug,
-              //   GetProvidedFaunaDBClient(),
-              //   action.Data.Adresses
-              // ),
-              // manageAnciensMandats(
-              //   action.Data.Slug,
-              //   GetProvidedFaunaDBClient(),
-              //   currentDeputeFromAPI.anciens_mandats.map(am => am.mandat)
-              // ),
-              // manageAutresMandats(
-              //   action.Data.Slug,
-              //   GetProvidedFaunaDBClient(),
-              //   currentDeputeFromAPI.autres_mandats.map(am => am.mandat)
-              // )
+              manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
+              manageAdresses(
+                action.Data.Slug,
+                GetProvidedFaunaDBClient(),
+                action.Data.Adresses
+              ),
+              manageAnciensMandats(
+                action.Data.Slug,
+                GetProvidedFaunaDBClient(),
+                currentDeputeFromAPI.anciens_mandats.map(am => am.mandat)
+              ),
+              manageAutresMandats(
+                action.Data.Slug,
+                GetProvidedFaunaDBClient(),
+                currentDeputeFromAPI.autres_mandats.map(am => am.mandat)
+              )
             ]);
           });
         } else if (action.Action === Action.Update) {
@@ -79,18 +79,22 @@ export async function ManageDeputes() {
           return UpdateDepute(action.Data).then((ret: any) => {
             GetLogger().info("Updated depute:", action.Data, "to", ret.data);
             return Promise.all([
-              // manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
-              // manageAdresses(action.Data.Slug, GetProvidedFaunaDBClient(), action.Data.Adresses),
-              // manageAnciensMandats(
-              //   action.Data.Slug,
-              //   GetProvidedFaunaDBClient(),
-              //   currentDeputeFromAPI.anciens_mandats.map(am => am.mandat)
-              // ),
-              // manageAutresMandats(
-              //   action.Data.Slug,
-              //   GetProvidedFaunaDBClient(),
-              //   currentDeputeFromAPI.autres_mandats.map(am => am.mandat)
-              // )
+              manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
+              manageAdresses(
+                action.Data.Slug,
+                GetProvidedFaunaDBClient(),
+                action.Data.Adresses
+              ),
+              manageAnciensMandats(
+                action.Data.Slug,
+                GetProvidedFaunaDBClient(),
+                currentDeputeFromAPI.anciens_mandats.map(am => am.mandat)
+              ),
+              manageAutresMandats(
+                action.Data.Slug,
+                GetProvidedFaunaDBClient(),
+                currentDeputeFromAPI.autres_mandats.map(am => am.mandat)
+              )
             ]);
           });
         } else if (action.Action === Action.Remove) {
@@ -98,27 +102,26 @@ export async function ManageDeputes() {
           return Promise.resolve();
         } else if (action.Action === Action.None) {
           GetLogger().info("Nothing to do on", action.Data.Slug);
-          //   return Promise.all([
-          //     manageActivites(action.Data.Slug, client),
-          //     manageAdresses(
-          //       action.Data.Slug,
-          //       client,
-          //       action.Data.Adresses
-          //     ),
-          //     manageAnciensMandats(
-          //       action.Data.Slug,
-          //       client,
-          //       currentDeputeFromAPI.anciens_mandats
-          //         .map(am => am.mandat)
-          //         .filter(am => am.split(" / ")[1] !== "")
-          //     ),
-          //     manageAutresMandats(
-          //       action.Data.Slug,
-          //       client,
-          //       currentDeputeFromAPI.autres_mandats.map(am => am.mandat)
-          //     )
-          //   ]);
-          return Promise.resolve();
+          return Promise.all([
+            manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
+            manageAdresses(
+              action.Data.Slug,
+              GetProvidedFaunaDBClient(),
+              action.Data.Adresses
+            ),
+            manageAnciensMandats(
+              action.Data.Slug,
+              GetProvidedFaunaDBClient(),
+              currentDeputeFromAPI.anciens_mandats
+                .map(am => am.mandat)
+                .filter(am => am.split(" / ")[1] !== "")
+            ),
+            manageAutresMandats(
+              action.Data.Slug,
+              GetProvidedFaunaDBClient(),
+              currentDeputeFromAPI.autres_mandats.map(am => am.mandat)
+            )
+          ]);
         }
       }, 1)
     )

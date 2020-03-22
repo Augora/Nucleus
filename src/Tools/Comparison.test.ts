@@ -2,108 +2,107 @@ import {
   RetrieveIdByPath,
   NormalizeArrayToObject,
   CompareLists,
-  Action
-} from "./Comparison";
+  Action,
+} from './Comparison'
 
-describe("RetrieveIdByPath function", () => {
-  it("should retrieve id, simple path", () => {
+describe('RetrieveIdByPath function', () => {
+  it('should retrieve id, simple path', () => {
     const res = RetrieveIdByPath(
       {
-        id: "lel"
+        id: 'lel',
       },
-      "id"
-    );
-    expect(res).toBe("lel");
-  });
+      'id'
+    )
+    expect(res).toBe('lel')
+  })
 
-  it("should retrieve id, nested path", () => {
+  it('should retrieve id, nested path', () => {
     const res = RetrieveIdByPath(
       {
         id: {
-          a: "xD"
-        }
+          a: 'xD',
+        },
       },
-      "id.a"
-    );
-    expect(res).toBe("xD");
-  });
-});
+      'id.a'
+    )
+    expect(res).toBe('xD')
+  })
+})
 
-describe("NormalizeArrayToObject function", () => {
-  it("should retrieve an empty array and normalize it to an object", () => {
-    const res = NormalizeArrayToObject([], "id");
-    expect(res.lel).toBeUndefined();
-    expect(res.lel2).toBeUndefined();
-  });
+describe('NormalizeArrayToObject function', () => {
+  it('should retrieve an empty array and normalize it to an object', () => {
+    const res = NormalizeArrayToObject([], 'id')
+    expect(res.lel).toBeUndefined()
+    expect(res.lel2).toBeUndefined()
+  })
 
-  it("should retrieve an array with one item and normalize it to an object", () => {
+  it('should retrieve an array with one item and normalize it to an object', () => {
     const res = NormalizeArrayToObject(
       [
         {
-          id: "lel"
-        }
+          id: 'lel',
+        },
       ],
-      "id"
-    );
-    expect(res.lel).toBeDefined();
-    expect(res.lel2).toBeUndefined();
-  });
+      'id'
+    )
+    expect(res.lel).toBeDefined()
+    expect(res.lel2).toBeUndefined()
+  })
 
-  it("should retrieve an array and normalize it to an object", () => {
+  it('should retrieve an array and normalize it to an object', () => {
     const res = NormalizeArrayToObject(
       [
         {
-          id: "lel"
+          id: 'lel',
         },
         {
-          id: "lel2"
-        }
+          id: 'lel2',
+        },
       ],
-      "id"
-    );
-    expect(res.lel).toBeDefined();
-    expect(res.lel2).toBeDefined();
-  });
-});
+      'id'
+    )
+    expect(res.lel).toBeDefined()
+    expect(res.lel2).toBeDefined()
+  })
+})
 
-describe("CompareLists function", () => {
+describe('CompareLists function', () => {
   interface SampleData {
-    id: String;
-    a?: Number;
+    id: string
+    a?: number
   }
 
   const compareFunction = (item1: SampleData, item2: SampleData) =>
-    item1.a === item2.a;
+    item1.a === item2.a
 
-  it("should compare two empty lists, returns no diff", () => {
-    const listA = [];
-    const listB = [];
-    const compareFunction = (item1, item2) => true;
-    const res = CompareLists(listA, listB, compareFunction, "");
-    expect(res.length).toBe(0);
-  });
+  it('should compare two empty lists, returns no diff', () => {
+    const listA = []
+    const listB = []
+    const res = CompareLists(listA, listB, compareFunction, '')
+    expect(res.length).toBe(0)
+  })
 
-  it("should compare empty with 1 item, return one diff ", () => {
-    const listA = [{ id: "a" }];
-    const listB = [];
-    const res = CompareLists<SampleData>(listA, listB, compareFunction, "id");
-    expect(res.length).toBe(1);
-    expect(res[0].Action).toBe(Action.Create);
-  });
+  it('should compare empty with 1 item, return one diff ', () => {
+    const listA = [{ id: 'a' }]
+    const listB = []
+    const res = CompareLists<SampleData>(listA, listB, compareFunction, 'id')
+    expect(res.length).toBe(1)
+    expect(res[0].Action).toBe(Action.Create)
+  })
 
-  it("should compare 2 identical lists, return no diff ", () => {
-    const listA = [{ id: "a" }];
-    const listB = [{ id: "a" }];
-    const res = CompareLists<SampleData>(listA, listB, compareFunction, "id");
-    expect(res.length).toBe(0);
-  });
+  it('should compare 2 identical lists, return no diff ', () => {
+    const listA = [{ id: 'a' }]
+    const listB = [{ id: 'a' }]
+    const res = CompareLists<SampleData>(listA, listB, compareFunction, 'id')
+    expect(res.length).toBe(0)
+  })
 
-  it("should compare 2 lists, return one update ", () => {
-    const listA = [{ id: "a", a: 5 }];
-    const listB = [{ id: "a" }];
-    const res = CompareLists<SampleData>(listA, listB, compareFunction, "id");
-    expect(res.length).toBe(1);
-    expect(res[0].Action).toBe(Action.Update);
-    expect(res[0].Data.a).toBe(5);
-  });
-});
+  it('should compare 2 lists, return one update ', () => {
+    const listA = [{ id: 'a', a: 5 }]
+    const listB = [{ id: 'a' }]
+    const res = CompareLists<SampleData>(listA, listB, compareFunction, 'id')
+    expect(res.length).toBe(1)
+    expect(res[0].Action).toBe(Action.Update)
+    expect(res[0].Data.a).toBe(5)
+  })
+})

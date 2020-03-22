@@ -1,5 +1,5 @@
-import moment from "moment";
-import _ from "lodash";
+import moment from 'moment'
+import _ from 'lodash'
 
 // export function MapDepute(
 //   depute: Types.External.NosDeputesFR.Depute
@@ -44,42 +44,42 @@ import _ from "lodash";
 // }
 
 export function MapAutreMandat(
-  autreMandat: String
+  autreMandat: string
 ): Types.Canonical.AutreMandat {
-  const [Localite, Institution, Intitule] = autreMandat.split(" / ");
+  const [Localite, Institution, Intitule] = autreMandat.split(' / ')
   return {
     AutreMandatComplet: autreMandat,
     Localite,
     Institution,
-    Intitule
-  };
+    Intitule,
+  }
 }
 
 export function MapAncienMandat(
-  ancienMandat: String
+  ancienMandat: string
 ): Types.Canonical.AncienMandat {
-  const [dateDebut, dateFin, intitule] = ancienMandat.split(" / ");
+  const [dateDebut, dateFin, intitule] = ancienMandat.split(' / ')
   return {
     AncienMandatComplet: ancienMandat,
-    DateDeDebut: moment(dateDebut, "dd/MM/yyyy").format(),
-    DateDeFin: moment(dateFin, "dd/MM/yyyy").format(),
-    Intitule: intitule
-  };
+    DateDeDebut: moment(dateDebut, 'dd/MM/yyyy').format(),
+    DateDeFin: moment(dateFin, 'dd/MM/yyyy').format(),
+    Intitule: intitule,
+  }
 }
 
 export function MapActivites(
   activites: Types.External.NosDeputesFR.Activite
 ): Types.Canonical.Activite[] {
   return Object.keys(activites.labels).map(weekNumber => {
-    const weekNumberAsInt = parseInt(weekNumber);
+    const weekNumberAsInt = parseInt(weekNumber, 10)
     return {
-      DateDeDebut: moment(activites.date_fin, "yyyy-MM-dd")
-        .startOf("isoWeek")
-        .subtract(weekNumberAsInt - 1, "w")
+      DateDeDebut: moment(activites.date_fin, 'yyyy-MM-dd')
+        .startOf('isoWeek')
+        .subtract(weekNumberAsInt - 1, 'w')
         .format(),
-      DateDeFin: moment(activites.date_fin, "yyyy-MM-dd")
-        .startOf("isoWeek")
-        .subtract(weekNumberAsInt, "w")
+      DateDeFin: moment(activites.date_fin, 'yyyy-MM-dd')
+        .startOf('isoWeek')
+        .subtract(weekNumberAsInt, 'w')
         .format(),
       NumeroDeSemaine: weekNumberAsInt,
       PresencesEnCommission: Math.ceil(
@@ -95,15 +95,15 @@ export function MapActivites(
         activites.n_participations.hemicycle[weekNumber]
       ),
       Question: Math.ceil(activites.n_questions[weekNumber]),
-      Vacances: Math.ceil(activites.vacances[weekNumber])
-    };
-  });
+      Vacances: Math.ceil(activites.vacances[weekNumber]),
+    }
+  })
 }
 
 export function areTheSameActivites(
   actA: Types.Canonical.Activite,
   actB: Types.Canonical.Activite
-): Boolean {
+): boolean {
   return (
     actA.NumeroDeSemaine === actB.NumeroDeSemaine &&
     actA.ParticipationEnHemicycle === actB.ParticipationEnHemicycle &&
@@ -112,13 +112,13 @@ export function areTheSameActivites(
     actA.PresencesEnCommission === actB.PresencesEnCommission &&
     actA.Question === actB.Question &&
     actA.Vacances === actB.Vacances
-  );
+  )
 }
 
 export function areTheSameDeputes(
   depA: Types.Canonical.Depute,
   depB: Types.Canonical.Depute
-): Boolean {
+): boolean {
   return (
     depA.Slug === depB.Slug &&
     depA.Nom === depB.Nom &&
@@ -146,59 +146,59 @@ export function areTheSameDeputes(
     _.difference(depA.Emails, depB.Emails).length === 0 &&
     _.difference(depA.Adresses, depB.Adresses).length === 0 &&
     _.difference(depA.Collaborateurs, depB.Collaborateurs).length === 0
-  );
+  )
 }
 
-export function MapAdresse(adresse: String): Types.Canonical.Adresse {
-  const CPRegex = /\ ([0-9]{5})\ /;
-  const [Adresse, Telephone] = _.split(adresse.valueOf(), " Téléphone : ");
+export function MapAdresse(adresse: string): Types.Canonical.Adresse {
+  const CPRegex = /\ ([0-9]{5})\ /
+  const [Adresse, Telephone] = _.split(adresse.valueOf(), ' Téléphone : ')
   const TelephoneCleaned = Telephone
-    ? _.replace(Telephone, /[\.\ ]+/g, "")
-    : Telephone;
+    ? _.replace(Telephone, /[\.\ ]+/g, '')
+    : Telephone
   const CodePostal =
     CPRegex.exec(adresse.valueOf()).length > 0
       ? CPRegex.exec(adresse.valueOf())[1]
-      : undefined;
+      : undefined
   return {
     Adresse,
     CodePostal,
     AdresseComplete: adresse,
-    Telephone: TelephoneCleaned
-  };
+    Telephone: TelephoneCleaned,
+  }
 }
 
 export function areTheSameAdresses(
   adA: Types.Canonical.Adresse,
   adB: Types.Canonical.Adresse
-): Boolean {
+): boolean {
   return (
     adA.AdresseComplete === adB.AdresseComplete &&
     adA.Adresse === adB.Adresse &&
     adA.CodePostal === adB.CodePostal &&
     adA.Telephone === adB.Telephone
-  );
+  )
 }
 
 export function areTheSameAnciensMandats(
   amA: Types.Canonical.AncienMandat,
   amB: Types.Canonical.AncienMandat
-): Boolean {
+): boolean {
   return (
     amA.AncienMandatComplet === amB.AncienMandatComplet &&
     amA.DateDeDebut === amB.DateDeDebut &&
     amA.DateDeFin === amB.DateDeFin &&
     amA.Intitule === amB.Intitule
-  );
+  )
 }
 
 export function areTheSameAutresMandats(
   amA: Types.Canonical.AutreMandat,
   amB: Types.Canonical.AutreMandat
-): Boolean {
+): boolean {
   return (
     amA.AutreMandatComplet === amB.AutreMandatComplet &&
     amA.Institution === amB.Institution &&
     amA.Intitule === amB.Intitule &&
     amA.Localite === amB.Localite
-  );
+  )
 }
