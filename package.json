@@ -25,7 +25,7 @@
   },
   "scripts": {
     "start": "ts-node ./src/index.ts",
-    "lint": "tslint 'src/**/*.ts",
+    "lint": "tslint 'src/**/*.ts'",
     "test": "jest"
   }
 }
