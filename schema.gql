@@ -87,7 +87,8 @@ type Depute {
   Twitter: String
   EstEnMandat: Boolean
   Age: Int
-  SigleGroupePolitique: GroupeSigle @deprecated
+  SigleGroupePolitique: GroupeSigle
+    @deprecated(reason: "Please use GroupeParlementaire instead.")
   Sexe: Sexe
   URLPhotoAssembleeNationnale: String
   URLPhotoAugora: String
@@ -96,7 +97,7 @@ type Depute {
   SitesWeb: [String]
   Emails: [String]
   Collaborateurs: [String]
-  Adresses: [String] @deprecated
+  Adresses: [String] @deprecated(reason: "Please use AdressesDetails instead.")
 
   # Relations
   GroupeParlementaire: GroupeParlementaire!
