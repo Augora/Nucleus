@@ -249,7 +249,7 @@ export function updateActiviteByDeputeSlugAndWeekNumber(
 ) {
   return Map(
     Paginate(
-      Match(Index('activite_Depute_by_depute_and_weekNumber'), [
+      Match(Index('unique_Activite_DeputeAndNumeroDeSemaine'), [
         getDeputeRefByDeputeSlug(deputeSlug),
         weekNumber,
       ])
@@ -264,7 +264,7 @@ export function deleteActiviteByDeputeSlugAndWeekNumber(
 ) {
   return Map(
     Paginate(
-      Match(Index('activite_Depute_by_depute_and_weekNumber'), [
+      Match(Index('unique_Activite_DeputeAndNumeroDeSemaine'), [
         getDeputeRefByDeputeSlug(deputeSlug),
         weekNumber,
       ])
