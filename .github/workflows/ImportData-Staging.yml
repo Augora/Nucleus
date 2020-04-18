@@ -1,4 +1,4 @@
-name: Import data in production
+name: Import data in staging
 on:
   schedule:
     - cron: "0 4 * * *"
@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: master
+          ref: develop
 
       - name: Use Node.js 13.x
         uses: actions/setup-node@v1
@@ -23,7 +23,7 @@ jobs:
       - name: yarn start
         run: yarn start
         env:
-          FAUNADB_TOKEN: ${{ secrets.FAUNADB_TOKEN_PRODUCTION }}
+          FAUNADB_TOKEN: ${{ secrets.FAUNADB_TOKEN_STAGING }}
 
       - name: Upload logs as artifact
         uses: actions/upload-artifact@v1
