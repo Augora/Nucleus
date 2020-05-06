@@ -18,7 +18,7 @@
     "@types/lodash": "^4.14.150",
     "@types/node": "^13.13.5",
     "tslint": "^6.1.2",
-    "ts-jest": "^25.4.0",
+    "ts-jest": "^25.5.0",
     "jest": "^25.5.4",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0"
