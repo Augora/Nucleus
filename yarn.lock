@@ -1440,10 +1440,10 @@ fast-safe-stringify@^2.0.4:
   resolved "https://registry.yarnpkg.com/fast-safe-stringify/-/fast-safe-stringify-2.0.7.tgz#124aa885899261f68aedb42a7c080de9da608743"
   integrity sha512-Utm6CdzT+6xsDk2m8S6uL8VHxNwI6Jub+e9NYTcAms28T84pTa25GJQV9j0CY0N1rM8hK4x6grpF2BQf+2qwVA==
 
-faunadb@^2.11.1:
-  version "2.13.1"
-  resolved "https://registry.yarnpkg.com/faunadb/-/faunadb-2.13.1.tgz#7c199c4f9daf067f48a49b665ff0839d4b2b69b5"
-  integrity sha512-tIuQFEuBRx8UJSc1gGOQCIGAmlKYOERpcZKH5/FC1m/JrhOa/6VeIqAJUz46hb02RZP5vROuSPF/V5DMn6jFqQ==
+faunadb@^2.14.0:
+  version "2.14.0"
+  resolved "https://registry.yarnpkg.com/faunadb/-/faunadb-2.14.0.tgz#1f20ac94d5d74a537784ab9af92838e0446a5415"
+  integrity sha512-Nqf2/AqKYnWuMuuHQwdo5MkXN7j088xcDljOHeB5csfMmK5RE3rD+HsM8La8gK1YfocYmIJ0fLXoF2fdlqRfgQ==
   dependencies:
     base64-js "^1.2.0"
     btoa-lite "^1.0.0"
