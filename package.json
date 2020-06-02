@@ -5,7 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.19.2",
-    "faunadb": "^2.14.1",
+    "faunadb": "^2.14.2",
     "lodash": "^4.17.15",
     "moment": "^2.26.0",
     "rxjs": "^6.5.5",
