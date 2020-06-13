@@ -19,6 +19,7 @@ jobs:
       - name: yarn install, lint and test
         env:
           CI: true
+          FAUNADB_TOKEN: ${{ secrets.FAUNADB_TOKEN_STAGING }}
         run: |
           yarn install
           yarn lint
