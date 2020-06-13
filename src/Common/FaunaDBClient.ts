@@ -1,10 +1,10 @@
-import faunadb from 'faunadb'
+import { Client } from 'faunadb'
 
-const client = new faunadb.Client({
+const client = new Client({
   secret: process.env.FAUNADB_TOKEN,
   timeout: 60,
 })
 
-export function GetProvidedFaunaDBClient(): faunadb.Client {
+export function GetProvidedFaunaDBClient(): Client {
   return client
 }

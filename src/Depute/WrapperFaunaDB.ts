@@ -28,8 +28,12 @@ export function GetDeputesFromFaunaDB() {
   )
 }
 
-export function getDeputeBySlug(slug: string) {
-  return Get(Match(Index('unique_Depute_Slug'), slug))
+export function getDeputeBySlug(
+  slug: string
+): Promise<values.Document<Types.Canonical.Depute>> {
+  return GetProvidedFaunaDBClient().query<
+    values.Document<Types.Canonical.Depute>
+  >(Get(Match(Index('unique_Depute_Slug'), slug)))
 }
 
 export function getDeputeRefByDeputeSlug(slug: string) {
