@@ -1,0 +1,12 @@
+query GroupesParlementairesDetailsActifs {
+  GroupesParlementairesDetailsActifs(Actif: true) {
+    data {
+      Sigle
+      NomComplet
+      Ordre
+      Couleur
+      Actif
+      URLImage
+    }
+  }
+}
