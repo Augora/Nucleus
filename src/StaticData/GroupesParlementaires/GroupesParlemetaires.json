@@ -4,6 +4,7 @@
     "NomComplet": "Gauche démocrate et républicaine",
     "URLImage": "",
     "Couleur": "hsla(0, 88%, 57%, 1)",
+    "Actif": true,
     "Ordre": 0
   },
   {
@@ -11,6 +12,7 @@
     "NomComplet": "La France insoumise",
     "URLImage": "",
     "Couleur": "hsla(0, 82%, 39%, 1)",
+    "Actif": true,
     "Ordre": 1
   },
   {
@@ -18,48 +20,71 @@
     "NomComplet": "Socialistes et apparentés",
     "URLImage": "",
     "Couleur": "hsla(340, 78%, 56%, 1)",
+    "Actif": true,
     "Ordre": 2
+  },
+  {
+    "Sigle": "EDS",
+    "NomComplet": "Écologie Démocratie Solidarité",
+    "URLImage": "",
+    "Couleur": "hsla(17, 33%, 31%, 1)",
+    "Actif": true,
+    "Ordre": 3
   },
   {
     "Sigle": "LREM",
     "NomComplet": "La République En Marche",
     "URLImage": "",
     "Couleur": "hsla(203, 68%, 54%, 1)",
-    "Ordre": 3
+    "Actif": true,
+    "Ordre": 4
   },
   {
     "Sigle": "LT",
     "NomComplet": "Libertés et Territoires",
     "URLImage": "",
     "Couleur": "hsla(312, 60%, 41%, 1)",
-    "Ordre": 4
+    "Actif": true,
+    "Ordre": 5
   },
   {
     "Sigle": "MODEM",
     "NomComplet": "Mouvement Démocrate et apparentés",
     "URLImage": "",
     "Couleur": "hsla(30, 80%, 52%, 1)",
-    "Ordre": 5
+    "Actif": true,
+    "Ordre": 6
   },
   {
     "Sigle": "UAI",
     "NomComplet": "UDI, Agir et Indépendants",
     "URLImage": "",
     "Couleur": "hsla(260, 58%, 52%, 1)",
-    "Ordre": 6
+    "Actif": true,
+    "Ordre": 7
   },
   {
     "Sigle": "LR",
     "NomComplet": "Les Républicains",
     "URLImage": "",
     "Couleur": "hsla(231, 82%, 33%, 1)",
-    "Ordre": 7
+    "Actif": true,
+    "Ordre": 8
   },
   {
     "Sigle": "NI",
     "NomComplet": "Non inscrits",
     "URLImage": "",
     "Couleur": "hsla(30, 19%, 63%, 1)",
-    "Ordre": 8
+    "Actif": true,
+    "Ordre": 9
+  },
+  {
+    "Sigle": "NG",
+    "NomComplet": "Nouvelle Gauche",
+    "URLImage": "",
+    "Couleur": "hsla(319, 100%, 60%, 1)",
+    "Actif": false,
+    "Ordre": 1000
   }
 ]
