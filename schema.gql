@@ -1,16 +1,3 @@
-enum GroupeSigle {
-  GDR
-  LFI
-  LR
-  LREM
-  LT
-  MODEM
-  NI
-  NG
-  SOC
-  UAI
-}
-
 enum Sexe {
   F
   H
@@ -18,11 +5,12 @@ enum Sexe {
 
 type GroupeParlementaire {
   Sigle: String! @unique @index
-  NomComplet: String
-  Couleur: String
-  URLImage: String
-  Ordre: Int
-  Deputes: [Depute!] @relation
+  NomComplet: String!
+  Couleur: String!
+  URLImage: String!
+  Ordre: Int!
+  Actif: Boolean!
+  Deputes: [Depute!]! @relation
 }
 
 type AncienMandat {
@@ -30,7 +18,7 @@ type AncienMandat {
   DateDeDebut: String
   DateDeFin: String
   Intitule: String
-  Deputes: [Depute!] @relation
+  Deputes: [Depute!]! @relation
 }
 
 type AutreMandat {
@@ -38,28 +26,28 @@ type AutreMandat {
   Localite: String
   Institution: String
   Intitule: String
-  Deputes: [Depute!] @relation
+  Deputes: [Depute!]! @relation
 }
 
 type Activite {
-  DateDeDebut: String
-  DateDeFin: String
-  NumeroDeSemaine: Int
-  PresencesEnCommission: Int
-  PresenceEnHemicycle: Int
-  ParticipationsEnCommission: Int
-  ParticipationEnHemicycle: Int
-  Question: Int
-  Vacances: Int
+  DateDeDebut: String!
+  DateDeFin: String!
+  NumeroDeSemaine: Int!
+  PresencesEnCommission: Int!
+  PresenceEnHemicycle: Int!
+  ParticipationsEnCommission: Int!
+  ParticipationEnHemicycle: Int!
+  Question: Int!
+  Vacances: Int!
   Depute: Depute!
 }
 
 type Adresse {
   AdresseComplete: String! @unique @index
-  Adresse: String
+  Adresse: String!
   CodePostal: String
   Telephone: String
-  Deputes: [Depute!] @relation
+  Deputes: [Depute!]! @relation
 }
 
 type Depute {
@@ -77,45 +65,39 @@ type Depute {
   parti_ratt_financier: String
   Profession: String
   PlaceEnHemicycle: String
-  URLAssembleeNationnale: String @deprecated
-  IDAssembleeNationnale: String @deprecated
   URLAssembleeNationale: String
   IDAssembleeNationale: String
   URLNosdeputes: String
   URLNosdeputesAPI: String
-  NombreMandats: Int
+  NombreMandats: Int!
   Twitter: String
-  EstEnMandat: Boolean
+  EstEnMandat: Boolean!
   Age: Int
-  SigleGroupePolitique: GroupeSigle
-    @deprecated(reason: "Please use GroupeParlementaire instead.")
   Sexe: Sexe
   URLPhotoAssembleeNationnale: String
   URLPhotoAugora: String
 
   # Arrays
-  SitesWeb: [String]
-  Emails: [String]
-  Collaborateurs: [String]
-  Adresses: [String] @deprecated(reason: "Please use AdressesDetails instead.")
+  SitesWeb: [String]!
+  Emails: [String]!
+  Collaborateurs: [String]!
 
   # Relations
   GroupeParlementaire: GroupeParlementaire!
-  Activites: [Activite] @relation
-  AdressesDetails: [Adresse!] @relation
-  AnciensMandats: [AncienMandat!] @relation
-  AutresMandats: [AutreMandat!] @relation
+  Activites: [Activite!]! @relation
+  AdressesDetails: [Adresse!]! @relation
+  AnciensMandats: [AncienMandat!]! @relation
+  AutresMandats: [AutreMandat!]! @relation
 }
 
 type Query {
   Depute(Slug: String!): Depute!
-  Deputes: [Depute!]
-  DeputesEnMandat(EstEnMandat: Boolean): [Depute!]
-  GroupeParlementaire(Sigle: String!): GroupeParlementaire
-  GroupesParlementaires: [String!]
-    @resolver(name: "GroupesParlementaires")
-    @deprecated(reason: "Please use GroupesParlementairesDetails instead.")
-  GroupesParlementairesDetails: [GroupeParlementaire!]
-  Adresse(AdresseComplete: String!): Adresse!
-  Adresses: [Adresse!]
+
+  Deputes: [Depute!]!
+  DeputesEnMandat(EstEnMandat: Boolean): [Depute!]!
+
+  Adresses: [Adresse!]!
+
+  GroupesParlementairesDetails: [GroupeParlementaire!]!
+  GroupesParlementairesDetailsActifs(Actif: Boolean!): [GroupeParlementaire!]!
 }
