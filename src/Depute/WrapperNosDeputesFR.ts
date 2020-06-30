@@ -12,11 +12,11 @@ export function GetDeputesFromNosDeputesFR(): Promise<
     .get<Types.External.NosDeputesFR.DeputesWrapper>(
       `https://www.nosdeputes.fr/deputes/json`
     )
-    .then(res => {
+    .then((res) => {
       GetLogger().info('Retrieved deputes from nosdeputes.fr.')
       return res
     })
-    .then(res => res.data.deputes.map(d => d.depute))
+    .then((res) => res.data.deputes.map((d) => d.depute))
 }
 
 export function GetDeputesBySlugFromNosDeputesFR(
@@ -25,7 +25,7 @@ export function GetDeputesBySlugFromNosDeputesFR(
   GetLogger().info('GetDeputesBySlugFromNosDeputesFR', slugs)
   return from(slugs)
     .pipe(
-      mergeMap(val => GetDeputeFromNosDeputesFR(val), 1),
+      mergeMap((val) => GetDeputeFromNosDeputesFR(val), 5),
       toArray()
     )
     .toPromise()
@@ -40,11 +40,11 @@ export function GetDeputeFromNosDeputesFR(
       .get<Types.External.NosDeputesFR.DeputeWrapper>(
         `https://www.nosdeputes.fr/${slug}/json`
       )
-      .then(res => {
+      .then((res) => {
         GetLogger().info(`Retrieved ${slug} from nosdeputes.fr.`)
         return res
       })
-      .then(res => res.data.depute)
+      .then((res) => res.data.depute)
   )
     .pipe(retry(3))
     .toPromise()

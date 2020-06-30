@@ -7,4 +7,6 @@ import './Types/Canonical/Adresse'
 import './Types/Canonical/AncienMandat'
 import './Types/Canonical/AutreMandat'
 
-ManageDeputes().then(() => console.log('The end.'))
+ManageDeputes()
+  .then(() => console.log('The end.'))
+  .catch((err) => console.error(err))
