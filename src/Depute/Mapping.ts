@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment from 'moment'
 
 export function MapDepute(
   depute: Types.External.NosDeputesFR.Depute
@@ -17,7 +17,7 @@ export function MapDepute(
     DebutDuMandat: depute.mandat_debut,
     SigleGroupePolitique: depute.groupe_sigle,
     parti_ratt_financier: depute.parti_ratt_financier,
-    Profession: depute.profession,
+    Profession: depute.profession ? depute.profession : '',
     PlaceEnHemicycle: depute.place_en_hemicycle,
     URLAssembleeNationnale: depute.url_an,
     IDAssembleeNationnale: depute.id_an,
@@ -28,19 +28,19 @@ export function MapDepute(
     NombreMandats: depute.nb_mandats,
     Twitter: depute.twitter,
     EstEnMandat: depute.ancien_depute !== 1,
-    Age: moment().diff(depute.date_naissance, "years", false),
+    Age: moment().diff(depute.date_naissance, 'years', false),
     URLPhotoAssembleeNationnale: `http://www2.assemblee-nationale.fr/static/tribun/15/photos/${depute.id_an}.jpg`,
     URLPhotoAugora: `https://static.augora.fr/depute/${depute.slug}`,
-    SitesWeb: depute.sites_web.map(s => s.site),
-    Emails: depute.emails.map(e => e.email),
+    SitesWeb: depute.sites_web.map((s) => s.site),
+    Emails: depute.emails.map((e) => e.email),
     Adresses: depute.adresses
-      .map(a => a.adresse)
+      .map((a) => a.adresse)
       .filter(
-        a =>
-          !a.startsWith("Sur rendez-vous") &&
-          !a.startsWith("Varsovie/Konstancin") &&
-          !a.startsWith("Allemagne et Autriche")
+        (a) =>
+          !a.startsWith('Sur rendez-vous') &&
+          !a.startsWith('Varsovie/Konstancin') &&
+          !a.startsWith('Allemagne et Autriche')
       ),
-    Collaborateurs: depute.collaborateurs.map(c => c.collaborateur)
-  };
+    Collaborateurs: depute.collaborateurs.map((c) => c.collaborateur),
+  }
 }

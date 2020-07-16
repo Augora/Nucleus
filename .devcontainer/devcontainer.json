@@ -9,14 +9,14 @@
   },
   // Add the IDs of extensions you want installed when the container is created.
   "extensions": [
-	"dbaeumer.vscode-eslint",
-	"joelday.docthis",
-	"kumar-harsh.graphql-for-vscode",
-	"quicktype.quicktype",
-	"esbenp.prettier-vscode",
-	"ms-vscode.vscode-typescript-tslint-plugin",
-	"orta.vscode-jest"
-]
+    "dbaeumer.vscode-eslint",
+    "joelday.docthis",
+    "kumar-harsh.graphql-for-vscode",
+    "quicktype.quicktype",
+    "esbenp.prettier-vscode",
+    "ms-vscode.vscode-typescript-tslint-plugin",
+    "orta.vscode-jest"
+  ]
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
   // Use 'postCreateCommand' to run commands after the container is created.
