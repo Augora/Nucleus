@@ -35,17 +35,20 @@ export function GetDeputeFromNosDeputesFR(
   slug: string
 ): Promise<Types.External.NosDeputesFR.Depute> {
   GetLogger().info('GetDeputeFromNosDeputesFR', slug)
-  return from(
-    axios
-      .get<Types.External.NosDeputesFR.DeputeWrapper>(
-        `https://www.nosdeputes.fr/${slug}/json`
-      )
-      .then((res) => {
-        GetLogger().info(`Retrieved ${slug} from nosdeputes.fr.`)
-        return res
-      })
-      .then((res) => res.data.depute)
-  )
-    .pipe(retry(3))
+  return from([slug])
+    .pipe(
+      mergeMap((_slug) => {
+        return axios
+          .get<Types.External.NosDeputesFR.DeputeWrapper>(
+            `https://www.nosdeputes.fr/${_slug}/json`
+          )
+          .then((res) => {
+            GetLogger().info(`Retrieved ${_slug} from nosdeputes.fr.`)
+            return res
+          })
+          .then((res) => res.data.depute)
+      }, 1),
+      retry(2)
+    )
     .toPromise()
 }

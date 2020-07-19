@@ -9,4 +9,7 @@ import './Types/Canonical/AutreMandat'
 
 ManageDeputes()
   .then(() => console.log('The end.'))
-  .catch((err) => console.error(err))
+  .catch((err) => {
+    console.error(err)
+    throw err
+  })
