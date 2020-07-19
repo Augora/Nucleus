@@ -17,14 +17,14 @@ export function manageActivites(slug: string, client: faunadb.Client) {
   return client
     .query(getActivitesByDeputeSlug(slug))
     .then((ret: values.Document<values.Document<Types.Canonical.Activite>[]>) =>
-      ret.data.map(e => e.data)
+      ret.data.map((e) => e.data)
     )
-    .then(RDActs => {
+    .then((RDActs) => {
       return axios
         .get(
           `https://www.nosdeputes.fr/${slug}/graphes/lastyear/total?questions=true&format=json`
         )
-        .then(response => {
+        .then((response) => {
           const { data } = response
           const LDActs = MapActivites(data)
           const res = CompareLists(
@@ -75,12 +75,12 @@ export function manageActivites(slug: string, client: faunadb.Client) {
                       console.log('Deleted activity:', ret.data)
                     })
                 }
-              }, 1)
+              }, 20)
             )
             .toPromise()
         })
     })
-    .catch(err => {
+    .catch((err) => {
       console.error(
         'Something went wrong while retriving activities from',
         slug,
