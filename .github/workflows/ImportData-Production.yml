@@ -1,7 +1,7 @@
 name: Import data in production
 on:
   schedule:
-    - cron: "0 4 * * *"
+    - cron: '0 4 * * *'
 
 jobs:
   build:
@@ -12,10 +12,10 @@ jobs:
         with:
           ref: master
 
-      - name: Use Node.js 13.x
+      - name: Use Node.js 14.x
         uses: actions/setup-node@v1
         with:
-          node-version: 13.x
+          node-version: 14.x
 
       - name: yarn install
         run: yarn install
