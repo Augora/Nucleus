@@ -247,14 +247,17 @@ export function updateActiviteByDeputeSlugAndWeekNumber(
   weekNumber: number,
   data: Types.Canonical.Activite
 ) {
-  return Map(
-    Paginate(
-      Match(Index('unique_Activite_DeputeAndNumeroDeSemaine'), [
-        getDeputeRefByDeputeSlug(deputeSlug),
-        weekNumber,
-      ])
+  return Update(
+    Select(
+      'ref',
+      Get(
+        Match(Index('unique_Activite_DeputeAndNumeroDeSemaine'), [
+          weekNumber,
+          getDeputeRefByDeputeSlug(deputeSlug),
+        ])
+      )
     ),
-    Lambda('X', Update(Var('X'), { data }))
+    { data }
   )
 }
 
@@ -262,14 +265,16 @@ export function deleteActiviteByDeputeSlugAndWeekNumber(
   deputeSlug: string,
   weekNumber: number
 ) {
-  return Map(
-    Paginate(
-      Match(Index('unique_Activite_DeputeAndNumeroDeSemaine'), [
-        getDeputeRefByDeputeSlug(deputeSlug),
-        weekNumber,
-      ])
-    ),
-    Lambda('X', Delete(Var('X')))
+  return Delete(
+    Select(
+      'ref',
+      Get(
+        Match(Index('unique_Activite_DeputeAndNumeroDeSemaine'), [
+          weekNumber,
+          getDeputeRefByDeputeSlug(deputeSlug),
+        ])
+      )
+    )
   )
 }
 
