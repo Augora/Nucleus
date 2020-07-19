@@ -19,7 +19,7 @@ import { manageAdresses } from '../Tools/Adresse'
 import { manageAnciensMandats } from '../Tools/AnciensMandat'
 import { manageAutresMandats } from '../Tools/AutresMandat'
 import { GetProvidedFaunaDBClient } from '../Common/FaunaDBClient'
-import GlobalMetrics from '../Common/Metrics'
+import GlobalMetrics from '../Common/GlobalMetrics'
 
 export async function ManageDeputes() {
   const simpleDeputesFromNosDeputesFR = await GetDeputesFromNosDeputesFR()
