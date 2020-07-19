@@ -7,8 +7,13 @@ import './Types/Canonical/Adresse'
 import './Types/Canonical/AncienMandat'
 import './Types/Canonical/AutreMandat'
 
+import GlobalMetrics from './Common/Metrics'
+
 ManageDeputes()
-  .then(() => console.log('The end.'))
+  .then(() => {
+    console.log(GlobalMetrics)
+    console.log('The end.')
+  })
   .catch((err) => {
     console.error(err)
     throw err

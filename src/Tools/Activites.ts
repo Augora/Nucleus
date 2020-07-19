@@ -36,7 +36,7 @@ export function manageActivites(slug: string, client: faunadb.Client) {
           return from(res)
             .pipe(
               mergeMap((action: DiffType<Types.Canonical.Activite>) => {
-                console.log(action)
+                // console.log(action)
                 if (action.Action === Action.Create) {
                   return client
                     .query(
@@ -50,7 +50,7 @@ export function manageActivites(slug: string, client: faunadb.Client) {
                       console.log('Inserted activity:', ret.data)
                     })
                 } else if (action.Action === Action.Update) {
-                  console.log(action.Data)
+                  // console.log(action.Data)
                   return client
                     .query(
                       updateActiviteByDeputeSlugAndWeekNumber(
@@ -75,7 +75,7 @@ export function manageActivites(slug: string, client: faunadb.Client) {
                       console.log('Deleted activity:', ret.data)
                     })
                 }
-              }, 20)
+              }, 1)
             )
             .toPromise()
         })

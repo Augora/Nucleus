@@ -19,6 +19,7 @@ import { manageAdresses } from '../Tools/Adresse'
 import { manageAnciensMandats } from '../Tools/AnciensMandat'
 import { manageAutresMandats } from '../Tools/AutresMandat'
 import { GetProvidedFaunaDBClient } from '../Common/FaunaDBClient'
+import GlobalMetrics from '../Common/Metrics'
 
 export async function ManageDeputes() {
   const simpleDeputesFromNosDeputesFR = await GetDeputesFromNosDeputesFR()
@@ -38,8 +39,8 @@ export async function ManageDeputes() {
     AreTheSameDeputes,
     'Slug',
     true
-  )
-  GetLogger().info('Modifications to make:', res)
+  ).filter((_, i) => i < 1)
+  // GetLogger().info('Modifications to make:', res)
   return from(res)
     .pipe(
       mergeMap((action: DiffType<Types.Canonical.Depute>) => {
@@ -49,6 +50,7 @@ export async function ManageDeputes() {
         )
         GetLogger().info('currentDeputeFromAPI:', currentDeputeFromAPI)
         if (action.Action === Action.Create) {
+          GlobalMetrics.addCreatedDepute()
           GetLogger().info('Creating depute:', action.Data.Slug)
           return CreateDepute(action.Data)
             .then((ret: any) => {
@@ -78,6 +80,7 @@ export async function ManageDeputes() {
               )
             })
         } else if (action.Action === Action.Update) {
+          GlobalMetrics.addUpdatedDepute()
           GetLogger().info('Updating depute:', action.Data.Slug)
           return UpdateDepute(action.Data).then((ret: any) => {
             GetLogger().info('Updated depute:', action.Data, 'to', ret.data)
@@ -104,6 +107,7 @@ export async function ManageDeputes() {
           // TODO: Think about this kind of cases.
           return Promise.resolve()
         } else if (action.Action === Action.None) {
+          GlobalMetrics.addNoneDepute()
           GetLogger().info('Nothing to do on', action.Data.Slug)
           return Promise.all([
             manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
