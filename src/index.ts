@@ -7,7 +7,7 @@ import './Types/Canonical/Adresse'
 import './Types/Canonical/AncienMandat'
 import './Types/Canonical/AutreMandat'
 
-import GlobalMetrics from './Common/Metrics'
+import GlobalMetrics from './Common/GlobalMetrics'
 
 ManageDeputes()
   .then(() => {
