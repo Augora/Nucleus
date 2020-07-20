@@ -12,10 +12,10 @@ jobs:
         with:
           ref: develop
 
-      - name: Use Node.js 14s.x
+      - name: Use Node.js 14.x
         uses: actions/setup-node@v1
         with:
-          node-version: 14s.x
+          node-version: 14.x
 
       - name: yarn install
         run: yarn install
