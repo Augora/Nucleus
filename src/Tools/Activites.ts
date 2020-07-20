@@ -75,7 +75,7 @@ export function manageActivites(slug: string, client: faunadb.Client) {
                       console.log('Deleted activity:', ret.data)
                     })
                 }
-              }, 1)
+              }, 20)
             )
             .toPromise()
         })
