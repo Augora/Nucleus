@@ -36,4 +36,4 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         uses: pullreminders/slack-action@master
         with:
-          args: '{\"channel\":\"C4H19LCN9\",\"text\":\"Data successfully imported in FaunaDB :sunglasses::tada:\"}'
+          args: '{\"channel\":\"C4H19LCN9\",\"text\":\"Data successfully imported in Staging :sunglasses::tada:\"}'
