@@ -39,7 +39,7 @@ export async function ManageDeputes() {
     AreTheSameDeputes,
     'Slug',
     true
-  ).filter((_, i) => i < 1)
+  )
   // GetLogger().info('Modifications to make:', res)
   return from(res)
     .pipe(
