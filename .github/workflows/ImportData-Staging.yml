@@ -1,7 +1,10 @@
 name: Import data in staging
+
 on:
+  repository_dispatch:
+    types: import-data-staging
   schedule:
-    - cron: '0 4 * * *'
+    - cron: "0 4 * * *"
 
 jobs:
   build:
