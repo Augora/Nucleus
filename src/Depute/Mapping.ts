@@ -15,7 +15,8 @@ export function MapDepute(
     NomCirconscription: depute.nom_circo,
     NumeroCirconscription: depute.num_circo,
     DebutDuMandat: depute.mandat_debut,
-    SigleGroupePolitique: depute.groupe_sigle,
+    SigleGroupePolitique:
+      depute.groupe_sigle == null ? 'NI' : depute.groupe_sigle,
     parti_ratt_financier: depute.parti_ratt_financier,
     Profession: depute.profession ? depute.profession : '',
     PlaceEnHemicycle: depute.place_en_hemicycle,
