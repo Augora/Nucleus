@@ -54,7 +54,7 @@ export async function ManageDeputes() {
             .then((ret: any) => {
               GetLogger().info('Created depute:', ret.data)
               return Promise.all([
-                // manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
+                manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
                 manageAdresses(
                   action.Data.Slug,
                   GetProvidedFaunaDBClient(),
@@ -78,11 +78,11 @@ export async function ManageDeputes() {
               )
             })
         } else if (action.Action === Action.Update) {
-          GetLogger().info('Updating depute:', action.Data.Slug)
+          GetLogger().info('Updating depute:', { Slug: action.Data.Slug })
           return UpdateDepute(action.Data).then((ret: any) => {
             GetLogger().info('Updated depute:', action.Data, 'to', ret.data)
             return Promise.all([
-              // manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
+              manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
               manageAdresses(
                 action.Data.Slug,
                 GetProvidedFaunaDBClient(),
@@ -104,9 +104,9 @@ export async function ManageDeputes() {
           // TODO: Think about this kind of cases.
           return Promise.resolve()
         } else if (action.Action === Action.None) {
-          // GetLogger().info('Nothing to do on', action.Data.Slug)
+          GetLogger().info('Nothing to do on', { Slug: action.Data.Slug })
           return Promise.all([
-            // manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
+            manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
             manageAdresses(
               action.Data.Slug,
               GetProvidedFaunaDBClient(),
