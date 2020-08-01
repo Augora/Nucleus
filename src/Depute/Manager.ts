@@ -19,7 +19,6 @@ import { manageAdresses } from '../Tools/Adresse'
 import { manageAnciensMandats } from '../Tools/AnciensMandat'
 import { manageAutresMandats } from '../Tools/AutresMandat'
 import { GetProvidedFaunaDBClient } from '../Common/FaunaDBClient'
-import GlobalMetrics from '../Common/GlobalMetrics'
 
 export async function ManageDeputes() {
   const simpleDeputesFromNosDeputesFR = await GetDeputesFromNosDeputesFR()
@@ -44,19 +43,18 @@ export async function ManageDeputes() {
   return from(res)
     .pipe(
       mergeMap((action: DiffType<Types.Canonical.Depute>) => {
-        GetLogger().info('Processing', action.Data.Slug)
+        GetLogger().info('Processing', { Slug: action.Data.Slug })
         const currentDeputeFromAPI = deputesFromNosDeputesFR.find(
           (d) => d.slug === action.Data.Slug
         )
-        GetLogger().info('currentDeputeFromAPI:', currentDeputeFromAPI)
+        // GetLogger().info('currentDeputeFromAPI:', currentDeputeFromAPI)
         if (action.Action === Action.Create) {
-          GlobalMetrics.addCreatedDepute()
-          GetLogger().info('Creating depute:', action.Data.Slug)
+          GetLogger().info('Creating depute:', action.Data)
           return CreateDepute(action.Data)
             .then((ret: any) => {
               GetLogger().info('Created depute:', ret.data)
               return Promise.all([
-                manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
+                // manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
                 manageAdresses(
                   action.Data.Slug,
                   GetProvidedFaunaDBClient(),
@@ -80,12 +78,11 @@ export async function ManageDeputes() {
               )
             })
         } else if (action.Action === Action.Update) {
-          GlobalMetrics.addUpdatedDepute()
           GetLogger().info('Updating depute:', action.Data.Slug)
           return UpdateDepute(action.Data).then((ret: any) => {
             GetLogger().info('Updated depute:', action.Data, 'to', ret.data)
             return Promise.all([
-              manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
+              // manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
               manageAdresses(
                 action.Data.Slug,
                 GetProvidedFaunaDBClient(),
@@ -107,10 +104,9 @@ export async function ManageDeputes() {
           // TODO: Think about this kind of cases.
           return Promise.resolve()
         } else if (action.Action === Action.None) {
-          GlobalMetrics.addNoneDepute()
-          GetLogger().info('Nothing to do on', action.Data.Slug)
+          // GetLogger().info('Nothing to do on', action.Data.Slug)
           return Promise.all([
-            manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
+            // manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
             manageAdresses(
               action.Data.Slug,
               GetProvidedFaunaDBClient(),

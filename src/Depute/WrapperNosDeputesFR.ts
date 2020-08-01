@@ -34,7 +34,7 @@ export function GetDeputesBySlugFromNosDeputesFR(
 export function GetDeputeFromNosDeputesFR(
   slug: string
 ): Promise<Types.External.NosDeputesFR.Depute> {
-  GetLogger().info(`GetDeputeFromNosDeputesFR: ${slug}`)
+  GetLogger().info('GetDeputeFromNosDeputesFR:', { Slug: slug })
   return from([slug])
     .pipe(
       mergeMap((_slug) => {
@@ -43,11 +43,11 @@ export function GetDeputeFromNosDeputesFR(
             `https://www.nosdeputes.fr/${_slug}/json`
           )
           .then((res) => {
-            GetLogger().info(`Retrieved ${_slug} from nosdeputes.fr.`)
+            GetLogger().info('Retrieved from nosdeputes.fr:', { Slug: slug })
             return res
           })
           .then((res) => res.data.depute)
-      }, 1),
+      }, 10),
       retry(2)
     )
     .toPromise()
