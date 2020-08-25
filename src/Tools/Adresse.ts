@@ -1,6 +1,6 @@
 import faunadb, { values } from 'faunadb'
 import { from, concat } from 'rxjs'
-import { mergeMap } from 'rxjs/operators'
+import { mergeMap, retry } from 'rxjs/operators'
 
 import {
   getAdressesByDeputeSlug,
@@ -18,7 +18,7 @@ export function manageAdresses(
   client: faunadb.Client,
   adresses: string[]
 ) {
-  const LDAds = adresses.map(ad => MapAdresse(ad))
+  const LDAds = adresses.map((ad) => MapAdresse(ad))
   return concat(
     from(LDAds).pipe(
       mergeMap((adresse: Types.Canonical.Adresse) => {
@@ -26,7 +26,7 @@ export function manageAdresses(
         return client
           .query(getAdressByAdresseComplete(adresse.AdresseComplete))
           .then((ret: values.Document<Types.Canonical.Adresse>) => ret.data)
-          .then(adresseFromFauna => {
+          .then((adresseFromFauna) => {
             if (!areTheSameAdresses(adresse, adresseFromFauna)) {
               console.log('Updating adresse:', adresseFromFauna, 'to', adresse)
               return client.query(updateAdresse(adresse)).then((ret: any) => {
@@ -36,22 +36,23 @@ export function manageAdresses(
               console.log('Nothing to do on', adresse)
             }
           })
-          .catch(e => {
+          .catch((e) => {
             console.log('Creating adresse:', adresse)
             return client.query(createAdresse(adresse)).then((ret: any) => {
               console.log('Created adresse:', ret)
             })
           })
-      }, 1)
+      }, 1),
+      retry(2)
     ),
     from(
       client
         .query(getAdressesByDeputeSlug(slug))
         .then(
           (ret: values.Document<values.Document<Types.Canonical.Adresse>[]>) =>
-            ret.data.map(e => e.data)
+            ret.data.map((e) => e.data)
         )
-        .then(RSAds =>
+        .then((RSAds) =>
           CompareLists(LDAds, RSAds, areTheSameAdresses, 'AdresseComplete')
         )
     ).pipe(
@@ -87,9 +88,11 @@ export function manageAdresses(
               console.log('Nothing to do at all on :', action.Data)
               return Promise.resolve()
             }
-          }, 1)
+          }, 1),
+          retry(2)
         )
-      }, 1)
+      }, 1),
+      retry(2)
     )
   ).toPromise()
 }

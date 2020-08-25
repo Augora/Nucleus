@@ -1,6 +1,6 @@
 import faunadb, { values } from 'faunadb'
 import { from, concat } from 'rxjs'
-import { mergeMap } from 'rxjs/operators'
+import { mergeMap, retry } from 'rxjs/operators'
 
 import {
   getAutreMandatByAncienMandatComplet,
@@ -18,7 +18,7 @@ export function manageAutresMandats(
   client: faunadb.Client,
   autresMandats: string[]
 ) {
-  const LDAms = autresMandats.map(am => MapAutreMandat(am))
+  const LDAms = autresMandats.map((am) => MapAutreMandat(am))
   return concat(
     from(LDAms).pipe(
       mergeMap((autreMandat: Types.Canonical.AutreMandat) => {
@@ -28,7 +28,7 @@ export function manageAutresMandats(
             getAutreMandatByAncienMandatComplet(autreMandat.AutreMandatComplet)
           )
           .then((ret: values.Document<Types.Canonical.AutreMandat>) => ret.data)
-          .then(autreMandatFromFauna => {
+          .then((autreMandatFromFauna) => {
             if (!areTheSameAutresMandats(autreMandat, autreMandatFromFauna)) {
               console.log(
                 'Updating autre mandat:',
@@ -46,7 +46,7 @@ export function manageAutresMandats(
               return Promise.resolve()
             }
           })
-          .catch(e => {
+          .catch((e) => {
             console.error(e)
             console.log('Creating autre mandat:', autreMandat)
             return client
@@ -55,7 +55,8 @@ export function manageAutresMandats(
                 console.log('Created autre mandat:', ret)
               })
           })
-      }, 1)
+      }, 1),
+      retry(2)
     ),
     from(
       client
@@ -63,9 +64,9 @@ export function manageAutresMandats(
         .then(
           (
             ret: values.Document<values.Document<Types.Canonical.AutreMandat>[]>
-          ) => ret.data.map(e => e.data)
+          ) => ret.data.map((e) => e.data)
         )
-        .then(RDAms => {
+        .then((RDAms) => {
           console.log(LDAms, RDAms)
           return CompareLists(
             LDAms,
@@ -107,9 +108,11 @@ export function manageAutresMandats(
               console.log('nothing to do at all.')
               return Promise.resolve()
             }
-          }, 1)
+          }, 1),
+          retry(2)
         )
-      }, 1)
+      }, 1),
+      retry(2)
     )
   ).toPromise()
 }

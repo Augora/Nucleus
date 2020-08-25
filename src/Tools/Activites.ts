@@ -1,7 +1,7 @@
 import faunadb, { values } from 'faunadb'
 import axios from 'axios'
 import { from } from 'rxjs'
-import { mergeMap } from 'rxjs/operators'
+import { mergeMap, retry } from 'rxjs/operators'
 
 import {
   getActivitesByDeputeSlug,
@@ -75,7 +75,8 @@ export function manageActivites(slug: string, client: faunadb.Client) {
                       console.log('Deleted activity:', ret.data)
                     })
                 }
-              }, 20)
+              }, 20),
+              retry(2)
             )
             .toPromise()
         })

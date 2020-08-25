@@ -1,5 +1,5 @@
 import { from } from 'rxjs'
-import { mergeMap } from 'rxjs/operators'
+import { mergeMap, retry } from 'rxjs/operators'
 
 import { MapDepute } from './Mapping'
 import { AreTheSameDeputes } from './Comparison'
@@ -126,7 +126,8 @@ export async function ManageDeputes() {
             ),
           ])
         }
-      }, 1)
+      }, 1),
+      retry(2)
     )
     .toPromise()
 }

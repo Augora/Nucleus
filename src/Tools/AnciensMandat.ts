@@ -1,6 +1,6 @@
 import faunadb, { values } from 'faunadb'
 import { from, concat } from 'rxjs'
-import { mergeMap } from 'rxjs/operators'
+import { mergeMap, retry } from 'rxjs/operators'
 
 import {
   getAncienMandatByAncienMandatComplet,
@@ -18,7 +18,7 @@ export function manageAnciensMandats(
   client: faunadb.Client,
   anciensMandats: string[]
 ) {
-  const LDAms = anciensMandats.map(am => MapAncienMandat(am))
+  const LDAms = anciensMandats.map((am) => MapAncienMandat(am))
   return concat(
     from(LDAms).pipe(
       mergeMap((ancienMandat: Types.Canonical.AncienMandat) => {
@@ -32,7 +32,7 @@ export function manageAnciensMandats(
           .then(
             (ret: values.Document<Types.Canonical.AncienMandat>) => ret.data
           )
-          .then(ancienMandatFromFauna => {
+          .then((ancienMandatFromFauna) => {
             if (
               !areTheSameAnciensMandats(ancienMandat, ancienMandatFromFauna)
             ) {
@@ -52,7 +52,7 @@ export function manageAnciensMandats(
               return Promise.resolve()
             }
           })
-          .catch(e => {
+          .catch((e) => {
             console.error(e)
             console.log('Creating ancien mandat:', ancienMandat)
             return client
@@ -61,7 +61,8 @@ export function manageAnciensMandats(
                 console.log('Created ancien mandat:', ret)
               })
           })
-      }, 1)
+      }, 1),
+      retry(2)
     ),
     from(
       client
@@ -71,9 +72,9 @@ export function manageAnciensMandats(
             ret: values.Document<
               values.Document<Types.Canonical.AncienMandat>[]
             >
-          ) => ret.data.map(e => e.data)
+          ) => ret.data.map((e) => e.data)
         )
-        .then(RDAms => {
+        .then((RDAms) => {
           console.log(LDAms, RDAms)
           return CompareLists(
             LDAms,
@@ -115,9 +116,11 @@ export function manageAnciensMandats(
               console.log('nothing to do at all.')
               return Promise.resolve()
             }
-          }, 1)
+          }, 1),
+          retry(2)
         )
-      }, 1)
+      }, 1),
+      retry(2)
     )
   ).toPromise()
 }
