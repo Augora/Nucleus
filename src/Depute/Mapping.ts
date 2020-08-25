@@ -1,4 +1,5 @@
 import moment from 'moment'
+import { split, toLower, upperFirst, join } from 'lodash'
 
 export function MapDepute(
   depute: Types.External.NosDeputesFR.Depute
@@ -42,6 +43,16 @@ export function MapDepute(
           !a.startsWith('Varsovie/Konstancin') &&
           !a.startsWith('Allemagne et Autriche')
       ),
-    Collaborateurs: depute.collaborateurs.map((c) => c.collaborateur),
+    Collaborateurs: depute.collaborateurs.map((c) =>
+      join(
+        split(c.collaborateur, ' ').map((mc) =>
+          join(
+            split(mc, '-').map((mcsplitted) => upperFirst(toLower(mcsplitted))),
+            '-'
+          )
+        ),
+        ' '
+      )
+    ),
   }
 }
