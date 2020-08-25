@@ -4,5 +4,6 @@ namespace Types.Canonical {
     Adresse: string
     CodePostal: string
     Telephone: string
+    Fax: string
   }
 }

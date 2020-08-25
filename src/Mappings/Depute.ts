@@ -109,7 +109,8 @@ export function areTheSameDeputes(
 
 export function MapAdresse(adresse: string): Types.Canonical.Adresse {
   const CPRegex = /\ ([0-9]{5})/
-  const PhoneRegex = /\ ((\+|00)\s?[0-9]{2})?\s?(?:[\s.-]?\d{1}){10}/
+  const PhoneRegex = /Téléphone : (((\+|00)\s?[0-9]{2})?\s?(?:[\s.-]?\d{1}){10})/
+  const FaxRegex = /Télécopie : (((\+|00)\s?[0-9]{2})?\s?(?:[\s.-]?\d{1}){10})/
 
   // Postal code processing
   const CPRegexResult = CPRegex.exec(adresse)
@@ -119,7 +120,14 @@ export function MapAdresse(adresse: string): Types.Canonical.Adresse {
   const PhoneRegexResult = PhoneRegex.exec(adresse)
   const Telephone =
     PhoneRegexResult !== null
-      ? _.replace(PhoneRegexResult[0], /[\.\ ]+/g, '')
+      ? _.replace(PhoneRegexResult[1], /[\.\ ]+/g, '')
+      : undefined
+
+  // Fax number processing
+  const FaxRegexResult = FaxRegex.exec(adresse)
+  const Fax =
+    FaxRegexResult !== null
+      ? _.replace(FaxRegexResult[1], /[\.\ ]+/g, '')
       : undefined
 
   const [Adresse] = _.split(adresse, ' Téléphone : ')
@@ -128,6 +136,7 @@ export function MapAdresse(adresse: string): Types.Canonical.Adresse {
     Adresse,
     CodePostal,
     Telephone,
+    Fax,
     AdresseComplete: adresse,
   }
 }
