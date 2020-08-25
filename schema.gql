@@ -47,6 +47,7 @@ type Adresse {
   Adresse: String!
   CodePostal: String
   Telephone: String
+  Fax: String
   Deputes: [Depute!]! @relation
 }
 
