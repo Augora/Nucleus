@@ -1,4 +1,6 @@
 import { ManageDeputes } from './Depute/Manager'
+import { GetLogger } from './Common/Logger'
+
 import './Types/External/NosDeputesFR/Deputes'
 import './Types/External/NosDeputesFR/Depute'
 import './Types/Canonical/Activite'
@@ -12,6 +14,6 @@ ManageDeputes()
     console.log('The end.')
   })
   .catch((err) => {
-    console.error(err)
+    GetLogger().error(err)
     throw err
   })
