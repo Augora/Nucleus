@@ -11,12 +11,9 @@ namespace Types.Canonical {
     NomCirconscription: string
     NumeroCirconscription: number
     DebutDuMandat: string
-    SigleGroupePolitique: string
     parti_ratt_financier: string
     Profession: string
     PlaceEnHemicycle: string
-    URLAssembleeNationnale: string
-    IDAssembleeNationnale: string
     URLAssembleeNationale: string
     IDAssembleeNationale: string
     URLNosdeputes: string

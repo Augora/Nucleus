@@ -3,6 +3,7 @@ import { GetLogger } from './Common/Logger'
 
 import './Types/External/NosDeputesFR/Deputes'
 import './Types/External/NosDeputesFR/Depute'
+import './Types/External/NosDeputesFR/Groupes'
 import './Types/Canonical/Activite'
 import './Types/Canonical/Depute'
 import './Types/Canonical/Adresse'
