@@ -89,12 +89,9 @@ export function areTheSameDeputes(
     depA.NomCirconscription === depB.NomCirconscription &&
     depA.NumeroCirconscription === depB.NumeroCirconscription &&
     depA.DebutDuMandat === depB.DebutDuMandat &&
-    depA.SigleGroupePolitique === depB.SigleGroupePolitique &&
     depA.parti_ratt_financier === depB.parti_ratt_financier &&
     // depA.Profession === depB.Profession &&
     depA.PlaceEnHemicycle === depB.PlaceEnHemicycle &&
-    depA.URLAssembleeNationnale === depB.URLAssembleeNationnale &&
-    depA.IDAssembleeNationnale === depB.IDAssembleeNationnale &&
     depA.URLNosdeputes === depB.URLNosdeputes &&
     depA.URLNosdeputesAPI === depB.URLNosdeputesAPI &&
     depA.NombreMandats === depB.NombreMandats &&
