@@ -1,10 +1,10 @@
 namespace Types.External.NosDeputesFR {
   export interface Organismes {
-    oganismes: [OrganismeWrapper]
+    organismes: [OrganismeWrapper]
   }
 
   export interface OrganismeWrapper {
-    oganisme: Organisme
+    organisme: Organisme
   }
 
   export interface Organisme {
