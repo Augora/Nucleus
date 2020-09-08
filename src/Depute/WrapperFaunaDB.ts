@@ -1,5 +1,5 @@
 import { GetProvidedFaunaDBClient } from '../Common/FaunaDBClient'
-import { GetLogger } from '../Common/Logger'
+import { GetGroupeParlementaireRefBySigle } from '../GroupeParlementaire/WrapperFaunaDB'
 
 import { query, values } from 'faunadb'
 const {
@@ -40,7 +40,7 @@ export function getDeputeRefByDeputeSlug(slug: string) {
   return Select('ref', Get(Match(Index('unique_Depute_Slug'), slug)))
 }
 
-export function UpdateDepute(data) {
+export function UpdateDepute(data: Types.Canonical.Depute) {
   return GetProvidedFaunaDBClient().query<
     values.Document<values.Document<Types.Canonical.Depute>[]>
   >(
@@ -48,20 +48,21 @@ export function UpdateDepute(data) {
       Paginate(Match(Index('unique_Depute_Slug'), data.Slug)),
       Lambda(
         'X',
-        Update(Var('X'), {
-          data: Object.assign({}, data, {
-            GroupeParlementaire: getGroupeParlementaireRefBySigle(
-              data.SigleGroupePolitique
-            ),
-          }),
-        })
+        Update(
+          Var('X'),
+          Object.assign(
+            {},
+            { data },
+            {
+              GroupePolitique: GetGroupeParlementaireRefBySigle(
+                data.GroupeParlementaire.Sigle
+              ),
+            }
+          )
+        )
       )
     )
   )
-}
-
-function getGroupeParlementaireRefBySigle(sigle: string) {
-  return Select('ref', Get(Match(Index('GroupeParlementaire'), sigle)))
 }
 
 export function CreateDepute(
@@ -70,12 +71,17 @@ export function CreateDepute(
   return GetProvidedFaunaDBClient().query<
     values.Document<Types.Canonical.Depute>
   >(
-    Create(Collection('Depute'), {
-      data: Object.assign({}, data, {
-        GroupeParlementaire: getGroupeParlementaireRefBySigle(
-          data.SigleGroupePolitique
-        ),
-      }),
-    })
+    Create(
+      Collection('Depute'),
+      Object.assign(
+        {},
+        { data },
+        {
+          GroupePolitique: GetGroupeParlementaireRefBySigle(
+            data.GroupeParlementaire.Sigle
+          ),
+        }
+      )
+    )
   )
 }

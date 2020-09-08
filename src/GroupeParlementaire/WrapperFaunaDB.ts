@@ -33,7 +33,7 @@ export function DoesGroupeParlementaireExistsBySigle(sigle: string) {
   )
 }
 
-export function getGroupeParlementaireRefBySigle(sigle: string) {
+export function GetGroupeParlementaireRefBySigle(sigle: string) {
   return Select('ref', Get(Match(Index('GroupeParlementaire'), sigle)))
 }
 

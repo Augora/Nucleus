@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { split, toLower, upperFirst, join } from 'lodash'
+import { split, toLower, upperFirst, join, isUndefined, isNull } from 'lodash'
 
 export function MapDepute(
   depute: Types.External.NosDeputesFR.Depute
@@ -50,5 +50,11 @@ export function MapDepute(
         ' '
       )
     ),
+    GroupeParlementaire: {
+      Sigle:
+        isUndefined(depute.groupe_sigle) || isNull(depute.groupe_sigle)
+          ? 'NI'
+          : depute.groupe_sigle,
+    },
   }
 }
