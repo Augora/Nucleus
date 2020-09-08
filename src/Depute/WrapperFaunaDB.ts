@@ -53,6 +53,11 @@ export function UpdateDepute(data: Types.Canonical.Depute) {
             {},
             { data },
             {
+              data: {
+                GroupePolitique: undefined,
+              },
+            },
+            {
               GroupePolitique: GetGroupeParlementaireRefBySigle(
                 data.GroupeParlementaire.Sigle
               ),
@@ -74,6 +79,11 @@ export function CreateDepute(
       data: Object.assign(
         {},
         { data },
+        {
+          data: {
+            GroupePolitique: undefined,
+          },
+        },
         {
           GroupePolitique: GetGroupeParlementaireRefBySigle(
             data.GroupeParlementaire.Sigle
