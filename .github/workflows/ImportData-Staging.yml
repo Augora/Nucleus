@@ -4,7 +4,7 @@ on:
   repository_dispatch:
     types: import-data-staging
   schedule:
-    - cron: "0 4 * * *"
+    - cron: '0 4 * * *'
 
 jobs:
   build:
@@ -35,47 +35,46 @@ jobs:
           name: logs
           path: logs
 
-          - uses: 8398a7/action-slack@v3
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          if: always()
-          with:
-            status: custom
-            fields: workflow,job,commit
-            custom_payload: |
-              {
-                username: 'Github Actions',
-                icon_emoji: ':rocket:',
-                attachments: [
-                  {
-                    color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
-                    "blocks": [
-                      {
-                        "type": "section",
-                        "text": {
-                          "type": "mrkdwn",
-                          "text": `${process.env.AS_WORKFLOW} (${process.env.AS_COMMIT})`
-                        }
-                      },
-                      {
-                        "type": "section",
-                        "text": {
-                          "type": "mrkdwn",
-                          "text": '${{ job.status }}' === 'success' ? "Data successfully imported in Staging :sunglasses::tada:" : "Error while importing data in Staging"
-                        }
-                      },
-                      {
-                        "type": "context",
-                        "elements": [
-                          {
-                            "type": "mrkdwn",
-                            "text": "From GitHub Actions with :heart:"
-                          }
-                        ]
+      - uses: 8398a7/action-slack@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()
+        with:
+          status: custom
+          fields: workflow,job,commit
+          custom_payload: |
+            {
+              username: 'Github Actions',
+              icon_emoji: ':rocket:',
+              attachments: [
+                {
+                  color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
+                  "blocks": [
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": `${process.env.AS_WORKFLOW} (${process.env.AS_COMMIT})`
                       }
-                    ]
-                  }
-                ]
-              }
-  
+                    },
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": '${{ job.status }}' === 'success' ? "Data successfully imported in Staging :sunglasses::tada:" : "Error while importing data in Staging"
+                      }
+                    },
+                    {
+                      "type": "context",
+                      "elements": [
+                        {
+                          "type": "mrkdwn",
+                          "text": "From GitHub Actions with :heart:"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
