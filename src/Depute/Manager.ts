@@ -19,6 +19,7 @@ import { manageAdresses } from '../Tools/Adresse'
 import { manageAnciensMandats } from '../Tools/AnciensMandat'
 import { manageAutresMandats } from '../Tools/AutresMandat'
 import { GetProvidedFaunaDBClient } from '../Common/FaunaDBClient'
+import { SendNewDeputeNotification } from '../Common/SlackWrapper'
 
 export async function ManageDeputes() {
   const simpleDeputesFromNosDeputesFR = await GetDeputesFromNosDeputesFR()
@@ -52,8 +53,9 @@ export async function ManageDeputes() {
           GetLogger().info('Creating depute:', action.Data)
           return CreateDepute(action.Data)
             .then((ret: any) => {
-              GetLogger().info('Created depute:', ret.data)
+              GetLogger().info('Created depute:', { Slug: action.Data.Slug })
               return Promise.all([
+                SendNewDeputeNotification(action.Data),
                 // manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
                 manageAdresses(
                   action.Data.Slug,
