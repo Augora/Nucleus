@@ -3,7 +3,7 @@ import Color from 'ac-colors'
 export function MapGroupeParlementaire(
   groupe: Types.External.NosDeputesFR.Organisme
 ): Types.Canonical.GroupeParlementaire {
-  var color = new Color({
+  const color = new Color({
     type: 'rgb',
     color: groupe.couleur.split(',').map((n) => parseInt(n)),
   })
@@ -15,7 +15,7 @@ export function MapGroupeParlementaire(
       color.hsl[1]
     )}%, ${Math.round(color.hsl[2])}%, 1)`,
     Ordre: groupe.order,
-    Actif: groupe.groupe_actuel ? false : groupe.groupe_actuel,
+    Actif: groupe.groupe_actuel === undefined ? false : groupe.groupe_actuel,
     URLImage: '',
   }
 }
