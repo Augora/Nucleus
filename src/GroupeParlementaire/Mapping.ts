@@ -5,7 +5,7 @@ export function MapGroupeParlementaire(
 ): Types.Canonical.GroupeParlementaire {
   const color = new Color({
     type: 'rgb',
-    color: groupe.couleur.split(',').map((n) => parseInt(n)),
+    color: groupe.couleur.split(',').map((n) => parseInt(n, 10)),
   })
 
   return {
