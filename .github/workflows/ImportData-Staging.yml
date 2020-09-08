@@ -27,6 +27,7 @@ jobs:
         run: yarn start
         env:
           FAUNADB_TOKEN: ${{ secrets.FAUNADB_TOKEN_ADMIN_STAGING }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Upload logs as artifact
         uses: actions/upload-artifact@v1
