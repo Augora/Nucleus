@@ -15,6 +15,7 @@ const {
   Lambda,
   Var,
   Documents,
+  Merge,
 } = query
 
 export function GetDeputesFromFaunaDB() {
@@ -23,12 +24,19 @@ export function GetDeputesFromFaunaDB() {
   >(
     Map(
       Paginate(Documents(Collection('Depute')), { size: 1000 }),
-      Lambda('X', Get(Var('X')))
+      Lambda('X', {
+        data: Merge(Select('data', Get(Var('X'))), {
+          GroupeParlementaire: Select(
+            ['data'],
+            Get(Select(['data', 'GroupeParlementaire'], Get(Var('X'))))
+          ),
+        }),
+      })
     )
   )
 }
 
-export function getDeputeBySlug(
+export function GetDeputeBySlug(
   slug: string
 ): Promise<values.Document<Types.Canonical.Depute>> {
   return GetProvidedFaunaDBClient().query<
@@ -36,7 +44,7 @@ export function getDeputeBySlug(
   >(Get(Match(Index('unique_Depute_Slug'), slug)))
 }
 
-export function getDeputeRefByDeputeSlug(slug: string) {
+export function GetDeputeRefByDeputeSlug(slug: string) {
   return Select('ref', Get(Match(Index('unique_Depute_Slug'), slug)))
 }
 
@@ -53,12 +61,7 @@ export function UpdateDepute(data: Types.Canonical.Depute) {
             {},
             { data },
             {
-              data: {
-                GroupePolitique: undefined,
-              },
-            },
-            {
-              GroupePolitique: GetGroupeParlementaireRefBySigle(
+              GroupeParlementaire: GetGroupeParlementaireRefBySigle(
                 data.GroupeParlementaire.Sigle
               ),
             }
@@ -80,12 +83,7 @@ export function CreateDepute(
         {},
         { data },
         {
-          data: {
-            GroupePolitique: undefined,
-          },
-        },
-        {
-          GroupePolitique: GetGroupeParlementaireRefBySigle(
+          GroupeParlementaire: GetGroupeParlementaireRefBySigle(
             data.GroupeParlementaire.Sigle
           ),
         }

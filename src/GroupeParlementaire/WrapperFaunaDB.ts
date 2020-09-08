@@ -33,6 +33,12 @@ export function DoesGroupeParlementaireExistsBySigle(sigle: string) {
   )
 }
 
+export function GetGroupeParlementaireByRef(ref) {
+  return GetProvidedFaunaDBClient().query<
+    values.Document<Types.Canonical.GroupeParlementaire>
+  >(Get(ref))
+}
+
 export function GetGroupeParlementaireRefBySigle(sigle: string) {
   return Select(
     'ref',

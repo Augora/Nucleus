@@ -1,8 +1,8 @@
-import { getDeputeBySlug } from './WrapperFaunaDB'
+import { GetDeputeBySlug } from './WrapperFaunaDB'
 
 describe('MapAdresse function', () => {
   it('should ', async () => {
-    const depute = (await getDeputeBySlug('cedric-roussel')).data
+    const depute = (await GetDeputeBySlug('cedric-roussel')).data
     expect(depute.Slug).toBe('cedric-roussel')
   })
 })
