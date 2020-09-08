@@ -48,9 +48,8 @@ export function UpdateDepute(data: Types.Canonical.Depute) {
       Paginate(Match(Index('unique_Depute_Slug'), data.Slug)),
       Lambda(
         'X',
-        Update(
-          Var('X'),
-          Object.assign(
+        Update(Var('X'), {
+          data: Object.assign(
             {},
             { data },
             {
@@ -58,8 +57,8 @@ export function UpdateDepute(data: Types.Canonical.Depute) {
                 data.GroupeParlementaire.Sigle
               ),
             }
-          )
-        )
+          ),
+        })
       )
     )
   )
@@ -71,9 +70,8 @@ export function CreateDepute(
   return GetProvidedFaunaDBClient().query<
     values.Document<Types.Canonical.Depute>
   >(
-    Create(
-      Collection('Depute'),
-      Object.assign(
+    Create(Collection('Depute'), {
+      data: Object.assign(
         {},
         { data },
         {
@@ -81,7 +79,7 @@ export function CreateDepute(
             data.GroupeParlementaire.Sigle
           ),
         }
-      )
-    )
+      ),
+    })
   )
 }
