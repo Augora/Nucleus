@@ -55,13 +55,6 @@ jobs:
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": `${process.env.AS_WORKFLOW} (${process.env.AS_COMMIT})`
-                      }
-                    },
-                    {
-                      "type": "section",
-                      "text": {
-                        "type": "mrkdwn",
                         "text": '${{ job.status }}' === 'success' ? "Data successfully imported in Staging :sunglasses::tada:" : "Error while importing data in Staging"
                       }
                     },
