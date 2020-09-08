@@ -30,6 +30,7 @@ export function AreTheSameDeputes(
     difference(depA.SitesWeb, depB.SitesWeb).length === 0 &&
     difference(depA.Emails, depB.Emails).length === 0 &&
     difference(depA.Adresses, depB.Adresses).length === 0 &&
-    difference(depA.Collaborateurs, depB.Collaborateurs).length === 0
+    difference(depA.Collaborateurs, depB.Collaborateurs).length === 0 &&
+    depA.GroupeParlementaire.Sigle === depB.GroupeParlementaire.Sigle
   )
 }
