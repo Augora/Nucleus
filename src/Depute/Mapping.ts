@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { split, toLower, upperFirst, join } from 'lodash'
+import { split, toLower, upperFirst, join, isUndefined, isNull } from 'lodash'
 
 export function MapDepute(
   depute: Types.External.NosDeputesFR.Depute
@@ -16,13 +16,9 @@ export function MapDepute(
     NomCirconscription: depute.nom_circo,
     NumeroCirconscription: depute.num_circo,
     DebutDuMandat: depute.mandat_debut,
-    SigleGroupePolitique:
-      depute.groupe_sigle == null ? 'NI' : depute.groupe_sigle,
     parti_ratt_financier: depute.parti_ratt_financier,
     Profession: depute.profession ? depute.profession : '',
     PlaceEnHemicycle: depute.place_en_hemicycle,
-    URLAssembleeNationnale: depute.url_an,
-    IDAssembleeNationnale: depute.id_an,
     URLAssembleeNationale: depute.url_an,
     IDAssembleeNationale: depute.id_an,
     URLNosdeputes: depute.url_nosdeputes,
@@ -54,5 +50,11 @@ export function MapDepute(
         ' '
       )
     ),
+    GroupeParlementaire: {
+      Sigle:
+        isUndefined(depute.groupe_sigle) || isNull(depute.groupe_sigle)
+          ? 'NI'
+          : depute.groupe_sigle,
+    },
   }
 }

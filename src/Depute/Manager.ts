@@ -14,11 +14,12 @@ import {
   GetDeputesFromNosDeputesFR,
   GetDeputesBySlugFromNosDeputesFR,
 } from './WrapperNosDeputesFR'
-import { manageActivites } from '../Tools/Activites'
+// import { manageActivites } from '../Tools/Activites'
 import { manageAdresses } from '../Tools/Adresse'
 import { manageAnciensMandats } from '../Tools/AnciensMandat'
 import { manageAutresMandats } from '../Tools/AutresMandat'
 import { GetProvidedFaunaDBClient } from '../Common/FaunaDBClient'
+import { SendNewDeputeNotification } from '../Common/SlackWrapper'
 
 export async function ManageDeputes() {
   const simpleDeputesFromNosDeputesFR = await GetDeputesFromNosDeputesFR()
@@ -52,9 +53,10 @@ export async function ManageDeputes() {
           GetLogger().info('Creating depute:', action.Data)
           return CreateDepute(action.Data)
             .then((ret: any) => {
-              GetLogger().info('Created depute:', ret.data)
+              GetLogger().info('Created depute:', { Slug: action.Data.Slug })
               return Promise.all([
-                manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
+                SendNewDeputeNotification(action.Data),
+                // manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
                 manageAdresses(
                   action.Data.Slug,
                   GetProvidedFaunaDBClient(),
@@ -79,34 +81,40 @@ export async function ManageDeputes() {
             })
         } else if (action.Action === Action.Update) {
           GetLogger().info('Updating depute:', { Slug: action.Data.Slug })
-          return UpdateDepute(action.Data).then((ret: any) => {
-            GetLogger().info('Updated depute:', action.Data, 'to', ret.data)
-            return Promise.all([
-              manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
-              manageAdresses(
-                action.Data.Slug,
-                GetProvidedFaunaDBClient(),
-                action.Data.Adresses
-              ),
-              manageAnciensMandats(
-                action.Data.Slug,
-                GetProvidedFaunaDBClient(),
-                currentDeputeFromAPI.anciens_mandats.map((am) => am.mandat)
-              ),
-              manageAutresMandats(
-                action.Data.Slug,
-                GetProvidedFaunaDBClient(),
-                currentDeputeFromAPI.autres_mandats.map((am) => am.mandat)
-              ),
-            ])
-          })
+          return UpdateDepute(action.Data)
+            .then((ret: any) => {
+              GetLogger().info('Updated depute:', action.Data, 'to', ret.data)
+              return Promise.all([
+                // manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
+                manageAdresses(
+                  action.Data.Slug,
+                  GetProvidedFaunaDBClient(),
+                  action.Data.Adresses
+                ),
+                manageAnciensMandats(
+                  action.Data.Slug,
+                  GetProvidedFaunaDBClient(),
+                  currentDeputeFromAPI.anciens_mandats.map((am) => am.mandat)
+                ),
+                manageAutresMandats(
+                  action.Data.Slug,
+                  GetProvidedFaunaDBClient(),
+                  currentDeputeFromAPI.autres_mandats.map((am) => am.mandat)
+                ),
+              ])
+            })
+            .catch((err) => {
+              GetLogger().error(
+                `Error while creating depute ${action.Data.Slug}: ${err}`
+              )
+            })
         } else if (action.Action === Action.Remove) {
           // TODO: Think about this kind of cases.
           return Promise.resolve()
         } else if (action.Action === Action.None) {
           GetLogger().info('Nothing to do on', { Slug: action.Data.Slug })
           return Promise.all([
-            manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
+            // manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
             manageAdresses(
               action.Data.Slug,
               GetProvidedFaunaDBClient(),

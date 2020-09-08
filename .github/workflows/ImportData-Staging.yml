@@ -27,6 +27,7 @@ jobs:
         run: yarn start
         env:
           FAUNADB_TOKEN: ${{ secrets.FAUNADB_TOKEN_ADMIN_STAGING }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Upload logs as artifact
         uses: actions/upload-artifact@v1
@@ -34,9 +35,47 @@ jobs:
           name: logs
           path: logs
 
-      - name: Notify slack
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-        uses: pullreminders/slack-action@master
-        with:
-          args: '{\"channel\":\"C4H19LCN9\",\"text\":\"Data successfully imported in Staging :sunglasses::tada:\"}'
+          - uses: 8398a7/action-slack@v3
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          if: always()
+          with:
+            status: custom
+            fields: workflow,job,commit
+            custom_payload: |
+              {
+                username: 'Github Actions',
+                icon_emoji: ':rocket:',
+                attachments: [
+                  {
+                    color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
+                    "blocks": [
+                      {
+                        "type": "section",
+                        "text": {
+                          "type": "mrkdwn",
+                          "text": `${process.env.AS_WORKFLOW} (${process.env.AS_COMMIT})`
+                        }
+                      },
+                      {
+                        "type": "section",
+                        "text": {
+                          "type": "mrkdwn",
+                          "text": '${{ job.status }}' === 'success' ? "Data successfully imported in Staging :sunglasses::tada:" : "Error while importing data in Staging"
+                        }
+                      },
+                      {
+                        "type": "context",
+                        "elements": [
+                          {
+                            "type": "mrkdwn",
+                            "text": "From GitHub Actions with :heart:"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+  

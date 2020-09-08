@@ -493,10 +493,10 @@
     jest-diff "^25.2.1"
     pretty-format "^25.2.1"
 
-"@types/lodash@^4.14.160":
-  version "4.14.160"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.160.tgz#2f1bba6500bc3cb9a732c6d66a083378fb0b0b29"
-  integrity sha512-aP03BShJoO+WVndoVj/WNcB/YBPt+CIU1mvaao2GRAHy2yg4pT/XS4XnVHEQBjPJGycWf/9seKEO9vopTJGkvA==
+"@types/lodash@^4.14.161":
+  version "4.14.161"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.161.tgz#a21ca0777dabc6e4f44f3d07f37b765f54188b18"
+  integrity sha512-EP6O3Jkr7bXvZZSZYlsgt5DIjiGr0dXP1/jVEwVLTFgg0d+3lWVQkRavYVQszV7dYUwvg0B8R0MBDpcmXg7XIA==
 
 "@types/node@*", "@types/node@^14.6.4":
   version "14.6.4"
@@ -534,6 +534,11 @@ abab@^2.0.0:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/abab/-/abab-2.0.3.tgz#623e2075e02eb2d3f2475e49f99c91846467907a"
   integrity sha512-tsFzPpcttalNjFBCFMqsKYQcWxxen1pgJR56by//QwvJc4/OUS3kPOOttx2tSIfjsylB0pYu7f5D3K1RCxUnUg==
+
+ac-colors@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/ac-colors/-/ac-colors-1.4.1.tgz#cb3724b93c924dcb6f436904101e8203a12f0b57"
+  integrity sha512-KqXc4QRegd/yTnMXyfCaQZrVm0dNZzT0+4YvjNOF+robFHG94we0Kcu9p1fm//QVPl4Z5fUMWKXdR3cNLLKM/A==
 
 acorn-globals@^4.3.2:
   version "4.3.4"
@@ -3088,10 +3093,10 @@ rsvp@^4.8.4:
   resolved "https://registry.yarnpkg.com/rsvp/-/rsvp-4.8.5.tgz#c8f155311d167f68f21e168df71ec5b083113734"
   integrity sha512-nfMOlASu9OnRJo1mbEk2cz0D56a1MBNrJ7orjRZQG10XDyuvwksKbuXNp6qa+kbn839HwjwhBzhFmdsaEAfauA==
 
-rxjs@^6.6.2:
-  version "6.6.2"
-  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.6.2.tgz#8096a7ac03f2cc4fe5860ef6e572810d9e01c0d2"
-  integrity sha512-BHdBMVoWC2sL26w//BCu3YzKT4s2jip/WhwsGEDmeKYBhKDZeYezVUnHatYB7L85v5xs0BAQmg6BEYJEKxBabg==
+rxjs@^6.6.3:
+  version "6.6.3"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.6.3.tgz#8ca84635c4daa900c0d3967a6ee7ac60271ee552"
+  integrity sha512-trsQc+xYYXZ3urjOiJOuCOa5N3jAZ3eiSpQB5hIT8zGlL2QfnHLJ2r7GMkBGuIausdJN1OneaI6gQlsqNHHmZQ==
   dependencies:
     tslib "^1.9.0"
 
