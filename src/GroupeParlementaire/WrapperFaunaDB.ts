@@ -29,12 +29,15 @@ export function GetGroupesFromFaunaDB() {
 
 export function DoesGroupeParlementaireExistsBySigle(sigle: string) {
   return GetProvidedFaunaDBClient().query<values.Document<boolean>>(
-    Exists(Match(Index('GroupeParlementaire'), sigle))
+    Exists(Match(Index('unique_GroupeParlementaire_Sigle'), sigle))
   )
 }
 
 export function GetGroupeParlementaireRefBySigle(sigle: string) {
-  return Select('ref', Get(Match(Index('GroupeParlementaire'), sigle)))
+  return Select(
+    'ref',
+    Get(Match(Index('unique_GroupeParlementaire_Sigle'), sigle))
+  )
 }
 
 export function CreateGroupeParlementaire(
