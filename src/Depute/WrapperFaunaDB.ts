@@ -49,6 +49,26 @@ export function GetDeputeRefByDeputeSlug(slug: string) {
   return Select('ref', Get(Match(Index('unique_Depute_Slug'), slug)))
 }
 
+export function CreateDepute(
+  data: Types.Canonical.Depute
+): Promise<values.Document<Types.Canonical.Depute>> {
+  return GetProvidedFaunaDBClient().query<
+    values.Document<Types.Canonical.Depute>
+  >(
+    Create(Collection('Depute'), {
+      data: Object.assign(
+        {},
+        { data },
+        {
+          GroupeParlementaire: GetGroupeParlementaireRefBySigle(
+            data.GroupeParlementaire.Sigle
+          ),
+        }
+      ),
+    })
+  )
+}
+
 export function UpdateDepute(data: Types.Canonical.Depute) {
   return GetProvidedFaunaDBClient().query<
     values.Document<values.Document<Types.Canonical.Depute>[]>
@@ -73,29 +93,9 @@ export function UpdateDepute(data: Types.Canonical.Depute) {
   )
 }
 
-export function CreateDepute(
-  data: Types.Canonical.Depute
-): Promise<values.Document<Types.Canonical.Depute>> {
-  return GetProvidedFaunaDBClient().query<
-    values.Document<Types.Canonical.Depute>
-  >(
-    Create(Collection('Depute'), {
-      data: Object.assign(
-        {},
-        { data },
-        {
-          GroupeParlementaire: GetGroupeParlementaireRefBySigle(
-            data.GroupeParlementaire.Sigle
-          ),
-        }
-      ),
-    })
-  )
-}
-
 export function DeleteDepute(slug: string) {
   return GetProvidedFaunaDBClient().query<
-    values.Document<Types.Canonical.Depute>
+    values.Document<values.Document<Types.Canonical.Depute>[]>
   >(
     Map(
       Paginate(Match(Index('unique_Depute_Slug'), slug)),
