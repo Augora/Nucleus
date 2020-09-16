@@ -110,7 +110,6 @@ export async function ManageDeputes() {
               )
             })
         } else if (action.Action === Action.Remove) {
-          // TODO: Think about this kind of cases.
           GetLogger().info('Removing depute:', { Slug: action.Data.Slug })
           return DeleteDepute(action.Data.Slug)
         } else if (action.Action === Action.None) {
