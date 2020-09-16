@@ -9,6 +9,7 @@ import {
   GetDeputesFromFaunaDB,
   CreateDepute,
   UpdateDepute,
+  DeleteDepute,
 } from './WrapperFaunaDB'
 import {
   GetDeputesFromNosDeputesFR,
@@ -110,7 +111,8 @@ export async function ManageDeputes() {
             })
         } else if (action.Action === Action.Remove) {
           // TODO: Think about this kind of cases.
-          return Promise.resolve()
+          GetLogger().info('Removing depute:', { Slug: action.Data.Slug })
+          return DeleteDepute(action.Data.Slug)
         } else if (action.Action === Action.None) {
           GetLogger().info('Nothing to do on', { Slug: action.Data.Slug })
           return Promise.all([

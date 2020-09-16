@@ -16,6 +16,7 @@ const {
   Var,
   Documents,
   Merge,
+  Delete,
 } = query
 
 export function GetDeputesFromFaunaDB() {
@@ -89,5 +90,16 @@ export function CreateDepute(
         }
       ),
     })
+  )
+}
+
+export function DeleteDepute(slug: string) {
+  return GetProvidedFaunaDBClient().query<
+    values.Document<Types.Canonical.Depute>
+  >(
+    Map(
+      Paginate(Match(Index('unique_Depute_Slug'), slug)),
+      Lambda('X', Delete(Var('X')))
+    )
   )
 }
