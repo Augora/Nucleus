@@ -56,15 +56,11 @@ export function CreateDepute(
     values.Document<Types.Canonical.Depute>
   >(
     Create(Collection('Depute'), {
-      data: Object.assign(
-        {},
-        { data },
-        {
-          GroupeParlementaire: GetGroupeParlementaireRefBySigle(
-            data.GroupeParlementaire.Sigle
-          ),
-        }
-      ),
+      data: Object.assign({}, data, {
+        GroupeParlementaire: GetGroupeParlementaireRefBySigle(
+          data.GroupeParlementaire.Sigle
+        ),
+      }),
     })
   )
 }
@@ -78,15 +74,11 @@ export function UpdateDepute(data: Types.Canonical.Depute) {
       Lambda(
         'X',
         Update(Var('X'), {
-          data: Object.assign(
-            {},
-            { data },
-            {
-              GroupeParlementaire: GetGroupeParlementaireRefBySigle(
-                data.GroupeParlementaire.Sigle
-              ),
-            }
-          ),
+          data: Object.assign({}, data, {
+            GroupeParlementaire: GetGroupeParlementaireRefBySigle(
+              data.GroupeParlementaire.Sigle
+            ),
+          }),
         })
       )
     )
