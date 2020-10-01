@@ -76,6 +76,7 @@ export async function ManageDeputes() {
               ])
             })
             .catch((err) => {
+              process.exitCode = 1
               GetLogger().error(
                 `Error while creating depute ${action.Data.Slug}: ${err}`
               )
@@ -105,13 +106,19 @@ export async function ManageDeputes() {
               ])
             })
             .catch((err) => {
+              process.exitCode = 1
               GetLogger().error(
                 `Error while creating depute ${action.Data.Slug}: ${err}`
               )
             })
         } else if (action.Action === Action.Remove) {
           GetLogger().info('Removing depute:', { Slug: action.Data.Slug })
-          return DeleteDepute(action.Data.Slug)
+          return DeleteDepute(action.Data.Slug).catch((err) => {
+            process.exitCode = 1
+            GetLogger().error(
+              `Error while removing depute ${action.Data.Slug}: ${err}`
+            )
+          })
         } else if (action.Action === Action.None) {
           GetLogger().info('Nothing to do on', { Slug: action.Data.Slug })
           return Promise.all([
@@ -133,7 +140,12 @@ export async function ManageDeputes() {
               GetProvidedFaunaDBClient(),
               currentDeputeFromAPI.autres_mandats.map((am) => am.mandat)
             ),
-          ])
+          ]).catch((err) => {
+            process.exitCode = 1
+            GetLogger().error(
+              `Error while doing nothing on depute ${action.Data.Slug}: ${err}`
+            )
+          })
         }
       }, 1),
       retry(2)
