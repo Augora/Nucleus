@@ -60,10 +60,15 @@ type Depute {
   DateDeNaissance: String
   LieuDeNaissance: String
   NumeroDepartement: String
+  NomDepartement: String
+  NumeroRegion: String
+  NomRegion: String
   NomCirconscription: String
   NumeroCirconscription: Int
   DebutDuMandat: String
   parti_ratt_financier: String
+    @deprecated(reason: "Please use RattachementFinancier")
+  RattachementFinancier: String
   Profession: String
   PlaceEnHemicycle: String
   URLAssembleeNationale: String

@@ -8,10 +8,13 @@ namespace Types.Canonical {
     DateDeNaissance?: string
     LieuDeNaissance?: string
     NumeroDepartement?: string
+    NomDepartement?: string
+    NumeroRegion?: string
+    NomRegion?: string
     NomCirconscription?: string
     NumeroCirconscription?: number
     DebutDuMandat?: string
-    parti_ratt_financier?: string
+    RattachementFinancier?: string
     Profession?: string
     PlaceEnHemicycle?: string
     URLAssembleeNationale?: string
