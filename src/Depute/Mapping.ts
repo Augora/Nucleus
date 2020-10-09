@@ -1,6 +1,56 @@
 import moment from 'moment'
 import { split, toLower, upperFirst, join, isUndefined, isNull } from 'lodash'
 
+import Departements from '../StaticData/Deputes/departments.json'
+import Regions from '../StaticData/Deputes/regions.json'
+
+function processNomDepartement(numeroDepartement: string, slug: string) {
+  if (numeroDepartement === '999') {
+    return 'Établis Hors de France'
+  } else {
+    var departement = Departements.find((d) => d.code === numeroDepartement)
+    if (departement) {
+      return departement.name
+    } else {
+      throw new Error(
+        `${slug}: Département ${numeroDepartement} introuvable dans nos données.`
+      )
+    }
+  }
+}
+
+function processNumeroRegion(numeroDepartement: string, slug: string) {
+  if (numeroDepartement === '999') {
+    return '00'
+  } else {
+    var departement = Departements.find((d) => d.code === numeroDepartement)
+    var region = Regions.find((r) => r.code === departement.region_code)
+    if (departement && region) {
+      return region.code
+    } else {
+      throw new Error(
+        `${slug}: Département ${numeroDepartement} introuvable dans nos données.`
+      )
+    }
+  }
+}
+
+function processNomRegion(numeroDepartement: string, slug: string) {
+  if (numeroDepartement === '999') {
+    return 'Établis Hors de France'
+  } else {
+    var departement = Departements.find((d) => d.code === numeroDepartement)
+    var region = Regions.find((r) => r.code === departement.region_code)
+    if (departement && region) {
+      return region.name
+    } else {
+      throw new Error(
+        `${slug}: Département ${numeroDepartement} introuvable dans nos données.`
+      )
+    }
+  }
+}
+
 export function MapDepute(
   depute: Types.External.NosDeputesFR.Depute
 ): Types.Canonical.Depute {
@@ -13,10 +63,13 @@ export function MapDepute(
     DateDeNaissance: depute.date_naissance,
     LieuDeNaissance: depute.lieu_naissance,
     NumeroDepartement: depute.num_deptmt,
+    NomDepartement: processNomDepartement(depute.num_deptmt, depute.slug),
+    NumeroRegion: processNumeroRegion(depute.num_deptmt, depute.slug),
+    NomRegion: processNomRegion(depute.num_deptmt, depute.slug),
     NomCirconscription: depute.nom_circo,
     NumeroCirconscription: depute.num_circo,
     DebutDuMandat: depute.mandat_debut,
-    parti_ratt_financier: depute.parti_ratt_financier,
+    RattachementFinancier: depute.parti_ratt_financier,
     Profession: depute.profession ? depute.profession : '',
     PlaceEnHemicycle: depute.place_en_hemicycle,
     URLAssembleeNationale: depute.url_an,

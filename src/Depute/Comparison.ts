@@ -13,10 +13,13 @@ export function AreTheSameDeputes(
     depA.DateDeNaissance === depB.DateDeNaissance &&
     depA.LieuDeNaissance === depB.LieuDeNaissance &&
     depA.NumeroDepartement === depB.NumeroDepartement &&
+    depA.NomDepartement === depB.NomDepartement &&
+    depA.NumeroRegion === depB.NumeroRegion &&
+    depA.NomRegion === depB.NomRegion &&
     depA.NomCirconscription === depB.NomCirconscription &&
     depA.NumeroCirconscription === depB.NumeroCirconscription &&
     depA.DebutDuMandat === depB.DebutDuMandat &&
-    depA.parti_ratt_financier === depB.parti_ratt_financier &&
+    depA.RattachementFinancier === depB.RattachementFinancier &&
     // depA.Profession === depB.Profession &&
     depA.PlaceEnHemicycle === depB.PlaceEnHemicycle &&
     depA.URLNosdeputes === depB.URLNosdeputes &&
