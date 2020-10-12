@@ -535,10 +535,10 @@ abab@^2.0.0:
   resolved "https://registry.yarnpkg.com/abab/-/abab-2.0.3.tgz#623e2075e02eb2d3f2475e49f99c91846467907a"
   integrity sha512-tsFzPpcttalNjFBCFMqsKYQcWxxen1pgJR56by//QwvJc4/OUS3kPOOttx2tSIfjsylB0pYu7f5D3K1RCxUnUg==
 
-ac-colors@^1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/ac-colors/-/ac-colors-1.4.1.tgz#cb3724b93c924dcb6f436904101e8203a12f0b57"
-  integrity sha512-KqXc4QRegd/yTnMXyfCaQZrVm0dNZzT0+4YvjNOF+robFHG94we0Kcu9p1fm//QVPl4Z5fUMWKXdR3cNLLKM/A==
+ac-colors@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/ac-colors/-/ac-colors-1.4.2.tgz#0451b04c5e625eede41d3e97bac909e43d5ca605"
+  integrity sha512-Gi9IFuxUSuIZiEecAOHZSHBLoHTMMEw6IBchJSLhYVLOCbH8Jl9ZEYHJDwqlwfNPPsVCiLIkKrIF8zuflKmxoQ==
 
 acorn-globals@^4.3.2:
   version "4.3.4"

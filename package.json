@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "ac-colors": "^1.4.1",
+    "ac-colors": "^1.4.2",
     "axios": "^0.20.0",
     "faunadb": "^3.0.1",
     "lodash": "^4.17.20",
