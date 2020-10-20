@@ -28,6 +28,7 @@ jobs:
         env:
           FAUNADB_TOKEN: ${{ secrets.FAUNADB_TOKEN_PRODUCTION_ADMIN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          FAUNADB_ENV: production
 
       - name: Upload logs as artifact
         uses: actions/upload-artifact@v1
