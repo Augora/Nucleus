@@ -33,3 +33,23 @@ export function SendNewGroupeParlementaireNotification(
     ],
   })
 }
+
+export function SendUpdateGroupeParlementaireNotification(
+  groupe: Types.Canonical.GroupeParlementaire
+) {
+  return axios.post(process.env.SLACK_WEBHOOK_URL, {
+    username: 'Nucleus',
+    icon_emoji: ':rocket:',
+    blocks: [
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `Le groupe ${groupe.NomComplet} est devenu ${
+            groupe.Actif ? 'actif' : 'inactif'
+          }.`,
+        },
+      },
+    ],
+  })
+}

@@ -4,13 +4,17 @@ import { mergeMap } from 'rxjs/operators'
 import {
   GetGroupesFromFaunaDB,
   CreateGroupeParlementaire,
+  UpdateGroupeParlementaire,
 } from './WrapperFaunaDB'
 import { GetDeputesFromNosDeputesFR } from './WrapperNosDeputesFR'
 import { MapGroupeParlementaire } from './Mapping'
 
 import { CompareLists, Action, DiffType } from '../Tools/Comparison'
 import { GetLogger } from '../Common/Logger'
-import { SendNewGroupeParlementaireNotification } from '../Common/SlackWrapper'
+import {
+  SendNewGroupeParlementaireNotification,
+  SendUpdateGroupeParlementaireNotification,
+} from '../Common/SlackWrapper'
 
 export async function ManageGroupes() {
   const groupesFromNosDeputesFR = await GetDeputesFromNosDeputesFR()
@@ -29,7 +33,7 @@ export async function ManageGroupes() {
   const res = CompareLists(
     canonicalGroupesFromNosDeputesFR,
     groupesFromFaunaDB,
-    (a, b) => a.Sigle === b.Sigle,
+    (a, b) => a.Sigle === b.Sigle && a.Actif === b.Actif,
     'Sigle'
   )
   GetLogger().info('Comparison', res)
@@ -42,6 +46,15 @@ export async function ManageGroupes() {
           return CreateGroupeParlementaire(action.Data).then((ret) =>
             SendNewGroupeParlementaireNotification(ret.data)
           )
+        } else if (action.Action === Action.Update) {
+          GetLogger().info('Updating Groupe', { Sigle: action.Data.Sigle })
+          return UpdateGroupeParlementaire(action.Data).then((ret) => {
+            return Promise.all(
+              ret.data.map((gp) =>
+                SendUpdateGroupeParlementaireNotification(gp.data)
+              )
+            )
+          })
         } else {
           return Promise.resolve()
         }

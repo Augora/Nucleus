@@ -12,6 +12,7 @@ const {
   Lambda,
   Var,
   Create,
+  Update,
 } = query
 
 import { GetProvidedFaunaDBClient } from '../Common/FaunaDBClient'
@@ -52,4 +53,24 @@ export function CreateGroupeParlementaire(
   return GetProvidedFaunaDBClient().query<
     values.Document<Types.Canonical.GroupeParlementaire>
   >(Create(Collection('GroupeParlementaire'), { data }))
+}
+
+export function UpdateGroupeParlementaire(
+  data: Types.Canonical.GroupeParlementaire
+) {
+  return GetProvidedFaunaDBClient().query<
+    values.Document<values.Document<Types.Canonical.GroupeParlementaire>[]>
+  >(
+    Map(
+      Paginate(Match(Index('unique_GroupeParlementaire_Sigle'), data.Sigle)),
+      Lambda(
+        'X',
+        Update(Var('X'), {
+          data: {
+            Actif: data.Actif,
+          },
+        })
+      )
+    )
+  )
 }
