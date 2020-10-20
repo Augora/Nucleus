@@ -8,7 +8,7 @@ function processNomDepartement(numeroDepartement: string, slug: string) {
   if (numeroDepartement === '999') {
     return 'Établis Hors de France'
   } else {
-    var departement = Departements.find((d) => d.code === numeroDepartement)
+    const departement = Departements.find((d) => d.code === numeroDepartement)
     if (departement) {
       return departement.name
     } else {
@@ -23,8 +23,8 @@ function processNumeroRegion(numeroDepartement: string, slug: string) {
   if (numeroDepartement === '999') {
     return '00'
   } else {
-    var departement = Departements.find((d) => d.code === numeroDepartement)
-    var region = Regions.find((r) => r.code === departement.region_code)
+    const departement = Departements.find((d) => d.code === numeroDepartement)
+    const region = Regions.find((r) => r.code === departement.region_code)
     if (departement && region) {
       return region.code
     } else {
@@ -39,8 +39,8 @@ function processNomRegion(numeroDepartement: string, slug: string) {
   if (numeroDepartement === '999') {
     return 'Établis Hors de France'
   } else {
-    var departement = Departements.find((d) => d.code === numeroDepartement)
-    var region = Regions.find((r) => r.code === departement.region_code)
+    const departement = Departements.find((d) => d.code === numeroDepartement)
+    const region = Regions.find((r) => r.code === departement.region_code)
     if (departement && region) {
       return region.name
     } else {
