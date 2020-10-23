@@ -1,5 +1,5 @@
-namespace Types.Canonical {
-  export interface GroupeParlementaire {
+declare namespace Types.Canonical {
+  interface GroupeParlementaire {
     Sigle: string
     NomComplet?: string
     Couleur?: string

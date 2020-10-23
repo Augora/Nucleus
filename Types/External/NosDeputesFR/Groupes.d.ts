@@ -1,13 +1,13 @@
-namespace Types.External.NosDeputesFR {
-  export interface Organismes {
+declare namespace Types.External.NosDeputesFR {
+  interface Organismes {
     organismes: [OrganismeWrapper]
   }
 
-  export interface OrganismeWrapper {
+  interface OrganismeWrapper {
     organisme: Organisme
   }
 
-  export interface Organisme {
+  interface Organisme {
     id: number
     slug: string
     nom: string

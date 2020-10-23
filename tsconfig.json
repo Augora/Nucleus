@@ -5,7 +5,8 @@
     "outDir": "./build",
     "strict": false,
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "typeRoots": ["./Types"]
   },
   "lib": ["esnext.asynciterable"]
 }

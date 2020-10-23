@@ -1,5 +1,5 @@
-namespace Types.Canonical {
-  export interface AncienMandat {
+declare namespace Types.Canonical {
+  interface AncienMandat {
     AncienMandatComplet: string
     DateDeDebut?: string
     DateDeFin?: string

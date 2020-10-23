@@ -1,5 +1,5 @@
-namespace Types.Canonical {
-  export interface Activite {
+declare namespace Types.Canonical {
+  interface Activite {
     NumeroDeSemaine: number
     DateDeDebut?: string
     DateDeFin?: string

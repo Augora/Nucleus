@@ -1,5 +1,5 @@
-namespace Types.Canonical {
-  export interface AutreMandat {
+declare namespace Types.Canonical {
+  interface AutreMandat {
     AutreMandatComplet: string
     Localite?: string
     Institution?: string

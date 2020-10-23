@@ -1,5 +1,5 @@
-namespace Types.Canonical {
-  export interface Depute {
+declare namespace Types.Canonical {
+  interface Depute {
     Slug: string
     Nom?: string
     NomDeFamille?: string
@@ -31,6 +31,6 @@ namespace Types.Canonical {
     Emails?: string[]
     Adresses?: string[]
     Collaborateurs?: string[]
-    GroupeParlementaire?: GroupeParlementaire
+    GroupeParlementaire?: Canonical.GroupeParlementaire
   }
 }
