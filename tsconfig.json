@@ -6,7 +6,7 @@
     "strict": false,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "typeRoots": ["./Types"]
+    "typeRoots": ["./node_modules/@types", "./Types"]
   },
   "lib": ["esnext.asynciterable"]
 }
