@@ -14,20 +14,20 @@ type GroupeParlementaire {
   Deputes: [Depute!]! @relation
 }
 
-type CouleurDetail {
+type CouleurDetail @embedded {
   HSL: HSLDetail
   RGB: RGBDetail
   HEX: String
 }
 
-type HSLDetail {
+type HSLDetail @embedded {
   Full: String
   H: Int
   S: Int
   L: Int
 }
 
-type RGBDetail {
+type RGBDetail @embedded {
   Full: String
   R: Int
   G: Int
