@@ -6,16 +6,16 @@ ManageGroupes()
   .then(() => {
     console.log('Imported groupes')
   })
-  // .then(() =>
-  //   ManageDeputes()
-  //     .then(() => {
-  //       console.log('Imported deputes')
-  //     })
-  //     .catch((err) => {
-  //       GetLogger().error(err)
-  //       throw err
-  //     })
-  // )
+  .then(() =>
+    ManageDeputes()
+      .then(() => {
+        console.log('Imported deputes')
+      })
+      .catch((err) => {
+        GetLogger().error(err)
+        throw err
+      })
+  )
   .catch((err) => {
     GetLogger().error(err)
     throw err
