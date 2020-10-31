@@ -60,24 +60,24 @@ export function manageAdresses(
         return from(actions).pipe(
           mergeMap((action: DiffType<Types.Canonical.Adresse>) => {
             if (action.Action === Action.Create) {
-              console.log('Creating adresse link:', action.Data)
+              console.log('Creating adresse link:', action.NewData)
               return client
                 .query(
                   createAdresseDeputeRelationLink(
                     slug,
-                    action.Data.AdresseComplete
+                    action.NewData.AdresseComplete
                   )
                 )
                 .then((ret: any) => {
                   console.log('Created adresse link:', ret)
                 })
             } else if (action.Action === Action.Remove) {
-              console.log('Removing adresse link:', action.Data)
+              console.log('Removing adresse link:', action.NewData)
               return client
                 .query(
                   removeAdresseDeputeRelationLink(
                     slug,
-                    action.Data.AdresseComplete
+                    action.NewData.AdresseComplete
                   )
                 )
                 .then((ret: any) => {
@@ -85,7 +85,7 @@ export function manageAdresses(
                 })
             } else {
               // Nothing to do
-              console.log('Nothing to do at all on :', action.Data)
+              console.log('Nothing to do at all on :', action.NewData)
               return Promise.resolve()
             }
           }, 1),

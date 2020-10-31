@@ -40,15 +40,15 @@ export async function ManageGroupes() {
   return from(res)
     .pipe(
       mergeMap((action: DiffType<Types.Canonical.GroupeParlementaire>) => {
-        GetLogger().info('Processing', { Sigle: action.Data.Sigle })
+        GetLogger().info('Processing', { Sigle: action.NewData.Sigle })
         if (action.Action === Action.Create) {
-          GetLogger().info('Creating Groupe', { Sigle: action.Data.Sigle })
-          return CreateGroupeParlementaire(action.Data).then((ret) =>
+          GetLogger().info('Creating Groupe', { Sigle: action.NewData.Sigle })
+          return CreateGroupeParlementaire(action.NewData).then((ret) =>
             SendNewGroupeParlementaireNotification(ret.data)
           )
         } else if (action.Action === Action.Update) {
-          GetLogger().info('Updating Groupe', { Sigle: action.Data.Sigle })
-          return UpdateGroupeParlementaire(action.Data).then((ret) => {
+          GetLogger().info('Updating Groupe', { Sigle: action.NewData.Sigle })
+          return UpdateGroupeParlementaire(action.NewData).then((ret) => {
             return Promise.all(
               ret.data.map((gp) =>
                 SendUpdateGroupeParlementaireNotification(gp.data)

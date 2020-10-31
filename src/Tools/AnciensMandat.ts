@@ -88,24 +88,24 @@ export function manageAnciensMandats(
         return from(actions).pipe(
           mergeMap((action: DiffType<Types.Canonical.AncienMandat>) => {
             if (action.Action === Action.Create) {
-              console.log('Creating ancien mandat link:', action.Data)
+              console.log('Creating ancien mandat link:', action.NewData)
               return client
                 .query(
                   createAncienMandatDeputeRelationLink(
                     slug,
-                    action.Data.AncienMandatComplet
+                    action.NewData.AncienMandatComplet
                   )
                 )
                 .then((ret: any) => {
                   console.log('Created ancien mandat link:', ret)
                 })
             } else if (action.Action === Action.Remove) {
-              console.log('Removing ancien mandat link:', action.Data)
+              console.log('Removing ancien mandat link:', action.NewData)
               return client
                 .query(
                   removeAncienMandatDeputeRelationLink(
                     slug,
-                    action.Data.AncienMandatComplet
+                    action.NewData.AncienMandatComplet
                   )
                 )
                 .then((ret: any) => {

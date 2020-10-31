@@ -45,31 +45,31 @@ export async function ManageDeputes() {
   return from(res)
     .pipe(
       mergeMap((action: DiffType<Types.Canonical.Depute>) => {
-        GetLogger().info('Processing', { Slug: action.Data.Slug })
+        GetLogger().info('Processing', { Slug: action.NewData.Slug })
         const currentDeputeFromAPI = deputesFromNosDeputesFR.find(
-          (d) => d.slug === action.Data.Slug
+          (d) => d.slug === action.NewData.Slug
         )
         // GetLogger().info('currentDeputeFromAPI:', currentDeputeFromAPI)
         if (action.Action === Action.Create) {
-          GetLogger().info('Creating depute:', action.Data)
-          return CreateDepute(action.Data)
+          GetLogger().info('Creating depute:', action.NewData)
+          return CreateDepute(action.NewData)
             .then((ret: any) => {
-              GetLogger().info('Created depute:', { Slug: action.Data.Slug })
+              GetLogger().info('Created depute:', { Slug: action.NewData.Slug })
               return Promise.all([
-                SendNewDeputeNotification(action.Data),
-                // manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
+                SendNewDeputeNotification(action.NewData),
+                // manageActivites(action.NewData.Slug, GetProvidedFaunaDBClient()),
                 manageAdresses(
-                  action.Data.Slug,
+                  action.NewData.Slug,
                   GetProvidedFaunaDBClient(),
-                  action.Data.Adresses
+                  action.NewData.Adresses
                 ),
                 manageAnciensMandats(
-                  action.Data.Slug,
+                  action.NewData.Slug,
                   GetProvidedFaunaDBClient(),
                   currentDeputeFromAPI.anciens_mandats.map((am) => am.mandat)
                 ),
                 manageAutresMandats(
-                  action.Data.Slug,
+                  action.NewData.Slug,
                   GetProvidedFaunaDBClient(),
                   currentDeputeFromAPI.autres_mandats.map((am) => am.mandat)
                 ),
@@ -78,28 +78,32 @@ export async function ManageDeputes() {
             .catch((err) => {
               process.exitCode = 1
               GetLogger().error(
-                `Error while creating depute ${action.Data.Slug}: ${err}`
+                `Error while doing creating depute ${action.NewData.Slug}`,
+                err
               )
             })
         } else if (action.Action === Action.Update) {
-          GetLogger().info('Updating depute:', { Slug: action.Data.Slug })
-          return UpdateDepute(action.Data)
+          GetLogger().info('Updating depute:', { Slug: action.NewData.Slug })
+          return UpdateDepute(action.NewData)
             .then((ret: any) => {
-              GetLogger().info('Updated depute:', action.Data, 'to', ret.data)
+              GetLogger().info('Updated depute:', {
+                from: action.NewData,
+                to: ret.data,
+              })
               return Promise.all([
                 // manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
                 manageAdresses(
-                  action.Data.Slug,
+                  action.NewData.Slug,
                   GetProvidedFaunaDBClient(),
-                  action.Data.Adresses
+                  action.NewData.Adresses
                 ),
                 manageAnciensMandats(
-                  action.Data.Slug,
+                  action.NewData.Slug,
                   GetProvidedFaunaDBClient(),
                   currentDeputeFromAPI.anciens_mandats.map((am) => am.mandat)
                 ),
                 manageAutresMandats(
-                  action.Data.Slug,
+                  action.NewData.Slug,
                   GetProvidedFaunaDBClient(),
                   currentDeputeFromAPI.autres_mandats.map((am) => am.mandat)
                 ),
@@ -108,42 +112,45 @@ export async function ManageDeputes() {
             .catch((err) => {
               process.exitCode = 1
               GetLogger().error(
-                `Error while creating depute ${action.Data.Slug}: ${err}`
+                `Error while doing updating depute ${action.NewData.Slug}`,
+                err
               )
             })
         } else if (action.Action === Action.Remove) {
-          GetLogger().info('Removing depute:', { Slug: action.Data.Slug })
-          return DeleteDepute(action.Data.Slug).catch((err) => {
+          GetLogger().info('Removing depute:', { Slug: action.NewData.Slug })
+          return DeleteDepute(action.NewData.Slug).catch((err) => {
             process.exitCode = 1
             GetLogger().error(
-              `Error while removing depute ${action.Data.Slug}: ${err}`
+              `Error while doing removing depute ${action.NewData.Slug}`,
+              err
             )
           })
         } else if (action.Action === Action.None) {
-          GetLogger().info('Nothing to do on', { Slug: action.Data.Slug })
+          GetLogger().info('Nothing to do on', { Slug: action.NewData.Slug })
           return Promise.all([
-            // manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
+            // manageActivites(action.NewData.Slug, GetProvidedFaunaDBClient()),
             manageAdresses(
-              action.Data.Slug,
+              action.NewData.Slug,
               GetProvidedFaunaDBClient(),
-              action.Data.Adresses
+              action.NewData.Adresses
             ),
             manageAnciensMandats(
-              action.Data.Slug,
+              action.NewData.Slug,
               GetProvidedFaunaDBClient(),
               currentDeputeFromAPI.anciens_mandats
                 .map((am) => am.mandat)
                 .filter((am) => am.split(' / ')[1] !== '')
             ),
             manageAutresMandats(
-              action.Data.Slug,
+              action.NewData.Slug,
               GetProvidedFaunaDBClient(),
               currentDeputeFromAPI.autres_mandats.map((am) => am.mandat)
             ),
           ]).catch((err) => {
             process.exitCode = 1
             GetLogger().error(
-              `Error while doing nothing on depute ${action.Data.Slug}: ${err}`
+              `Error while doing nothing on depute ${action.NewData.Slug}`,
+              err
             )
           })
         }

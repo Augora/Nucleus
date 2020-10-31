@@ -1,0 +1,14 @@
+Reduce(
+  Lambda(
+    ["acc", "value"],
+    Foreach(
+      Var("value"),
+      Lambda("X", Append(Var("acc"), Var("X")))
+    )
+  ),
+  [],
+  Select("data", Map(
+    Paginate(Match(Index("Deputes")), { size: 1 }),
+    Lambda("X", Select("data", Paginate(Events(Var("X")))))
+  ))
+)
