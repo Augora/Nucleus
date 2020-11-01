@@ -103,6 +103,15 @@ describe('CompareLists function', () => {
     const res = CompareLists<SampleData>(listA, listB, compareFunction, 'id')
     expect(res.length).toBe(1)
     expect(res[0].Action).toBe(Action.Update)
-    expect(res[0].Data.a).toBe(5)
+    expect(res[0].NewData.a).toBe(5)
+  })
+
+  it('should compare 2 lists, return one remove ', () => {
+    const listA = []
+    const listB = [{ id: 'a', a: 5 }]
+    const res = CompareLists<SampleData>(listA, listB, compareFunction, 'id')
+    expect(res.length).toBe(1)
+    expect(res[0].Action).toBe(Action.Remove)
+    expect(res[0].NewData.id).toBe('a')
   })
 })
