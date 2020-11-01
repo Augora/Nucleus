@@ -41,7 +41,7 @@ export function manageActivites(slug: string, client: faunadb.Client) {
                   return client
                     .query(
                       createActivite(
-                        Object.assign({}, action.Data, {
+                        Object.assign({}, action.NewData, {
                           Depute: getDeputeRefByDeputeSlug(slug),
                         })
                       )
@@ -55,20 +55,20 @@ export function manageActivites(slug: string, client: faunadb.Client) {
                     .query(
                       updateActiviteByDeputeSlugAndWeekNumber(
                         slug,
-                        action.Data.NumeroDeSemaine,
-                        action.Data
+                        action.NewData.NumeroDeSemaine,
+                        action.NewData
                       )
                     )
                     .then((ret: any) => {
                       console.log('Updated activity:', ret.data)
                     })
                 } else if (action.Action === Action.Remove) {
-                  console.log(action.Data)
+                  console.log(action.NewData)
                   return client
                     .query(
                       deleteActiviteByDeputeSlugAndWeekNumber(
                         slug,
-                        action.Data.NumeroDeSemaine
+                        action.NewData.NumeroDeSemaine
                       )
                     )
                     .then((ret: any) => {

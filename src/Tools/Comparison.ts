@@ -1,6 +1,7 @@
 export interface DiffType<T> {
   Action: Action
-  Data: T
+  NewData: T
+  PreviousData: T
 }
 
 export enum Action {
@@ -33,52 +34,58 @@ export function CompareLists<T>(
   const normalizedNewList = NormalizeArrayToObject(newList, pathToID)
   const normalizedPreviousList = NormalizeArrayToObject(previousList, pathToID)
   const addAndUpdateItems = newList
-    .map(itemInNewList => {
+    .map((itemInNewList) => {
       const itemInPreviousList =
         normalizedPreviousList[RetrieveIdByPath(itemInNewList, pathToID)]
       if (itemInPreviousList) {
         if (areTheSameFunction(itemInNewList, itemInPreviousList)) {
           return {
             Action: Action.None,
-            Data: itemInNewList,
+            NewData: itemInNewList,
+            PreviousData: itemInPreviousList,
           }
         } else {
           return {
             Action: Action.Update,
-            Data: itemInNewList,
+            NewData: itemInNewList,
+            PreviousData: itemInPreviousList,
           }
         }
       } else {
         return {
           Action: Action.Create,
-          Data: itemInNewList,
+          NewData: itemInNewList,
+          PreviousData: itemInPreviousList,
         }
       }
     })
-    .filter(i => shouldReturnNones || i.Action !== Action.None)
+    .filter((i) => shouldReturnNones || i.Action !== Action.None)
   const RemoveItems = previousList
-    .map(itemInPreviousList => {
+    .map((itemInPreviousList) => {
       const itemInNewList =
         normalizedNewList[RetrieveIdByPath(itemInPreviousList, pathToID)]
       if (itemInNewList) {
         if (areTheSameFunction(itemInNewList, itemInPreviousList)) {
           return {
             Action: Action.None,
-            Data: itemInPreviousList,
+            NewData: itemInNewList,
+            PreviousData: itemInPreviousList,
           }
         } else {
           return {
             Action: Action.None,
-            Data: itemInPreviousList,
+            NewData: itemInNewList,
+            PreviousData: itemInPreviousList,
           }
         }
       } else {
         return {
           Action: Action.Remove,
-          Data: itemInPreviousList,
+          NewData: itemInPreviousList,
+          PreviousData: itemInPreviousList,
         }
       }
     })
-    .filter(i => i.Action !== Action.None)
+    .filter((i) => i.Action !== Action.None)
   return addAndUpdateItems.concat(RemoveItems)
 }

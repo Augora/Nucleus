@@ -80,24 +80,24 @@ export function manageAutresMandats(
         return from(actions).pipe(
           mergeMap((action: DiffType<Types.Canonical.AutreMandat>) => {
             if (action.Action === Action.Create) {
-              console.log('Creating autre mandat link:', action.Data)
+              console.log('Creating autre mandat link:', action.NewData)
               return client
                 .query(
                   createAutreMandatDeputeRelationLink(
                     slug,
-                    action.Data.AutreMandatComplet
+                    action.NewData.AutreMandatComplet
                   )
                 )
                 .then((ret: any) => {
                   console.log('Created autre mandat link:', ret)
                 })
             } else if (action.Action === Action.Remove) {
-              console.log('Removing autre mandat link:', action.Data)
+              console.log('Removing autre mandat link:', action.NewData)
               return client
                 .query(
                   removeAutreMandatDeputeRelationLink(
                     slug,
-                    action.Data.AutreMandatComplet
+                    action.NewData.AutreMandatComplet
                   )
                 )
                 .then((ret: any) => {

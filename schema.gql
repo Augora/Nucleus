@@ -5,12 +5,33 @@ enum Sexe {
 
 type GroupeParlementaire {
   Sigle: String! @unique @index
-  NomComplet: String!
-  Couleur: String!
-  URLImage: String!
-  Ordre: Int!
-  Actif: Boolean!
+  NomComplet: String
+  Couleur: String @deprecated(reason: "Please use CouleurDetail.")
+  CouleurDetail: CouleurDetail
+  URLImage: String
+  Ordre: Int
+  Actif: Boolean
   Deputes: [Depute!]! @relation
+}
+
+type CouleurDetail @embedded {
+  HSL: HSLDetail
+  RGB: RGBDetail
+  HEX: String
+}
+
+type HSLDetail @embedded {
+  Full: String
+  H: Int
+  S: Int
+  L: Int
+}
+
+type RGBDetail @embedded {
+  Full: String
+  R: Int
+  G: Int
+  B: Int
 }
 
 type AncienMandat {
@@ -67,7 +88,7 @@ type Depute {
   NumeroCirconscription: Int
   DebutDuMandat: String
   parti_ratt_financier: String
-    @deprecated(reason: "Please use RattachementFinancier")
+    @deprecated(reason: "Please use RattachementFinancier.")
   RattachementFinancier: String
   Profession: String
   PlaceEnHemicycle: String
