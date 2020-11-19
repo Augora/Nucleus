@@ -6,6 +6,7 @@ enum Sexe {
 type GroupeParlementaire {
   Sigle: String! @unique @index
   NomComplet: String
+  Couleur: String
   CouleurDetail: CouleurDetail
   URLImage: String
   Ordre: Int
