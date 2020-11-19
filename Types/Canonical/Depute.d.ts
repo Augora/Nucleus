@@ -25,7 +25,7 @@ declare namespace Types.Canonical {
     Twitter?: string
     EstEnMandat?: boolean
     Age?: number
-    URLPhotoAssembleeNationnale?: string
+    URLPhotoAssembleeNationale?: string
     URLPhotoAugora?: string
     SitesWeb?: string[]
     Emails?: string[]
