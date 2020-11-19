@@ -1,5 +1,14 @@
 import moment from 'moment'
-import { split, toLower, upperFirst, join, isUndefined, isNull } from 'lodash'
+import {
+  split,
+  toLower,
+  upperFirst,
+  join,
+  isUndefined,
+  isNull,
+  includes,
+  lowerCase,
+} from 'lodash'
 
 import Departements from '../StaticData/Deputes/departments.json'
 import Regions from '../StaticData/Deputes/regions.json'
@@ -82,7 +91,14 @@ export function MapDepute(
     Age: moment().diff(depute.date_naissance, 'years', false),
     URLPhotoAssembleeNationale: `http://www2.assemblee-nationale.fr/static/tribun/15/photos/${depute.id_an}.jpg`,
     URLPhotoAugora: `https://static.augora.fr/depute/${depute.slug}`,
-    SitesWeb: depute.sites_web.map((s) => s.site),
+    SitesWeb: depute.sites_web
+      .map((s) => s.site)
+      .filter(
+        (s) =>
+          !includes(lowerCase(s), 'twitter.com') &&
+          !includes(lowerCase(s), 'facebook') &&
+          !includes(lowerCase(s), 'instagram')
+      ),
     Emails: depute.emails.map((e) => e.email),
     Adresses: depute.adresses
       .map((a) => a.adresse)
