@@ -6,7 +6,6 @@ enum Sexe {
 type GroupeParlementaire {
   Sigle: String! @unique @index
   NomComplet: String
-  Couleur: String @deprecated(reason: "Please use CouleurDetail.")
   CouleurDetail: CouleurDetail
   URLImage: String
   Ordre: Int
@@ -87,8 +86,6 @@ type Depute {
   NomCirconscription: String
   NumeroCirconscription: Int
   DebutDuMandat: String
-  parti_ratt_financier: String
-    @deprecated(reason: "Please use RattachementFinancier.")
   RattachementFinancier: String
   Profession: String
   PlaceEnHemicycle: String
@@ -101,7 +98,7 @@ type Depute {
   EstEnMandat: Boolean!
   Age: Int
   Sexe: Sexe
-  URLPhotoAssembleeNationnale: String
+  URLPhotoAssembleeNationale: String
   URLPhotoAugora: String
 
   # Arrays
