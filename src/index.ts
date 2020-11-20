@@ -1,3 +1,6 @@
+import dotenv from 'dotenv'
+dotenv.config()
+
 import { ManageGroupes } from './GroupeParlementaire/Manager'
 import { ManageDeputes } from './Depute/Manager'
 import { GetLogger } from './Common/Logger'

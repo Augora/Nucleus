@@ -14,6 +14,7 @@ import Departements from '../StaticData/Deputes/departments.json'
 import Regions from '../StaticData/Deputes/regions.json'
 
 function processNomDepartement(numeroDepartement: string, slug: string) {
+  if (!numeroDepartement) return undefined
   if (numeroDepartement === '999') {
     return 'Établis Hors de France'
   } else {
@@ -29,6 +30,7 @@ function processNomDepartement(numeroDepartement: string, slug: string) {
 }
 
 function processNumeroRegion(numeroDepartement: string, slug: string) {
+  if (!numeroDepartement) return undefined
   if (numeroDepartement === '999') {
     return '00'
   } else {
@@ -45,6 +47,7 @@ function processNumeroRegion(numeroDepartement: string, slug: string) {
 }
 
 function processNomRegion(numeroDepartement: string, slug: string) {
+  if (!numeroDepartement) return undefined
   if (numeroDepartement === '999') {
     return 'Établis Hors de France'
   } else {
@@ -95,7 +98,7 @@ export function MapDepute(
       .map((s) => s.site)
       .filter(
         (s) =>
-          !includes(lowerCase(s), 'twitter.com') &&
+          !includes(lowerCase(s), 'twitter') &&
           !includes(lowerCase(s), 'facebook') &&
           !includes(lowerCase(s), 'instagram')
       ),

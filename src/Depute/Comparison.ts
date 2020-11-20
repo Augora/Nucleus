@@ -1,5 +1,11 @@
 import { difference } from 'lodash'
 
+function areArraysTheSame(arr1: any[], arr2: any[]) {
+  return (
+    difference(arr1, arr2).length === 0 && difference(arr2, arr1).length === 0
+  )
+}
+
 export function AreTheSameDeputes(
   depA: Types.Canonical.Depute,
   depB: Types.Canonical.Depute
@@ -22,18 +28,20 @@ export function AreTheSameDeputes(
     depA.RattachementFinancier === depB.RattachementFinancier &&
     // depA.Profession === depB.Profession &&
     depA.PlaceEnHemicycle === depB.PlaceEnHemicycle &&
+    depA.URLAssembleeNationale === depB.URLAssembleeNationale &&
+    depA.IDAssembleeNationale === depB.IDAssembleeNationale &&
     depA.URLNosdeputes === depB.URLNosdeputes &&
     depA.URLNosdeputesAPI === depB.URLNosdeputesAPI &&
     depA.NombreMandats === depB.NombreMandats &&
     depA.Twitter === depB.Twitter &&
     depA.EstEnMandat === depB.EstEnMandat &&
-    depA.URLAssembleeNationale === depB.URLAssembleeNationale &&
-    depA.IDAssembleeNationale === depB.IDAssembleeNationale &&
+    depA.Age === depB.Age &&
+    depA.URLPhotoAssembleeNationale === depB.URLPhotoAssembleeNationale &&
     depA.URLPhotoAugora === depB.URLPhotoAugora &&
-    difference(depA.SitesWeb, depB.SitesWeb).length === 0 &&
-    difference(depA.Emails, depB.Emails).length === 0 &&
-    difference(depA.Adresses, depB.Adresses).length === 0 &&
-    difference(depA.Collaborateurs, depB.Collaborateurs).length === 0 &&
-    depA.GroupeParlementaire.Sigle === depB.GroupeParlementaire.Sigle
+    areArraysTheSame(depA.SitesWeb, depB.SitesWeb) &&
+    areArraysTheSame(depA.Emails, depB.Emails) &&
+    areArraysTheSame(depA.Adresses, depB.Adresses) &&
+    areArraysTheSame(depA.Collaborateurs, depB.Collaborateurs) &&
+    depA?.GroupeParlementaire?.Sigle === depB?.GroupeParlementaire?.Sigle
   )
 }
