@@ -101,6 +101,10 @@ type Depute {
   Sexe: Sexe
   URLPhotoAssembleeNationale: String
   URLPhotoAugora: String
+  URLTwitter: String
+  URLFacebook: String
+  URLLinkedIn: String
+  URLInstagram: String
 
   # Arrays
   SitesWeb: [String]!

@@ -63,6 +63,22 @@ function processNomRegion(numeroDepartement: string, slug: string) {
   }
 }
 
+function isWebSiteTwitter(website: string) {
+  return includes(lowerCase(website), 'twitter')
+}
+
+function isWebSiteFacebook(website: string) {
+  return includes(lowerCase(website), 'facebook')
+}
+
+function isWebSiteInstagram(website: string) {
+  return includes(lowerCase(website), 'instagram')
+}
+
+function isWebSiteLinkedIn(website: string) {
+  return includes(lowerCase(website), 'linkedin')
+}
+
 export function MapDepute(
   depute: Types.External.NosDeputesFR.Depute
 ): Types.Canonical.Depute {
@@ -94,13 +110,26 @@ export function MapDepute(
     Age: moment().diff(depute.date_naissance, 'years', false),
     URLPhotoAssembleeNationale: `http://www2.assemblee-nationale.fr/static/tribun/15/photos/${depute.id_an}.jpg`,
     URLPhotoAugora: `https://static.augora.fr/depute/${depute.slug}`,
+    URLTwitter: depute.sites_web
+      .map((s) => s.site)
+      .find((s) => isWebSiteTwitter(s)),
+    URLFacebook: depute.sites_web
+      .map((s) => s.site)
+      .find((s) => isWebSiteFacebook(s)),
+    URLInstagram: depute.sites_web
+      .map((s) => s.site)
+      .find((s) => isWebSiteInstagram(s)),
+    URLLinkedIn: depute.sites_web
+      .map((s) => s.site)
+      .find((s) => isWebSiteLinkedIn(s)),
     SitesWeb: depute.sites_web
       .map((s) => s.site)
       .filter(
         (s) =>
-          !includes(lowerCase(s), 'twitter') &&
-          !includes(lowerCase(s), 'facebook') &&
-          !includes(lowerCase(s), 'instagram')
+          !isWebSiteTwitter(s) &&
+          !isWebSiteFacebook(s) &&
+          !isWebSiteInstagram(s) &&
+          !isWebSiteLinkedIn
       ),
     Emails: depute.emails.map((e) => e.email),
     Adresses: depute.adresses
