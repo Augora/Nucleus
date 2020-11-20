@@ -129,7 +129,7 @@ export function MapDepute(
           !isWebSiteTwitter(s) &&
           !isWebSiteFacebook(s) &&
           !isWebSiteInstagram(s) &&
-          !isWebSiteLinkedIn
+          !isWebSiteLinkedIn(s)
       ),
     Emails: depute.emails.map((e) => e.email),
     Adresses: depute.adresses
