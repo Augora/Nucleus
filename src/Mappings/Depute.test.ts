@@ -62,8 +62,8 @@ describe('MapAncienMandat function', () => {
       '20/06/2007 / 19/06/2012 / fin de législature',
       {
         AncienMandatComplet: '20/06/2007 / 19/06/2012 / fin de législature',
-        DateDeDebut: '2007-06-20T00:00:00+02:00',
-        DateDeFin: '2012-06-19T00:00:00+02:00',
+        DateDeDebut: '2007-06-20T00:00:00',
+        DateDeFin: '2012-06-19T00:00:00',
         Intitule: 'fin de législature',
       },
     ],
@@ -72,8 +72,8 @@ describe('MapAncienMandat function', () => {
       {
         AncienMandatComplet:
           "13/06/1988 / 26/11/1988 / annulation de l'élection sur décision du conseil constitutionnel",
-        DateDeDebut: '1988-06-13T00:00:00+02:00',
-        DateDeFin: '1988-11-26T00:00:00+01:00',
+        DateDeDebut: '1988-06-13T00:00:00',
+        DateDeFin: '1988-11-26T00:00:00',
         Intitule:
           "annulation de l'élection sur décision du conseil constitutionnel",
       },
@@ -82,8 +82,8 @@ describe('MapAncienMandat function', () => {
       '20/06/2012 / 20/06/2017 / fin de législature',
       {
         AncienMandatComplet: '20/06/2012 / 20/06/2017 / fin de législature',
-        DateDeDebut: '2012-06-20T00:00:00+02:00',
-        DateDeFin: '2017-06-20T00:00:00+02:00',
+        DateDeDebut: '2012-06-20T00:00:00',
+        DateDeFin: '2017-06-20T00:00:00',
         Intitule: 'fin de législature',
       },
     ],
@@ -91,8 +91,8 @@ describe('MapAncienMandat function', () => {
       '19/06/2002 / 19/06/2007 / fin de législature',
       {
         AncienMandatComplet: '19/06/2002 / 19/06/2007 / fin de législature',
-        DateDeDebut: '2002-06-19T00:00:00+02:00',
-        DateDeFin: '2007-06-19T00:00:00+02:00',
+        DateDeDebut: '2002-06-19T00:00:00',
+        DateDeFin: '2007-06-19T00:00:00',
         Intitule: 'fin de législature',
       },
     ],
@@ -100,8 +100,8 @@ describe('MapAncienMandat function', () => {
       '01/06/1997 / 18/06/2002 / fin de législature',
       {
         AncienMandatComplet: '01/06/1997 / 18/06/2002 / fin de législature',
-        DateDeDebut: '1997-06-01T00:00:00+02:00',
-        DateDeFin: '2002-06-18T00:00:00+02:00',
+        DateDeDebut: '1997-06-01T00:00:00',
+        DateDeFin: '2002-06-18T00:00:00',
         Intitule: 'fin de législature',
       },
     ],
@@ -109,8 +109,8 @@ describe('MapAncienMandat function', () => {
       '02/04/1993 / 21/04/1997 / fin de législature',
       {
         AncienMandatComplet: '02/04/1993 / 21/04/1997 / fin de législature',
-        DateDeDebut: '1993-04-02T00:00:00+02:00',
-        DateDeFin: '1997-04-21T00:00:00+02:00',
+        DateDeDebut: '1993-04-02T00:00:00',
+        DateDeFin: '1997-04-21T00:00:00',
         Intitule: 'fin de législature',
       },
     ],
@@ -118,7 +118,7 @@ describe('MapAncienMandat function', () => {
       '21/06/2017 / / ',
       {
         AncienMandatComplet: '21/06/2017 / / ',
-        DateDeDebut: '2017-06-21T00:00:00+02:00',
+        DateDeDebut: '2017-06-21T00:00:00',
         DateDeFin: undefined,
         Intitule: undefined,
       },

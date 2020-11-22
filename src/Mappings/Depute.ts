@@ -1,7 +1,6 @@
 import moment from 'moment'
 import _ from 'lodash'
-import { parse } from 'date-fns'
-import { formatToTimeZone } from 'date-fns-timezone'
+import { parse, format } from 'date-fns'
 
 export function MapAutreMandat(
   autreMandat: string
@@ -25,22 +24,16 @@ export function MapAncienMandat(
     AncienMandatComplet: ancienMandat,
     DateDeDebut:
       dateDebut && dateDebut.length > 0
-        ? formatToTimeZone(
+        ? format(
             parse(dateDebut, 'dd/MM/yyyy', new Date()),
-            'YYYY-MM-DDTHH:mm:ssZ',
-            {
-              timeZone: 'Europe/Paris',
-            }
+            "yyyy-MM-dd'T'HH:mm:ss"
           )
         : undefined,
     DateDeFin:
       dateFin && dateFin.length > 0
-        ? formatToTimeZone(
+        ? format(
             parse(dateFin, 'dd/MM/yyyy', new Date()),
-            'YYYY-MM-DDTHH:mm:ssZ',
-            {
-              timeZone: 'Europe/Paris',
-            }
+            "yyyy-MM-dd'T'HH:mm:ss"
           )
         : undefined,
     Intitule: intitule && intitule.length > 0 ? intitule : undefined,
