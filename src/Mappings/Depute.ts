@@ -1,5 +1,6 @@
 import moment from 'moment'
 import _ from 'lodash'
+import { parse, formatISO } from 'date-fns'
 
 export function MapAutreMandat(
   autreMandat: string
@@ -16,12 +17,20 @@ export function MapAutreMandat(
 export function MapAncienMandat(
   ancienMandat: string
 ): Types.Canonical.AncienMandat {
-  const [dateDebut, dateFin, intitule] = ancienMandat.split(' / ')
+  const [dateDebut, dateFin, intitule] = ancienMandat
+    .split(' /')
+    .map((s) => _.trim(s))
   return {
     AncienMandatComplet: ancienMandat,
-    DateDeDebut: moment(dateDebut, 'dd/MM/yyyy').format(),
-    DateDeFin: moment(dateFin, 'dd/MM/yyyy').format(),
-    Intitule: intitule,
+    DateDeDebut:
+      dateDebut && dateDebut.length > 0
+        ? formatISO(parse(dateDebut, 'dd/MM/yyyy', new Date()))
+        : undefined,
+    DateDeFin:
+      dateFin && dateFin.length > 0
+        ? formatISO(parse(dateFin, 'dd/MM/yyyy', new Date()))
+        : undefined,
+    Intitule: intitule && intitule.length > 0 ? intitule : undefined,
   }
 }
 
