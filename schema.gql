@@ -3,6 +3,13 @@ enum Sexe {
   H
 }
 
+type ResponsabiliteGroupe @embedded {
+  GroupeParlementaire: GroupeParlementaire!
+  Fonction: String
+  DebutFonction: String
+  FinFonction: String
+}
+
 type GroupeParlementaire {
   Sigle: String! @unique @index
   NomComplet: String
@@ -110,6 +117,9 @@ type Depute {
   SitesWeb: [String]!
   Emails: [String]!
   Collaborateurs: [String]!
+
+  #Embedded
+  ResponsabiliteGroupe: ResponsabiliteGroupe!
 
   # Relations
   GroupeParlementaire: GroupeParlementaire!

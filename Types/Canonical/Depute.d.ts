@@ -36,5 +36,6 @@ declare namespace Types.Canonical {
     Adresses?: string[]
     Collaborateurs?: string[]
     GroupeParlementaire?: Canonical.GroupeParlementaire
+    ResponsabiliteGroupe?: ResponsabiliteGroupe
   }
 }

@@ -60,6 +60,11 @@ export function CreateDepute(
         GroupeParlementaire: GetGroupeParlementaireRefBySigle(
           data.GroupeParlementaire.Sigle
         ),
+        ResponsabiliteGroupe: Object.assign({}, data.ResponsabiliteGroupe, {
+          GroupeParlementaire: GetGroupeParlementaireRefBySigle(
+            data.GroupeParlementaire.Sigle
+          ),
+        }),
       }),
     })
   )
@@ -78,6 +83,11 @@ export function UpdateDepute(data: Types.Canonical.Depute) {
             GroupeParlementaire: GetGroupeParlementaireRefBySigle(
               data.GroupeParlementaire.Sigle
             ),
+            ResponsabiliteGroupe: Object.assign({}, data.ResponsabiliteGroupe, {
+              GroupeParlementaire: GetGroupeParlementaireRefBySigle(
+                data.GroupeParlementaire.Sigle
+              ),
+            }),
           }),
         })
       )

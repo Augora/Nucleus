@@ -157,5 +157,20 @@ export function MapDepute(
           ? 'NI'
           : depute.groupe_sigle,
     },
+    ResponsabiliteGroupe: {
+      GroupeParlementaire: {
+        Sigle:
+          isUndefined(depute.groupe_sigle) || isNull(depute.groupe_sigle)
+            ? 'NI'
+            : depute.groupe_sigle,
+      },
+      Fonction: depute.groupe ? depute.groupe.fonction : 'membre',
+      DebutFonction: depute.groupe
+        ? depute.groupe.debut_fonction
+        : depute.mandat_debut,
+      FinFonction: depute.groupe
+        ? depute.groupe.fin_fonction
+        : depute.mandat_fin,
+    },
   }
 }

@@ -15,6 +15,7 @@ declare namespace Types.External.NosDeputesFR {
     nom_circo: string
     num_circo: number
     mandat_debut: string
+    mandat_fin: string
     groupe: Groupe
     groupe_sigle: string
     parti_ratt_financier: string

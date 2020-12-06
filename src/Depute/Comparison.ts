@@ -42,6 +42,8 @@ export function AreTheSameDeputes(
     areArraysTheSame(depA.Emails, depB.Emails) &&
     areArraysTheSame(depA.Adresses, depB.Adresses) &&
     areArraysTheSame(depA.Collaborateurs, depB.Collaborateurs) &&
-    depA?.GroupeParlementaire?.Sigle === depB?.GroupeParlementaire?.Sigle
+    depA?.GroupeParlementaire?.Sigle === depB?.GroupeParlementaire?.Sigle &&
+    depA?.ResponsabiliteGroupe?.Fonction ===
+      depB?.ResponsabiliteGroupe?.Fonction
   )
 }
