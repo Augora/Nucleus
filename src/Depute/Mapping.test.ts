@@ -12,6 +12,7 @@ const depute: Types.External.NosDeputesFR.Depute = {
   nom_circo: 'Alpes-Maritimes',
   num_circo: 3,
   mandat_debut: '2017-06-21',
+  mandat_fin: '2017-07-21',
   groupe: {
     organisme: 'La R\u00e9publique En Marche',
     fonction: 'membre',
