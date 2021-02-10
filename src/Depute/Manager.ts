@@ -15,7 +15,7 @@ import {
   GetDeputesFromNosDeputesFR,
   GetDeputesBySlugFromNosDeputesFR,
 } from './WrapperNosDeputesFR'
-// import { manageActivites } from '../Tools/Activites'
+import { manageActivites } from '../Tools/Activites'
 import { manageAdresses } from '../Tools/Adresse'
 import { manageAnciensMandats } from '../Tools/AnciensMandat'
 import { manageAutresMandats } from '../Tools/AutresMandat'
@@ -57,7 +57,10 @@ export async function ManageDeputes() {
               GetLogger().info('Created depute:', { Slug: action.NewData.Slug })
               return Promise.all([
                 SendNewDeputeNotification(action.NewData),
-                // manageActivites(action.NewData.Slug, GetProvidedFaunaDBClient()),
+                manageActivites(
+                  action.NewData.Slug,
+                  GetProvidedFaunaDBClient()
+                ),
                 manageAdresses(
                   action.NewData.Slug,
                   GetProvidedFaunaDBClient(),
@@ -91,7 +94,10 @@ export async function ManageDeputes() {
                 to: ret.data,
               })
               return Promise.all([
-                // manageActivites(action.Data.Slug, GetProvidedFaunaDBClient()),
+                manageActivites(
+                  action.NewData.Slug,
+                  GetProvidedFaunaDBClient()
+                ),
                 manageAdresses(
                   action.NewData.Slug,
                   GetProvidedFaunaDBClient(),
@@ -128,7 +134,7 @@ export async function ManageDeputes() {
         } else if (action.Action === Action.None) {
           GetLogger().info('Nothing to do on', { Slug: action.NewData.Slug })
           return Promise.all([
-            // manageActivites(action.NewData.Slug, GetProvidedFaunaDBClient()),
+            manageActivites(action.NewData.Slug, GetProvidedFaunaDBClient()),
             manageAdresses(
               action.NewData.Slug,
               GetProvidedFaunaDBClient(),

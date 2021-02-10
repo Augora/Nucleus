@@ -1,6 +1,10 @@
-import moment from 'moment'
+import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+import 'dayjs/locale/fr'
 import _ from 'lodash'
-import { parse, format } from 'date-fns'
+
+dayjs.extend(customParseFormat)
+dayjs.locale('fr')
 
 export function MapAutreMandat(
   autreMandat: string
@@ -24,17 +28,11 @@ export function MapAncienMandat(
     AncienMandatComplet: ancienMandat,
     DateDeDebut:
       dateDebut && dateDebut.length > 0
-        ? format(
-            parse(dateDebut, 'dd/MM/yyyy', new Date()),
-            "yyyy-MM-dd'T'HH:mm:ss"
-          )
+        ? dayjs(dateDebut, 'DD/MM/YYYY', true).format('YYYY-MM-DDTHH:mm:ss')
         : undefined,
     DateDeFin:
       dateFin && dateFin.length > 0
-        ? format(
-            parse(dateFin, 'dd/MM/yyyy', new Date()),
-            "yyyy-MM-dd'T'HH:mm:ss"
-          )
+        ? dayjs(dateFin, 'DD/MM/YYYY', true).format('YYYY-MM-DDTHH:mm:ss')
         : undefined,
     Intitule: intitule && intitule.length > 0 ? intitule : undefined,
   }
@@ -46,14 +44,14 @@ export function MapActivites(
   return Object.keys(activites.labels).map((weekNumber) => {
     const weekNumberAsInt = parseInt(weekNumber, 10)
     return {
-      DateDeDebut: moment(activites.date_fin, 'yyyy-MM-dd')
-        .startOf('isoWeek')
-        .subtract(weekNumberAsInt - 1, 'w')
-        .format(),
-      DateDeFin: moment(activites.date_fin, 'yyyy-MM-dd')
-        .startOf('isoWeek')
-        .subtract(weekNumberAsInt, 'w')
-        .format(),
+      DateDeDebut: dayjs(activites.date_debut, 'YYYY-MM-DD')
+        .startOf('w')
+        .add(weekNumberAsInt, 'w')
+        .format('YYYY-MM-DDTHH:mm:ss'),
+      DateDeFin: dayjs(activites.date_debut, 'YYYY-MM-DD')
+        .startOf('w')
+        .add(weekNumberAsInt + 1, 'w')
+        .format('YYYY-MM-DDTHH:mm:ss'),
       NumeroDeSemaine: weekNumberAsInt,
       PresencesEnCommission: Math.ceil(
         activites.n_presences.commission[weekNumber]
@@ -79,6 +77,8 @@ export function areTheSameActivites(
 ): boolean {
   return (
     actA.NumeroDeSemaine === actB.NumeroDeSemaine &&
+    dayjs(actA.DateDeDebut).diff(actB.DateDeDebut, 'days', false) === 0 &&
+    dayjs(actA.DateDeFin).diff(actB.DateDeFin, 'days', false) === 0 &&
     actA.ParticipationEnHemicycle === actB.ParticipationEnHemicycle &&
     actA.ParticipationsEnCommission === actB.ParticipationsEnCommission &&
     actA.PresenceEnHemicycle === actB.PresenceEnHemicycle &&
@@ -140,8 +140,8 @@ export function areTheSameAnciensMandats(
 ): boolean {
   return (
     amA.AncienMandatComplet === amB.AncienMandatComplet &&
-    amA.DateDeDebut === amB.DateDeDebut &&
-    amA.DateDeFin === amB.DateDeFin &&
+    dayjs(amA.DateDeDebut).diff(amB.DateDeDebut, 'days', false) === 0 &&
+    dayjs(amA.DateDeFin).diff(amB.DateDeFin, 'days', false) === 0 &&
     amA.Intitule === amB.Intitule
   )
 }

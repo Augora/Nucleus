@@ -1,4 +1,4 @@
-import moment from 'moment'
+import dayjs from 'dayjs'
 import {
   split,
   toLower,
@@ -107,7 +107,7 @@ export function MapDepute(
     NombreMandats: depute.nb_mandats,
     Twitter: depute.twitter,
     EstEnMandat: depute.ancien_depute !== 1,
-    Age: moment().diff(depute.date_naissance, 'years', false),
+    Age: dayjs().diff(depute.date_naissance, 'years', false),
     URLPhotoAssembleeNationale: `http://www2.assemblee-nationale.fr/static/tribun/15/photos/${depute.id_an}.jpg`,
     URLPhotoAugora: `https://static.augora.fr/depute/${depute.slug}`,
     URLTwitter: depute.sites_web
