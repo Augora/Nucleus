@@ -6,25 +6,25 @@ import { ManageDeputes } from './Depute/Manager'
 import { GetLogger } from './Common/Logger'
 import firebaseClient from './Common/FirebaseClient'
 
-// ManageGroupes()
-//   .then(() => {
-//     console.log('Imported groupes')
-//   })
-//   .then(() =>
-ManageDeputes()
+ManageGroupes()
   .then(() => {
-    console.log('Imported deputes')
+    console.log('Imported groupes')
   })
+  .then(() =>
+    ManageDeputes()
+      .then(() => {
+        console.log('Imported deputes')
+      })
+      .catch((err) => {
+        GetLogger().error(err)
+        throw err
+      })
+  )
   .catch((err) => {
     GetLogger().error(err)
     throw err
   })
   .finally(() => firebaseClient.delete())
-//   )
-//   .catch((err) => {
-//     GetLogger().error(err)
-//     throw err
-//   })
 
 import { GetDeputesFromFirestore } from './Depute/WrapperFirebase'
 

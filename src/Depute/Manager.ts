@@ -38,32 +38,33 @@ export async function ManageDeputes() {
   return from(res)
     .pipe(
       mergeMap((action: DiffType<Types.Canonical.Depute>) => {
-        GetLogger().info('Processing', { Slug: action.NewData.Slug })
+        GetLogger().info('Processing Depute:', { Slug: action.NewData.Slug })
         if (action.Action === Action.Create) {
-          GetLogger().info('Creating depute:', action.NewData)
+          GetLogger().info('Creating Depute:', action.NewData)
           return CreateDeputeToFirestore(action.NewData)
             .then(() => {
-              GetLogger().info('Created depute:', { Slug: action.NewData.Slug })
-              SendNewDeputeNotification(action.NewData)
-              GetLogger().info('Notification sent for depute creation:', {
-                Slug: action.NewData.Slug,
+              GetLogger().info('Created Depute:', { Slug: action.NewData.Slug })
+              return SendNewDeputeNotification(action.NewData).then(() => {
+                GetLogger().info('Notification sent for Depute creation:', {
+                  Slug: action.NewData.Slug,
+                })
               })
             })
             .catch((err) => {
-              GetLogger().error('Error while creating depute:', {
+              GetLogger().error('Error while creating Depute:', {
                 Slug: action.NewData.Slug,
                 error: err,
               })
               process.exitCode = 1
             })
         } else if (action.Action === Action.Update) {
-          GetLogger().info('Updating depute:', { Slug: action.NewData.Slug })
+          GetLogger().info('Updating Depute:', { Slug: action.NewData.Slug })
           return UpdateDeputeToFirestore(action.NewData)
             .then(() => {
-              GetLogger().info('Updated depute:', { Slug: action.NewData.Slug })
+              GetLogger().info('Updated Depute:', { Slug: action.NewData.Slug })
             })
             .catch((err) => {
-              GetLogger().error('Error while updating depute:', {
+              GetLogger().error('Error while updating Depute:', {
                 Slug: action.NewData.Slug,
                 error: err,
               })
@@ -73,17 +74,19 @@ export async function ManageDeputes() {
           GetLogger().info('Deleting depute:', { Slug: action.NewData.Slug })
           return DeleteDeputeToFirestore(action.NewData)
             .then(() => {
-              GetLogger().info('Deleted depute:', { Slug: action.NewData.Slug })
+              GetLogger().info('Deleted Depute:', { Slug: action.NewData.Slug })
             })
             .catch((err) => {
-              GetLogger().error('Error while deleting depute:', {
+              GetLogger().error('Error while deleting Depute:', {
                 Slug: action.NewData.Slug,
                 error: err,
               })
               process.exitCode = 1
             })
         } else if (action.Action === Action.None) {
-          GetLogger().info('Nothing to do on', { Slug: action.NewData.Slug })
+          GetLogger().info('Nothing to do on Depute:', {
+            Slug: action.NewData.Slug,
+          })
           return Promise.resolve()
         }
       }, 1),
