@@ -47,8 +47,8 @@ jobs:
           fields: workflow,job,commit
           custom_payload: |
             {
-              username: 'Github Actions',
-              icon_emoji: ':rocket:',
+              username: '[Nucleus]',
+              icon_emoji: ':atom_symbol:',
               attachments: [
                 {
                   color: '${{ job.status }}' === 'success' ? '#28a745' : '${{ job.status }}' === 'failure' ? '#dc3545' : '#ffc107',
@@ -57,7 +57,7 @@ jobs:
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": '${{ job.status }}' === 'success' ? "Data successfully imported in Production :sunglasses::tada:" : "Error while importing data in Production"
+                        "text": '${{ job.status }}' === 'success' ? "[Nucleus] Data successfully imported in Production :sunglasses::tada:" : "Error while importing data in Production"
                       }
                     }
                   ]
