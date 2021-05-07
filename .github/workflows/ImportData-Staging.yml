@@ -57,7 +57,7 @@ jobs:
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": '${{ job.status }}' === 'success' ? "[Nucleus] Data successfully imported in Staging :sunglasses::tada:" : "Error while importing data in Staging"
+                        "text": '${{ job.status }}' === 'success' ? "Data successfully imported in Staging :sunglasses::tada:" : "Error while importing data in Staging"
                       }
                     }
                   ]
