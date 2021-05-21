@@ -1,1 +1,0 @@
-Query(Lambda([], Select("data", Distinct(Map(Paginate(Match("Deputes", []), 700), Lambda("X", Select(["data", "SigleGroupePolitique"], Get(Var("X")))))))))
