@@ -33,7 +33,7 @@ declare namespace Types.Canonical {
     URLPhotoAugora?: string
     SitesWeb?: string[]
     Emails?: string[]
-    Adresses?: string[]
+    Adresses?: Adresse[]
     Collaborateurs?: string[]
     GroupeParlementaire?: Canonical.GroupeParlementaire
     ResponsabiliteGroupe?: ResponsabiliteGroupe

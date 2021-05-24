@@ -16,23 +16,23 @@ import firebaseClient from './Common/FirebaseClient'
 //     throw err
 //   })
 
-// ManageDeputes()
-//   .then(() => {
-//     console.log('Imported deputes')
-//   })
-//   .catch((err) => {
-//     GetLogger().error(err)
-//     throw err
-//   })
-
-ManageActivites()
+ManageDeputes()
   .then(() => {
-    console.log('Imported activites')
+    console.log('Imported deputes')
   })
   .catch((err) => {
     GetLogger().error(err)
     throw err
   })
+
+// ManageActivites()
+//   .then(() => {
+//     console.log('Imported activites')
+//   })
+//   .catch((err) => {
+//     GetLogger().error(err)
+//     throw err
+//   })
 
 import { GetDeputesFromFirestore } from './Depute/WrapperFirebase'
 
