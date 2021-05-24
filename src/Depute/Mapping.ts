@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import 'dayjs/locale/fr'
 import {
   split,
   toLower,
@@ -8,6 +9,8 @@ import {
   isNull,
   includes,
   lowerCase,
+  replace,
+  trim,
 } from 'lodash'
 
 import Departements from '../StaticData/Deputes/departments.json'
@@ -139,7 +142,8 @@ export function MapDepute(
           !a.startsWith('Sur rendez-vous') &&
           !a.startsWith('Varsovie/Konstancin') &&
           !a.startsWith('Allemagne et Autriche')
-      ),
+      )
+      .map((a) => MapAdresse(a)),
     Collaborateurs: depute.collaborateurs.map((c) =>
       join(
         split(c.collaborateur, ' ').map((mc) =>
@@ -172,5 +176,76 @@ export function MapDepute(
         ? depute.groupe.fin_fonction
         : depute.mandat_fin,
     },
+    AutreMandat: depute.autres_mandats.map((am) => MapAutreMandat(am.mandat)),
+    AncienMandat: depute.anciens_mandats.map((am) =>
+      MapAncienMandat(am.mandat)
+    ),
+  }
+}
+
+export function MapAdresse(adresse: string): Types.Canonical.Adresse {
+  const CPRegex = /\ ([0-9]{5})/
+  const PhoneRegex =
+    /Téléphone : (((\+|00)\s?[0-9]{2})?\s?(?:[\s.-]?\d{1}){10})/
+  const FaxRegex = /Télécopie : (((\+|00)\s?[0-9]{2})?\s?(?:[\s.-]?\d{1}){10})/
+
+  // Postal code processing
+  const CPRegexResult = CPRegex.exec(adresse)
+  const CodePostal = CPRegexResult !== null ? CPRegexResult[1] : undefined
+
+  // Phone number processing
+  const PhoneRegexResult = PhoneRegex.exec(adresse)
+  const Telephone =
+    PhoneRegexResult !== null
+      ? replace(PhoneRegexResult[1], /[\.\ ]+/g, '')
+      : undefined
+
+  // Fax number processing
+  const FaxRegexResult = FaxRegex.exec(adresse)
+  const Fax =
+    FaxRegexResult !== null
+      ? replace(FaxRegexResult[1], /[\.\ ]+/g, '')
+      : undefined
+
+  const [Adresse] = split(adresse, ' Téléphone : ')
+
+  return {
+    Adresse,
+    CodePostal,
+    Telephone,
+    Fax,
+    AdresseComplete: adresse,
+  }
+}
+
+export function MapAutreMandat(
+  autreMandat: string
+): Types.Canonical.AutreMandat {
+  const [Localite, Institution, Intitule] = autreMandat.split(' / ')
+  return {
+    AutreMandatComplet: autreMandat,
+    Localite,
+    Institution,
+    Intitule,
+  }
+}
+
+export function MapAncienMandat(
+  ancienMandat: string
+): Types.Canonical.AncienMandat {
+  const [dateDebut, dateFin, intitule] = ancienMandat
+    .split(' /')
+    .map((s) => trim(s))
+  return {
+    AncienMandatComplet: ancienMandat,
+    DateDeDebut:
+      dateDebut && dateDebut.length > 0
+        ? dayjs(dateDebut, 'DD/MM/YYYY', true).format('YYYY-MM-DDTHH:mm:ss')
+        : undefined,
+    DateDeFin:
+      dateFin && dateFin.length > 0
+        ? dayjs(dateFin, 'DD/MM/YYYY', true).format('YYYY-MM-DDTHH:mm:ss')
+        : undefined,
+    Intitule: intitule && intitule.length > 0 ? intitule : undefined,
   }
 }

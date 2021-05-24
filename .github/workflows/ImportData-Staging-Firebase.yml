@@ -1,0 +1,71 @@
+name: Import data in staging
+
+on:
+  repository_dispatch:
+    types: import-data-stagin-firebase
+  schedule:
+    - cron: '0 4 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: move-to-firebase
+
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+
+      - name: yarn install
+        run: yarn install
+
+      - name: yarn start
+        run: yarn start
+        env:
+          FIREBASE_APIKEY: ${{ AIzaSyCa6I2lBR9pyDNvTl2BF7fJW3ahE4n0QVE }}
+          FIREBASE_AUTH_DOMAIN: ${{ augora-f16f3.firebaseapp.com }}
+          FIREBASE_PROJECTID: ${{ augora-f16f3 }}
+          FIREBASE_STORAGEACCOUNT: ${{ augora-f16f3.appspot.com }}
+          FIREBASE_MESSAGINGSENDERID: ${{ 615882901652 }}
+          FIREBASE_APPID: ${{ 1:615882901652:web:ada8cdea09ebcee72c8c81 }}
+          SLACK_WEBHOOK_URL: ${{  secrets.SLACK_WEBHOOK_URL  }}
+          FAUNADB_ENV: staging
+
+      - name: Upload logs as artifact
+        uses: actions/upload-artifact@v1
+        if: always()
+        with:
+          name: logs
+          path: logs
+
+      - uses: 8398a7/action-slack@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()
+        with:
+          status: custom
+          fields: workflow,job,commit
+          custom_payload: |
+            {
+              username: 'Github Actions',
+              icon_emoji: ':rocket:',
+              attachments: [
+                {
+                  color: '${{ job.status }}' === 'success' ? '#28a745' : '${{ job.status }}' === 'failure' ? '#dc3545' : '#ffc107',
+                  "blocks": [
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": '${{ job.status }}' === 'success' ? "Data successfully imported in Firebase :sunglasses::tada:" : "Error while importing data in Staging"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }

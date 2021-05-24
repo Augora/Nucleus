@@ -73,7 +73,7 @@ describe('CompareLists function', () => {
   }
 
   const compareFunction = (item1: SampleData, item2: SampleData) =>
-    item1.a === item2.a
+    item1.a === item2.a && item1.a === item2.a
 
   it('should compare two empty lists, returns no diff', () => {
     const listA = []
@@ -82,7 +82,7 @@ describe('CompareLists function', () => {
     expect(res.length).toBe(0)
   })
 
-  it('should compare empty with 1 item, return one diff ', () => {
+  it('should compare empty with 1 item, return one diff', () => {
     const listA = [{ id: 'a' }]
     const listB = []
     const res = CompareLists<SampleData>(listA, listB, compareFunction, 'id')
@@ -90,14 +90,14 @@ describe('CompareLists function', () => {
     expect(res[0].Action).toBe(Action.Create)
   })
 
-  it('should compare 2 identical lists, return no diff ', () => {
+  it('should compare 2 identical lists, return no diff', () => {
     const listA = [{ id: 'a' }]
     const listB = [{ id: 'a' }]
     const res = CompareLists<SampleData>(listA, listB, compareFunction, 'id')
     expect(res.length).toBe(0)
   })
 
-  it('should compare 2 lists, return one update ', () => {
+  it('should compare 2 lists, return one update', () => {
     const listA = [{ id: 'a', a: 5 }]
     const listB = [{ id: 'a' }]
     const res = CompareLists<SampleData>(listA, listB, compareFunction, 'id')
@@ -106,7 +106,7 @@ describe('CompareLists function', () => {
     expect(res[0].NewData.a).toBe(5)
   })
 
-  it('should compare 2 lists, return one remove ', () => {
+  it('should compare 2 lists, return one remove', () => {
     const listA = []
     const listB = [{ id: 'a', a: 5 }]
     const res = CompareLists<SampleData>(listA, listB, compareFunction, 'id')
