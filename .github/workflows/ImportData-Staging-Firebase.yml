@@ -1,4 +1,4 @@
-name: Import data in staging
+name: Import data in staging for Firebase
 
 on:
   repository_dispatch:
