@@ -39,11 +39,13 @@ export function MapAncienMandat(
 }
 
 export function MapActivites(
-  activites: Types.External.NosDeputesFR.Activite
+  activites: Types.External.NosDeputesFR.Activite,
+  deputeSlug: string
 ): Types.Canonical.Activite[] {
   return Object.keys(activites.labels).map((weekNumber) => {
     const weekNumberAsInt = parseInt(weekNumber, 10)
     return {
+      DeputeSlug: deputeSlug,
       DateDeDebut: dayjs(activites.date_debut, 'YYYY-MM-DD')
         .startOf('w')
         .add(weekNumberAsInt, 'w')
