@@ -26,36 +26,36 @@ jobs:
       - name: Import groupes
         run: yarn start -g
         env:
-          FIREBASE_APIKEY: ${{ AIzaSyCa6I2lBR9pyDNvTl2BF7fJW3ahE4n0QVE }}
-          FIREBASE_AUTH_DOMAIN: ${{ augora-f16f3.firebaseapp.com }}
-          FIREBASE_PROJECTID: ${{ augora-f16f3 }}
-          FIREBASE_STORAGEACCOUNT: ${{ augora-f16f3.appspot.com }}
-          FIREBASE_MESSAGINGSENDERID: ${{ 615882901652 }}
-          FIREBASE_APPID: ${{ 1:615882901652:web:ada8cdea09ebcee72c8c81 }}
+          FIREBASE_APIKEY: ${{ secrets.FIREBASE_APIKEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECTID: ${{ secrets.FIREBASE_PROJECTID }}
+          FIREBASE_STORAGEACCOUNT: ${{ secrets.FIREBASE_STORAGEACCOUNT }}
+          FIREBASE_MESSAGINGSENDERID: ${{ secrets.FIREBASE_MESSAGINGSENDERID }}
+          FIREBASE_APPID: ${{ secrets.FIREBASE_APPID }}
           SLACK_WEBHOOK_URL: ${{  secrets.SLACK_WEBHOOK_URL  }}
           FAUNADB_ENV: staging
 
       - name: Import deputes
         run: yarn start -d
         env:
-          FIREBASE_APIKEY: ${{ AIzaSyCa6I2lBR9pyDNvTl2BF7fJW3ahE4n0QVE }}
-          FIREBASE_AUTH_DOMAIN: ${{ augora-f16f3.firebaseapp.com }}
-          FIREBASE_PROJECTID: ${{ augora-f16f3 }}
-          FIREBASE_STORAGEACCOUNT: ${{ augora-f16f3.appspot.com }}
-          FIREBASE_MESSAGINGSENDERID: ${{ 615882901652 }}
-          FIREBASE_APPID: ${{ 1:615882901652:web:ada8cdea09ebcee72c8c81 }}
-          SLACK_WEBHOOK_URL: ${{  secrets.SLACK_WEBHOOK_URL  }}
+          FIREBASE_APIKEY: ${{ secrets.FIREBASE_APIKEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECTID: ${{ secrets.FIREBASE_PROJECTID }}
+          FIREBASE_STORAGEACCOUNT: ${{ secrets.FIREBASE_STORAGEACCOUNT }}
+          FIREBASE_MESSAGINGSENDERID: ${{ secrets.FIREBASE_MESSAGINGSENDERID }}
+          FIREBASE_APPID: ${{ secrets.FIREBASE_APPID }}
+          SLACK_WEBHOOK_URL: ${{  secrets.SLACK_WEBHOOK_URL }}
           FAUNADB_ENV: staging
 
       - name: Import activites
         run: yarn start -a
         env:
-          FIREBASE_APIKEY: ${{ AIzaSyCa6I2lBR9pyDNvTl2BF7fJW3ahE4n0QVE }}
-          FIREBASE_AUTH_DOMAIN: ${{ augora-f16f3.firebaseapp.com }}
-          FIREBASE_PROJECTID: ${{ augora-f16f3 }}
-          FIREBASE_STORAGEACCOUNT: ${{ augora-f16f3.appspot.com }}
-          FIREBASE_MESSAGINGSENDERID: ${{ 615882901652 }}
-          FIREBASE_APPID: ${{ 1:615882901652:web:ada8cdea09ebcee72c8c81 }}
+          FIREBASE_APIKEY: ${{ secrets.FIREBASE_APIKEY }}
+          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECTID: ${{ secrets.FIREBASE_PROJECTID }}
+          FIREBASE_STORAGEACCOUNT: ${{ secrets.FIREBASE_STORAGEACCOUNT }}
+          FIREBASE_MESSAGINGSENDERID: ${{ secrets.FIREBASE_MESSAGINGSENDERID }}
+          FIREBASE_APPID: ${{ secrets.FIREBASE_APPID }}
           SLACK_WEBHOOK_URL: ${{  secrets.SLACK_WEBHOOK_URL  }}
           FAUNADB_ENV: staging
 
