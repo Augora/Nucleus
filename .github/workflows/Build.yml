@@ -8,7 +8,7 @@ jobs:
       matrix:
         # Virtual envs : https://help.github.com/en/articles/virtual-environments-for-github-actions
         os: [macOS-latest, windows-latest, ubuntu-latest]
-        node-version: [14.x]
+        node-version: [14.x, 16.x]
 
     steps:
       - uses: actions/checkout@v1
@@ -16,11 +16,16 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: yarn install, lint and test
+      - name: yarn install
+        env:
+          CI: true
+        run: yarn install
+      - name: yarn lint
+        env:
+          CI: true
+        run: yarn lint
+      - name: yarn test
         env:
           CI: true
           FAUNADB_TOKEN: ${{ secrets.FAUNADB_TOKEN_ADMIN_STAGING }}
-        run: |
-          yarn install
-          yarn lint
-          yarn test
+        run: yarn test
