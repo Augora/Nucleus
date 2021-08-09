@@ -13,7 +13,7 @@
     "firebase": "^8.8.1",
     "lodash": "^4.17.21",
     "rxjs": "^7.3.0",
-    "ts-node": "^10.1.0",
+    "ts-node": "^10.2.0",
     "typescript": "^4.3.5",
     "winston": "^3.3.3"
   },
