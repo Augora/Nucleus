@@ -9,7 +9,7 @@
     "color": "^4.0.0",
     "command-line-args": "^5.2.0",
     "dayjs": "^1.10.6",
-    "faunadb": "^4.3.0",
+    "faunadb": "^4.4.1",
     "firebase": "^8.8.1",
     "lodash": "^4.17.21",
     "rxjs": "^7.3.0",
