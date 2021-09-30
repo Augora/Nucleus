@@ -1,4 +1,18 @@
-import firebase from 'firebase'
+import {
+  DocumentData,
+  QueryDocumentSnapshot,
+  SnapshotOptions,
+} from 'firebase/firestore'
+import {
+  getFirestore,
+  query,
+  where,
+  getDocsFromServer,
+  doc,
+  setDoc,
+  deleteDoc,
+  collection,
+} from 'firebase/firestore'
 import firebaseClient from '../Common/FirebaseClient'
 import isUndefined from 'lodash/isUndefined'
 import isNull from 'lodash/isNull'
@@ -28,15 +42,13 @@ function isAFirebaseDictionnary(dict) {
 }
 
 const activiteConverter = {
-  toFirestore(
-    activite: Types.Canonical.Activite
-  ): firebase.firestore.DocumentData {
+  toFirestore(activite: Types.Canonical.Activite): DocumentData {
     return removeEmpty(activite)
   },
 
   fromFirestore(
-    snapshot: firebase.firestore.QueryDocumentSnapshot,
-    options: firebase.firestore.SnapshotOptions
+    snapshot: QueryDocumentSnapshot,
+    options: SnapshotOptions
   ): Types.Canonical.Activite {
     const data: Types.Canonical.Activite = Object.assign(snapshot.data(options))
     Object.keys(data).forEach((k) => {
@@ -49,40 +61,46 @@ const activiteConverter = {
 }
 
 export function GetActivitesBySlugFromFirestore(slug: string) {
-  return firebaseClient
-    .firestore()
-    .collection('Activite')
-    .where('DeputeSlug', '==', slug)
-    .withConverter(activiteConverter)
-    .get({ source: 'server' })
-    .then((qs) => qs.docs.map((d) => d.data()))
+  return getDocsFromServer(
+    query(
+      collection(getFirestore(firebaseClient), 'Activite').withConverter(
+        activiteConverter
+      ),
+      where('DeputeSlug', '==', slug)
+    )
+  ).then((qs) => qs.docs.map((d) => d.data()))
 }
 
 export function CreateActiviteToFirestore(data: Types.Canonical.Activite) {
-  return firebaseClient
-    .firestore()
-    .collection('Activite')
-    .withConverter(activiteConverter)
-    .doc(`${data.NumeroDeSemaine}_${data.DeputeSlug}`)
-    .set(data)
+  return setDoc(
+    doc(
+      collection(getFirestore(firebaseClient), 'Activite').withConverter(
+        activiteConverter
+      ),
+      `${data.NumeroDeSemaine}_${data.DeputeSlug}`
+    ),
+    data
+  )
 }
 
-export function UpdateDeputeToFirestore(data: Types.Canonical.Activite) {
-  return firebaseClient
-    .firestore()
-    .collection('Activite')
-    .withConverter(activiteConverter)
-    .doc(`${data.NumeroDeSemaine}_${data.DeputeSlug}`)
-    .set(data, {
-      merge: true,
-    })
+export function UpdateActiviteToFirestore(data: Types.Canonical.Activite) {
+  return setDoc(
+    doc(
+      collection(getFirestore(firebaseClient), 'Activite').withConverter(
+        activiteConverter
+      ),
+      `${data.NumeroDeSemaine}_${data.DeputeSlug}`
+    ),
+    data,
+    { merge: true }
+  )
 }
 
-export function DeleteDeputeToFirestore(data: Types.Canonical.Activite) {
-  return firebaseClient
-    .firestore()
-    .collection('Activite')
-    .withConverter(activiteConverter)
-    .doc(`${data.NumeroDeSemaine}_${data.DeputeSlug}`)
-    .delete()
+export function DeleteActiviteToFirestore(data: Types.Canonical.Activite) {
+  return deleteDoc(
+    doc(
+      collection(getFirestore(firebaseClient), 'Activite'),
+      `${data.NumeroDeSemaine}_${data.DeputeSlug}`
+    )
+  )
 }

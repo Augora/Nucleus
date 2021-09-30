@@ -1,4 +1,17 @@
-import firebase from 'firebase'
+import {
+  DocumentData,
+  QueryDocumentSnapshot,
+  SnapshotOptions,
+} from 'firebase/firestore'
+import {
+  getFirestore,
+  query,
+  getDocsFromServer,
+  doc,
+  setDoc,
+  deleteDoc,
+  collection,
+} from 'firebase/firestore'
 import firebaseClient from '../Common/FirebaseClient'
 import isUndefined from 'lodash/isUndefined'
 import isNull from 'lodash/isNull'
@@ -28,13 +41,13 @@ function isAFirebaseDictionnary(dict) {
 }
 
 const deputeConverter = {
-  toFirestore(depute: Types.Canonical.Depute): firebase.firestore.DocumentData {
+  toFirestore(depute: Types.Canonical.Depute): DocumentData {
     return removeEmpty(depute)
   },
 
   fromFirestore(
-    snapshot: firebase.firestore.QueryDocumentSnapshot,
-    options: firebase.firestore.SnapshotOptions
+    snapshot: QueryDocumentSnapshot,
+    options: SnapshotOptions
   ): Types.Canonical.Depute {
     const data: Types.Canonical.Depute = Object.assign(snapshot.data(options))
     Object.keys(data).forEach((k) => {
@@ -47,39 +60,42 @@ const deputeConverter = {
 }
 
 export function GetDeputesFromFirestore() {
-  return firebaseClient
-    .firestore()
-    .collection('Depute')
-    .withConverter(deputeConverter)
-    .get({ source: 'server' })
-    .then((qs) => qs.docs.map((d) => d.data()))
+  return getDocsFromServer(
+    query(
+      collection(getFirestore(firebaseClient), 'Depute').withConverter(
+        deputeConverter
+      )
+    )
+  ).then((qs) => qs.docs.map((d) => d.data()))
 }
 
 export function CreateDeputeToFirestore(data: Types.Canonical.Depute) {
-  return firebaseClient
-    .firestore()
-    .collection('Depute')
-    .withConverter(deputeConverter)
-    .doc(data.Slug)
-    .set(data)
+  return setDoc(
+    doc(
+      collection(getFirestore(firebaseClient), 'Depute').withConverter(
+        deputeConverter
+      ),
+      data.Slug
+    ),
+    data
+  )
 }
 
 export function UpdateDeputeToFirestore(data: Types.Canonical.Depute) {
-  return firebaseClient
-    .firestore()
-    .collection('Depute')
-    .withConverter(deputeConverter)
-    .doc(data.Slug)
-    .set(data, {
-      merge: true,
-    })
+  return setDoc(
+    doc(
+      collection(getFirestore(firebaseClient), 'Depute').withConverter(
+        deputeConverter
+      ),
+      data.Slug
+    ),
+    data,
+    { merge: true }
+  )
 }
 
 export function DeleteDeputeToFirestore(data: Types.Canonical.Depute) {
-  return firebaseClient
-    .firestore()
-    .collection('Depute')
-    .withConverter(deputeConverter)
-    .doc(data.Slug)
-    .delete()
+  return deleteDoc(
+    doc(collection(getFirestore(firebaseClient), 'Depute'), data.Slug)
+  )
 }

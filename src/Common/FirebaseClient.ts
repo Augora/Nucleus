@@ -1,6 +1,6 @@
-import firebase from 'firebase'
+import { initializeApp } from 'firebase/app'
 
-export default firebase.initializeApp(
+export default initializeApp(
   {
     apiKey: process.env.FIREBASE_APIKEY,
     authDomain: process.env.FIREBASE_AUTH_DOMAIN,

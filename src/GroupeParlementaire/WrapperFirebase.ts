@@ -1,4 +1,17 @@
-import firebase from 'firebase'
+import {
+  DocumentData,
+  QueryDocumentSnapshot,
+  SnapshotOptions,
+} from 'firebase/firestore'
+import {
+  getFirestore,
+  query,
+  getDocsFromServer,
+  doc,
+  setDoc,
+  deleteDoc,
+  collection,
+} from 'firebase/firestore'
 import firebaseClient from '../Common/FirebaseClient'
 import isUndefined from 'lodash/isUndefined'
 import isNull from 'lodash/isNull'
@@ -28,15 +41,13 @@ function isAFirebaseDictionnary(dict) {
 }
 
 const groupeConverter = {
-  toFirestore(
-    groupe: Types.Canonical.GroupeParlementaire
-  ): firebase.firestore.DocumentData {
+  toFirestore(groupe: Types.Canonical.GroupeParlementaire): DocumentData {
     return removeEmpty(groupe)
   },
 
   fromFirestore(
-    snapshot: firebase.firestore.QueryDocumentSnapshot,
-    options: firebase.firestore.SnapshotOptions
+    snapshot: QueryDocumentSnapshot,
+    options: SnapshotOptions
   ): Types.Canonical.GroupeParlementaire {
     const data: Types.Canonical.GroupeParlementaire = Object.assign(
       snapshot.data(options)
@@ -51,36 +62,43 @@ const groupeConverter = {
 }
 
 export function GetGroupesFromFirestore() {
-  return firebaseClient
-    .firestore()
-    .collection('GroupeParlementaire')
-    .withConverter(groupeConverter)
-    .get({ source: 'server' })
-    .then((qs) => qs.docs.map((d) => d.data()))
+  return getDocsFromServer(
+    query(
+      collection(
+        getFirestore(firebaseClient),
+        'GroupeParlementaire'
+      ).withConverter(groupeConverter)
+    )
+  ).then((qs) => qs.docs.map((d) => d.data()))
 }
 
 export function CreateGroupeParlementaireToFirestore(
   data: Types.Canonical.GroupeParlementaire
 ) {
-  return firebaseClient
-    .firestore()
-    .collection('GroupeParlementaire')
-    .withConverter(groupeConverter)
-    .doc(data.Sigle)
-    .set(data)
+  return setDoc(
+    doc(
+      collection(getFirestore(firebaseClient), 'Depute').withConverter(
+        groupeConverter
+      ),
+      data.Sigle
+    ),
+    data
+  )
 }
 
 export function UpdateGroupeParlementaireToFirestore(
   data: Types.Canonical.GroupeParlementaire
 ) {
-  return firebaseClient
-    .firestore()
-    .collection('GroupeParlementaire')
-    .withConverter(groupeConverter)
-    .doc(data.Sigle)
-    .set(data, {
-      mergeFields: ['Actif'],
-    })
+  return setDoc(
+    doc(
+      collection(getFirestore(firebaseClient), 'Depute').withConverter(
+        groupeConverter
+      ),
+      data.Sigle
+    ),
+    data,
+    { mergeFields: ['Actif'] }
+  )
 }
 
 // export function DoesGroupeParlementaireExistsBySigle(sigle: string) {

@@ -10,8 +10,8 @@ import { GetDeputesFromFirestore } from '../Depute/WrapperFirebase'
 import {
   GetActivitesBySlugFromFirestore,
   CreateActiviteToFirestore,
-  UpdateDeputeToFirestore,
-  DeleteDeputeToFirestore,
+  UpdateActiviteToFirestore,
+  DeleteActiviteToFirestore,
 } from './WrapperFirebase'
 
 export async function ManageActivites() {
@@ -20,9 +20,8 @@ export async function ManageActivites() {
   return from(slugs)
     .pipe(
       mergeMap(async (slug: string) => {
-        const activitesFromNosDeputesFR = await GetActiviesBySlugFromNosDeputesFR(
-          slug
-        )
+        const activitesFromNosDeputesFR =
+          await GetActiviesBySlugFromNosDeputesFR(slug)
         const canonicalActivitesFromNosDeputesFR = MapActivites(
           slug,
           activitesFromNosDeputesFR
@@ -48,10 +47,10 @@ export async function ManageActivites() {
                   from: action.PreviousData,
                   to: action.NewData,
                 })
-                return UpdateDeputeToFirestore(action.NewData)
+                return UpdateActiviteToFirestore(action.NewData)
               } else if (action.Action === Action.Remove) {
                 GetLogger().info('Updating activite:', action.PreviousData)
-                return DeleteDeputeToFirestore(action.PreviousData)
+                return DeleteActiviteToFirestore(action.PreviousData)
               }
             }, 20),
             retry(2)
@@ -100,7 +99,7 @@ export async function ManageActivites() {
   //           })
   //       } else if (action.Action === Action.Update) {
   //         GetLogger().info('Updating Depute:', { Slug: action.NewData.Slug })
-  //         return UpdateDeputeToFirestore(action.NewData)
+  //         return UpdateActiviteToFirestore(action.NewData)
   //           .then(() => {
   //             GetLogger().info('Updated Depute:', { Slug: action.NewData.Slug })
   //           })
@@ -113,7 +112,7 @@ export async function ManageActivites() {
   //           })
   //       } else if (action.Action === Action.Remove) {
   //         GetLogger().info('Deleting depute:', { Slug: action.NewData.Slug })
-  //         return DeleteDeputeToFirestore(action.NewData)
+  //         return DeleteActiviteToFirestore(action.NewData)
   //           .then(() => {
   //             GetLogger().info('Deleted Depute:', { Slug: action.NewData.Slug })
   //           })
