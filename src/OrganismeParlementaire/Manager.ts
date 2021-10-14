@@ -6,20 +6,17 @@ import { MapOrganismeParlementaire } from './Mapping'
 import { CompareLists, Action, DiffType } from '../Tools/Comparison'
 import { GetLogger } from '../Common/Logger'
 import {
-  SendNewGroupeParlementaireNotification,
-  SendUpdateGroupeParlementaireNotification,
-} from '../Common/SlackWrapper'
-import {
   GetOrganismesFromFirestore,
   CreateOrganismeParlementaireToFirestore,
   UpdateOrganismeParlementaireToFirestore,
 } from './WrapperFirebase'
 
 export async function ManageOrganismes() {
-  const organismesFromNosDeputesFR = await GetOrganismesParlementairesFromNosDeputesFR()
+  const organismesFromNosDeputesFR =
+    await GetOrganismesParlementairesFromNosDeputesFR()
   GetLogger().info('organismesFromNosDeputesFR:', organismesFromNosDeputesFR)
-  const canonicalOrganismesFromNosDeputesFR = organismesFromNosDeputesFR.map((op) =>
-    MapOrganismeParlementaire(op)
+  const canonicalOrganismesFromNosDeputesFR = organismesFromNosDeputesFR.map(
+    (op) => MapOrganismeParlementaire(op)
   )
   GetLogger().info(
     'canonicalOrganismesFromNosDeputesFR:',

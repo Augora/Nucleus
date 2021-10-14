@@ -1,8 +1,8 @@
 declare namespace Types.Canonical {
   interface OrganismeParlementaire {
-    Id: number
-    Slug: string
+    Id?: number
+    Slug?: string
     Nom: string
-    Type: string
+    Type?: string
   }
 }

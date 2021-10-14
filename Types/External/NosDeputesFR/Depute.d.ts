@@ -40,7 +40,6 @@ declare namespace Types.External.NosDeputesFR {
     nb_mandats: number
     twitter: string
     ancien_depute?: number
-    organisme_parlementaire: OrganismeParlementaire
   }
 
   interface Adress {

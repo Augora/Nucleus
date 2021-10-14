@@ -181,12 +181,9 @@ export function MapDepute(
     AncienMandat: depute.anciens_mandats.map((am) =>
       MapAncienMandat(am.mandat)
     ),
-    OrganismeParlementaire: {
-      Nom: depute.organisme_parlementaire.nom,
-      Id: depute.organisme_parlementaire.id,
-      Slug: depute.organisme_parlementaire.slug,
-      Type: depute.organisme_parlementaire.type
-    }
+    OrganismeParlementaire: depute.responsabilites.map((r) => ({
+      Nom: r.responsabilite.organisme,
+    })),
   }
 }
 
