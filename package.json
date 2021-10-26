@@ -5,7 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "@types/color": "^3.0.2",
-    "axios": "^0.21.4",
+    "axios": "^0.24.0",
     "color": "^4.0.1",
     "command-line-args": "^5.2.0",
     "dayjs": "^1.10.7",
