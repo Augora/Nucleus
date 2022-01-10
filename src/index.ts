@@ -11,7 +11,7 @@ import commandLineArgs from 'command-line-args'
 const options = commandLineArgs(optionDefinitions)
 
 import { ManageGroupes } from './GroupeParlementaire/Manager'
-// import { ManageDeputes } from './Depute/Manager'
+import { ManageDeputes } from './Depute/Manager'
 // import { ManageActivites } from './Activite/Manager'
 import { GetLogger } from './Common/Logger'
 
@@ -26,16 +26,16 @@ if (options.groupes) {
     })
 }
 
-// if (options.deputes) {
-//   ManageDeputes()
-//     .then(() => {
-//       GetLogger().info('Imported deputes')
-//     })
-//     .catch((err) => {
-//       GetLogger().error(err)
-//       throw err
-//     })
-// }
+if (options.deputes) {
+  ManageDeputes()
+    .then(() => {
+      GetLogger().info('Imported deputes')
+    })
+    .catch((err) => {
+      GetLogger().error(err)
+      throw err
+    })
+}
 
 // if (options.activites) {
 //   ManageActivites()
