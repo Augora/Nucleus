@@ -12,7 +12,7 @@ const options = commandLineArgs(optionDefinitions)
 
 import { ManageGroupes } from './GroupeParlementaire/Manager'
 import { ManageDeputes } from './Depute/Manager'
-// import { ManageActivites } from './Activite/Manager'
+import { ManageActivites } from './Activite/Manager'
 import { GetLogger } from './Common/Logger'
 
 if (options.groupes) {
@@ -37,13 +37,13 @@ if (options.deputes) {
     })
 }
 
-// if (options.activites) {
-//   ManageActivites()
-//     .then(() => {
-//       GetLogger().info('Imported activites')
-//     })
-//     .catch((err) => {
-//       GetLogger().error(err)
-//       throw err
-//     })
-// }
+if (options.activites) {
+  ManageActivites()
+    .then(() => {
+      GetLogger().info('Imported activites')
+    })
+    .catch((err) => {
+      GetLogger().error(err)
+      throw err
+    })
+}

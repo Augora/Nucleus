@@ -7,6 +7,7 @@ export function MapActivites(
   return Object.keys(activites.labels).map((weekNumber) => {
     const weekNumberAsInt = parseInt(weekNumber, 10)
     return {
+      Id: `${slug}_${weekNumber}`,
       DeputeSlug: slug,
       DateDeDebut: dayjs(activites.date_debut, 'YYYY-MM-DD')
         .startOf('w')
