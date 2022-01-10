@@ -1,8 +1,8 @@
-name: Import data in staging for Firebase
+name: Import data in staging for Supabase
 
 on:
   repository_dispatch:
-    types: import-data-stagin-firebase
+    types: import-data-staging-supabase
   schedule:
     - cron: '0 4 * * *'
 
@@ -26,36 +26,21 @@ jobs:
       - name: Import groupes
         run: yarn start -g
         env:
-          FIREBASE_APIKEY: ${{ secrets.FIREBASE_APIKEY }}
-          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
-          FIREBASE_PROJECTID: ${{ secrets.FIREBASE_PROJECTID }}
-          FIREBASE_STORAGEACCOUNT: ${{ secrets.FIREBASE_STORAGEACCOUNT }}
-          FIREBASE_MESSAGINGSENDERID: ${{ secrets.FIREBASE_MESSAGINGSENDERID }}
-          FIREBASE_APPID: ${{ secrets.FIREBASE_APPID }}
-          SLACK_WEBHOOK_URL: ${{  secrets.SLACK_WEBHOOK_URL  }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           FAUNADB_ENV: staging
 
       - name: Import deputes
         run: yarn start -d
         env:
-          FIREBASE_APIKEY: ${{ secrets.FIREBASE_APIKEY }}
-          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
-          FIREBASE_PROJECTID: ${{ secrets.FIREBASE_PROJECTID }}
-          FIREBASE_STORAGEACCOUNT: ${{ secrets.FIREBASE_STORAGEACCOUNT }}
-          FIREBASE_MESSAGINGSENDERID: ${{ secrets.FIREBASE_MESSAGINGSENDERID }}
-          FIREBASE_APPID: ${{ secrets.FIREBASE_APPID }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
           SLACK_WEBHOOK_URL: ${{  secrets.SLACK_WEBHOOK_URL }}
           FAUNADB_ENV: staging
 
       - name: Import activites
         run: yarn start -a
         env:
-          FIREBASE_APIKEY: ${{ secrets.FIREBASE_APIKEY }}
-          FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
-          FIREBASE_PROJECTID: ${{ secrets.FIREBASE_PROJECTID }}
-          FIREBASE_STORAGEACCOUNT: ${{ secrets.FIREBASE_STORAGEACCOUNT }}
-          FIREBASE_MESSAGINGSENDERID: ${{ secrets.FIREBASE_MESSAGINGSENDERID }}
-          FIREBASE_APPID: ${{ secrets.FIREBASE_APPID }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
           SLACK_WEBHOOK_URL: ${{  secrets.SLACK_WEBHOOK_URL  }}
           FAUNADB_ENV: staging
 
