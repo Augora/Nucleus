@@ -71,7 +71,7 @@ jobs:
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": '${{ job.status }}' === 'success' ? "Data successfully imported in Firebase :sunglasses::tada:" : "Error while importing data in Staging"
+                        "text": '${{ job.status }}' === 'success' ? "Data successfully imported in Supabase Staging :sunglasses::tada:" : "Error while importing data in Supabase Staging"
                       }
                     }
                   ]
