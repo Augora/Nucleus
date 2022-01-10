@@ -7,7 +7,7 @@
     "@supabase/supabase-js": "^1.29.1",
     "@types/color": "^3.0.2",
     "axios": "^0.24.0",
-    "color": "^4.0.1",
+    "color": "^4.1.0",
     "command-line-args": "^5.2.0",
     "dayjs": "^1.10.7",
     "faunadb": "^4.4.1",
