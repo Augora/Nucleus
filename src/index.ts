@@ -18,7 +18,7 @@ import { GetLogger } from './Common/Logger'
 if (options.groupes) {
   ManageGroupes()
     .then(() => {
-      console.log('Imported groupes')
+      GetLogger().info('Imported groupes')
     })
     .catch((err) => {
       GetLogger().error(err)
@@ -29,7 +29,7 @@ if (options.groupes) {
 if (options.deputes) {
   ManageDeputes()
     .then(() => {
-      console.log('Imported deputes')
+      GetLogger().info('Imported deputes')
     })
     .catch((err) => {
       GetLogger().error(err)
@@ -40,7 +40,7 @@ if (options.deputes) {
 if (options.activites) {
   ManageActivites()
     .then(() => {
-      console.log('Imported activites')
+      GetLogger().info('Imported activites')
     })
     .catch((err) => {
       GetLogger().error(err)

@@ -10,10 +10,10 @@ import {
   SendUpdateGroupeParlementaireNotification,
 } from '../Common/SlackWrapper'
 import {
-  GetGroupesFromFirestore,
-  CreateGroupeParlementaireToFirestore,
-  UpdateGroupeParlementaireToFirestore,
-} from './WrapperFirebase'
+  GetGroupesFromSupabase,
+  CreateGroupeParlementaireToSupabase,
+  UpdateGroupeParlementaireToSupabase,
+} from './WrapperSupabase'
 
 export async function ManageGroupes() {
   const groupesFromNosDeputesFR = await GetDeputesFromNosDeputesFR()
@@ -25,11 +25,11 @@ export async function ManageGroupes() {
     'canonicalGroupesFromNosDeputesFR:',
     canonicalGroupesFromNosDeputesFR
   )
-  const groupesFromFirestore = await GetGroupesFromFirestore()
-  GetLogger().info('groupesFromFaunaDB:', groupesFromFirestore)
+  const groupesFromSupabase = await GetGroupesFromSupabase()
+  GetLogger().info('groupesFromFaunaDB:', groupesFromSupabase)
   const res = CompareLists(
     canonicalGroupesFromNosDeputesFR,
-    groupesFromFirestore,
+    groupesFromSupabase,
     (a, b) => a.Sigle === b.Sigle && a.Actif === b.Actif,
     'Sigle',
     true
@@ -43,8 +43,8 @@ export async function ManageGroupes() {
         })
         if (action.Action === Action.Create) {
           GetLogger().info('Creating Groupe:', { Sigle: action.NewData.Sigle })
-          return CreateGroupeParlementaireToFirestore(action.NewData).then(
-            () => {
+          return CreateGroupeParlementaireToSupabase(action.NewData).then(
+            (data) => {
               GetLogger().info('Created Groupe:', {
                 Sigle: action.NewData.Sigle,
               })
@@ -55,7 +55,7 @@ export async function ManageGroupes() {
           GetLogger().info('Updating GroupeParlementaire:', {
             Sigle: action.NewData.Sigle,
           })
-          return UpdateGroupeParlementaireToFirestore(action.NewData).then(
+          return UpdateGroupeParlementaireToSupabase(action.NewData).then(
             () => {
               GetLogger().info('Updated GroupeParlementaire', {
                 Sigle: action.NewData.Sigle,

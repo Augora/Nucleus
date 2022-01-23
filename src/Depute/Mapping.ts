@@ -156,12 +156,10 @@ export function MapDepute(
         ' '
       )
     ),
-    GroupeParlementaire: {
-      Sigle:
-        isUndefined(depute.groupe_sigle) || isNull(depute.groupe_sigle)
-          ? 'NI'
-          : depute.groupe_sigle,
-    },
+    GroupeParlementaire:
+      isUndefined(depute.groupe_sigle) || isNull(depute.groupe_sigle)
+        ? 'NI'
+        : depute.groupe_sigle,
     ResponsabiliteGroupe: {
       GroupeParlementaire: {
         Sigle:

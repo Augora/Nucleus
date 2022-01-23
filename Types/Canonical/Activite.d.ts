@@ -1,5 +1,6 @@
 declare namespace Types.Canonical {
   interface Activite {
+    Id: string
     DeputeSlug: string
     NumeroDeSemaine: number
     DateDeDebut?: string

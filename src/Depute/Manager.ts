@@ -11,11 +11,11 @@ import {
 } from './WrapperNosDeputesFR'
 import { SendNewDeputeNotification } from '../Common/SlackWrapper'
 import {
-  GetDeputesFromFirestore,
-  CreateDeputeToFirestore,
-  UpdateDeputeToFirestore,
-  DeleteDeputeToFirestore,
-} from './WrapperFirebase'
+  GetDeputesFromSupabase,
+  CreateDeputeToSupabase,
+  UpdateDeputeToSupabase,
+  DeleteDeputeToSupabase,
+} from './WrapperSupabase'
 
 export async function ManageDeputes() {
   const simpleDeputesFromNosDeputesFR = await GetDeputesFromNosDeputesFR()
@@ -25,11 +25,11 @@ export async function ManageDeputes() {
     MapDepute(d)
   )
   GetLogger().info('deputesFromNosDeputesFR:', canonicalDeputesFromNosDeputesFR)
-  const deputesFromFaunaDB = await GetDeputesFromFirestore()
-  GetLogger().info('deputesFromFaunaDB:', deputesFromFaunaDB)
+  const deputesFromSupabase = await GetDeputesFromSupabase()
+  GetLogger().info('deputesFromSupabase:', deputesFromSupabase)
   const res = CompareLists(
     canonicalDeputesFromNosDeputesFR,
-    deputesFromFaunaDB,
+    deputesFromSupabase,
     AreTheSameDeputes,
     'Slug',
     true
@@ -41,48 +41,45 @@ export async function ManageDeputes() {
         GetLogger().info('Processing Depute:', { Slug: action.NewData.Slug })
         if (action.Action === Action.Create) {
           GetLogger().info('Creating Depute:', action.NewData)
-          return CreateDeputeToFirestore(action.NewData)
-            .then(() => {
-              GetLogger().info('Created Depute:', { Slug: action.NewData.Slug })
-              return SendNewDeputeNotification(action.NewData).then(() => {
-                GetLogger().info('Notification sent for Depute creation:', {
-                  Slug: action.NewData.Slug,
-                })
-              })
-            })
-            .catch((err) => {
-              GetLogger().error('Error while creating Depute:', {
-                Slug: action.NewData.Slug,
-                error: err,
-              })
-              process.exitCode = 1
-            })
+          return CreateDeputeToSupabase(action.NewData).then(() => {
+            GetLogger().info('Created Depute:', { Slug: action.NewData.Slug })
+            // return SendNewDeputeNotification(action.NewData).then(() => {
+            //   GetLogger().info('Notification sent for Depute creation:', {
+            //     Slug: action.NewData.Slug,
+            //   })
+            // })
+          })
+          // .catch((err) => {
+          //   GetLogger().error('Error while creating Depute:', {
+          //     Slug: action.NewData.Slug,
+          //     error: err,
+          //   })
+          //   process.exitCode = 1
+          // })
         } else if (action.Action === Action.Update) {
           GetLogger().info('Updating Depute:', { Slug: action.NewData.Slug })
-          return UpdateDeputeToFirestore(action.NewData)
-            .then(() => {
-              GetLogger().info('Updated Depute:', { Slug: action.NewData.Slug })
-            })
-            .catch((err) => {
-              GetLogger().error('Error while updating Depute:', {
-                Slug: action.NewData.Slug,
-                error: err,
-              })
-              process.exitCode = 1
-            })
+          return UpdateDeputeToSupabase(action.NewData).then(() => {
+            GetLogger().info('Updated Depute:', { Slug: action.NewData.Slug })
+          })
+          // .catch((err) => {
+          //   GetLogger().error('Error while updating Depute:', {
+          //     Slug: action.NewData.Slug,
+          //     error: err,
+          //   })
+          //   process.exitCode = 1
+          // })
         } else if (action.Action === Action.Remove) {
           GetLogger().info('Deleting depute:', { Slug: action.NewData.Slug })
-          return DeleteDeputeToFirestore(action.NewData)
-            .then(() => {
-              GetLogger().info('Deleted Depute:', { Slug: action.NewData.Slug })
-            })
-            .catch((err) => {
-              GetLogger().error('Error while deleting Depute:', {
-                Slug: action.NewData.Slug,
-                error: err,
-              })
-              process.exitCode = 1
-            })
+          return DeleteDeputeToSupabase(action.NewData).then(() => {
+            GetLogger().info('Deleted Depute:', { Slug: action.NewData.Slug })
+          })
+          // .catch((err) => {
+          //   GetLogger().error('Error while deleting Depute:', {
+          //     Slug: action.NewData.Slug,
+          //     error: err,
+          //   })
+          //   process.exitCode = 1
+          // })
         } else if (action.Action === Action.None) {
           GetLogger().info('Nothing to do on Depute:', {
             Slug: action.NewData.Slug,

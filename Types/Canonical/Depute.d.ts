@@ -38,7 +38,7 @@ declare namespace Types.Canonical {
     AutreMandat?: AutreMandat[]
     AncienMandat?: AncienMandat[]
     OrganismeParlementaire?: Canonical.OrganismeParlementaire[]
-    GroupeParlementaire?: Canonical.GroupeParlementaire
+    GroupeParlementaire?: string
     ResponsabiliteGroupe?: ResponsabiliteGroupe
   }
 }

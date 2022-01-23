@@ -1,4 +1,9 @@
-import firebase from 'firebase'
+import { DocumentData, QueryDocumentSnapshot } from 'firebase-admin/firestore'
+import {
+  getFirestore,
+  Query,
+  CollectionReference,
+} from 'firebase-admin/firestore'
 import firebaseClient from '../Common/FirebaseClient'
 import isUndefined from 'lodash/isUndefined'
 import isNull from 'lodash/isNull'
@@ -28,18 +33,15 @@ function isAFirebaseDictionnary(dict) {
 }
 
 const groupeConverter = {
-  toFirestore(
-    groupe: Types.Canonical.GroupeParlementaire
-  ): firebase.firestore.DocumentData {
+  toFirestore(groupe: Types.Canonical.GroupeParlementaire): DocumentData {
     return removeEmpty(groupe)
   },
 
   fromFirestore(
-    snapshot: firebase.firestore.QueryDocumentSnapshot,
-    options: firebase.firestore.SnapshotOptions
+    snapshot: QueryDocumentSnapshot
   ): Types.Canonical.GroupeParlementaire {
     const data: Types.Canonical.GroupeParlementaire = Object.assign(
-      snapshot.data(options)
+      snapshot.data()
     )
     Object.keys(data).forEach((k) => {
       if (isAFirebaseDictionnary(data[k])) {
@@ -51,19 +53,17 @@ const groupeConverter = {
 }
 
 export function GetGroupesFromFirestore() {
-  return firebaseClient
-    .firestore()
+  return getFirestore(firebaseClient)
     .collection('GroupeParlementaire')
     .withConverter(groupeConverter)
-    .get({ source: 'server' })
+    .get()
     .then((qs) => qs.docs.map((d) => d.data()))
 }
 
 export function CreateGroupeParlementaireToFirestore(
   data: Types.Canonical.GroupeParlementaire
 ) {
-  return firebaseClient
-    .firestore()
+  return getFirestore(firebaseClient)
     .collection('GroupeParlementaire')
     .withConverter(groupeConverter)
     .doc(data.Sigle)
@@ -73,8 +73,7 @@ export function CreateGroupeParlementaireToFirestore(
 export function UpdateGroupeParlementaireToFirestore(
   data: Types.Canonical.GroupeParlementaire
 ) {
-  return firebaseClient
-    .firestore()
+  return getFirestore(firebaseClient)
     .collection('GroupeParlementaire')
     .withConverter(groupeConverter)
     .doc(data.Sigle)

@@ -1,8 +1,8 @@
-name: Import data in staging
+name: Import data in staging for Supabase
 
 on:
   repository_dispatch:
-    types: import-data-stagin-firebase
+    types: import-data-staging-supabase
   schedule:
     - cron: '0 4 * * *'
 
@@ -26,36 +26,21 @@ jobs:
       - name: Import groupes
         run: yarn start -g
         env:
-          FIREBASE_APIKEY: ${{ AIzaSyCa6I2lBR9pyDNvTl2BF7fJW3ahE4n0QVE }}
-          FIREBASE_AUTH_DOMAIN: ${{ augora-f16f3.firebaseapp.com }}
-          FIREBASE_PROJECTID: ${{ augora-f16f3 }}
-          FIREBASE_STORAGEACCOUNT: ${{ augora-f16f3.appspot.com }}
-          FIREBASE_MESSAGINGSENDERID: ${{ 615882901652 }}
-          FIREBASE_APPID: ${{ 1:615882901652:web:ada8cdea09ebcee72c8c81 }}
-          SLACK_WEBHOOK_URL: ${{  secrets.SLACK_WEBHOOK_URL  }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           FAUNADB_ENV: staging
 
       - name: Import deputes
         run: yarn start -d
         env:
-          FIREBASE_APIKEY: ${{ AIzaSyCa6I2lBR9pyDNvTl2BF7fJW3ahE4n0QVE }}
-          FIREBASE_AUTH_DOMAIN: ${{ augora-f16f3.firebaseapp.com }}
-          FIREBASE_PROJECTID: ${{ augora-f16f3 }}
-          FIREBASE_STORAGEACCOUNT: ${{ augora-f16f3.appspot.com }}
-          FIREBASE_MESSAGINGSENDERID: ${{ 615882901652 }}
-          FIREBASE_APPID: ${{ 1:615882901652:web:ada8cdea09ebcee72c8c81 }}
-          SLACK_WEBHOOK_URL: ${{  secrets.SLACK_WEBHOOK_URL  }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
+          SLACK_WEBHOOK_URL: ${{  secrets.SLACK_WEBHOOK_URL }}
           FAUNADB_ENV: staging
 
       - name: Import activites
         run: yarn start -a
         env:
-          FIREBASE_APIKEY: ${{ AIzaSyCa6I2lBR9pyDNvTl2BF7fJW3ahE4n0QVE }}
-          FIREBASE_AUTH_DOMAIN: ${{ augora-f16f3.firebaseapp.com }}
-          FIREBASE_PROJECTID: ${{ augora-f16f3 }}
-          FIREBASE_STORAGEACCOUNT: ${{ augora-f16f3.appspot.com }}
-          FIREBASE_MESSAGINGSENDERID: ${{ 615882901652 }}
-          FIREBASE_APPID: ${{ 1:615882901652:web:ada8cdea09ebcee72c8c81 }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
           SLACK_WEBHOOK_URL: ${{  secrets.SLACK_WEBHOOK_URL  }}
           FAUNADB_ENV: staging
 
@@ -86,7 +71,7 @@ jobs:
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": '${{ job.status }}' === 'success' ? "Data successfully imported in Firebase :sunglasses::tada:" : "Error while importing data in Staging"
+                        "text": '${{ job.status }}' === 'success' ? "Data successfully imported in Supabase Staging :sunglasses::tada:" : "Error while importing data in Supabase Staging"
                       }
                     }
                   ]

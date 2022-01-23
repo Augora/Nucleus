@@ -118,7 +118,7 @@ export function AreTheSameDeputes(
     areAncienMandatArraysTheSame(depA.AncienMandat, depB.AncienMandat) &&
     areAutreMandatArraysTheSame(depA.AutreMandat, depB.AutreMandat) &&
     areArraysTheSame(depA.Collaborateurs, depB.Collaborateurs) &&
-    depA?.GroupeParlementaire?.Sigle === depB?.GroupeParlementaire?.Sigle &&
+    depA?.GroupeParlementaire === depB?.GroupeParlementaire &&
     depA?.ResponsabiliteGroupe?.Fonction ===
       depB?.ResponsabiliteGroupe?.Fonction
   )
