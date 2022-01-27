@@ -38,41 +38,6 @@ export function MapAncienMandat(
   }
 }
 
-export function MapActivites(
-  activites: Types.External.NosDeputesFR.Activite,
-  deputeSlug: string
-): Types.Canonical.Activite[] {
-  return Object.keys(activites.labels).map((weekNumber) => {
-    const weekNumberAsInt = parseInt(weekNumber, 10)
-    return {
-      DeputeSlug: deputeSlug,
-      DateDeDebut: dayjs(activites.date_debut, 'YYYY-MM-DD')
-        .startOf('w')
-        .add(weekNumberAsInt, 'w')
-        .format('YYYY-MM-DDTHH:mm:ss'),
-      DateDeFin: dayjs(activites.date_debut, 'YYYY-MM-DD')
-        .startOf('w')
-        .add(weekNumberAsInt + 1, 'w')
-        .format('YYYY-MM-DDTHH:mm:ss'),
-      NumeroDeSemaine: weekNumberAsInt,
-      PresencesEnCommission: Math.ceil(
-        activites.n_presences.commission[weekNumber]
-      ),
-      PresenceEnHemicycle: Math.ceil(
-        activites.n_presences.hemicycle[weekNumber]
-      ),
-      ParticipationsEnCommission: Math.ceil(
-        activites.n_participations.commission[weekNumber]
-      ),
-      ParticipationEnHemicycle: Math.ceil(
-        activites.n_participations.hemicycle[weekNumber]
-      ),
-      Question: Math.ceil(activites.n_questions[weekNumber]),
-      Vacances: Math.ceil(activites.vacances[weekNumber]),
-    }
-  })
-}
-
 export function areTheSameActivites(
   actA: Types.Canonical.Activite,
   actB: Types.Canonical.Activite
@@ -92,7 +57,8 @@ export function areTheSameActivites(
 
 export function MapAdresse(adresse: string): Types.Canonical.Adresse {
   const CPRegex = /\ ([0-9]{5})/
-  const PhoneRegex = /Téléphone : (((\+|00)\s?[0-9]{2})?\s?(?:[\s.-]?\d{1}){10})/
+  const PhoneRegex =
+    /Téléphone : (((\+|00)\s?[0-9]{2})?\s?(?:[\s.-]?\d{1}){10})/
   const FaxRegex = /Télécopie : (((\+|00)\s?[0-9]{2})?\s?(?:[\s.-]?\d{1}){10})/
 
   // Postal code processing
