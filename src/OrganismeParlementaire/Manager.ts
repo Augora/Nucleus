@@ -6,10 +6,10 @@ import { MapOrganismeParlementaire } from './Mapping'
 import { CompareLists, Action, DiffType } from '../Tools/Comparison'
 import { GetLogger } from '../Common/Logger'
 import {
-  GetOrganismesFromFirestore,
-  CreateOrganismeParlementaireToFirestore,
-  UpdateOrganismeParlementaireToFirestore,
-} from './WrapperFirebase'
+  GetOrganismesFromSupabase,
+  CreateOrganismeToSupabase,
+  UpdateOrganismeToSupabase,
+} from './WrapperSupabase'
 
 export async function ManageOrganismes() {
   const organismesFromNosDeputesFR =
@@ -22,11 +22,11 @@ export async function ManageOrganismes() {
     'canonicalOrganismesFromNosDeputesFR:',
     canonicalOrganismesFromNosDeputesFR
   )
-  const organismesFromFirestore = await GetOrganismesFromFirestore()
-  GetLogger().info('organismesFromFaunaDB:', organismesFromFirestore)
+  const organismesFromSupabase = await GetOrganismesFromSupabase()
+  GetLogger().info('organismesFromSupabase:', organismesFromSupabase)
   const res = CompareLists(
     canonicalOrganismesFromNosDeputesFR,
-    organismesFromFirestore,
+    organismesFromSupabase,
     (a, b) => a.Nom === b.Nom && a.Nom === b.Nom,
     'Sigle',
     true
@@ -40,7 +40,7 @@ export async function ManageOrganismes() {
         })
         if (action.Action === Action.Create) {
           GetLogger().info('Creating Organisme:', { Nom: action.NewData.Nom })
-          return CreateOrganismeParlementaireToFirestore(action.NewData).then(
+          return CreateOrganismeToSupabase(action.NewData).then(
             () => {
               GetLogger().info('Created Organisme:', {
                 Nom: action.NewData.Nom,
@@ -52,7 +52,7 @@ export async function ManageOrganismes() {
           GetLogger().info('Updating OrganismeParlementaire:', {
             Nom: action.NewData.Nom,
           })
-          return UpdateOrganismeParlementaireToFirestore(action.NewData).then(
+          return UpdateOrganismeToSupabase(action.NewData).then(
             () => {
               GetLogger().info('Updated OrganismeParlementaire', {
                 Nom: action.NewData.Nom,

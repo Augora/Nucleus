@@ -16,5 +16,5 @@ export function GetOrganismesParlementairesFromNosDeputesFR(): Promise<
       GetLogger().info('Retrieved organismes from nosdeputes.fr.', res.data)
       return res
     })
-    .then((res) => res.data.organismes.map((d) => d.organismeParlementaire))
+    .then((res) => res.data.organismes.map((d) => d.organisme))
 }

@@ -5,7 +5,7 @@ declare namespace Types.External.NosDeputesFR {
   }
 
   interface OrganismeParlementaireWrapper {
-    organismeParlementaire: OrganismeParlementaire
+    organisme: OrganismeParlementaire
   }
 
   interface OrganismeParlementaire {

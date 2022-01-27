@@ -7,7 +7,7 @@ function handleSupabaseError({ error, ...rest }) {
   return rest
 }
 
-export function GetOrganismesBySlugFromSupabase(slug: string) {
+export function GetOrganismesFromSupabase() {
   return supabaseClient
     .from<Types.Canonical.OrganismeParlementaire>('OrganismeParlementaire')
     .select()
@@ -27,7 +27,7 @@ export function UpdateOrganismeToSupabase(data: Types.Canonical.OrganismeParleme
   return supabaseClient
     .from<Types.Canonical.OrganismeParlementaire>('OrganismeParlementaire')
     .update(data)
-    .match({ Id: data.Id })
+    .match({ Slug: data.Slug })
     .then(handleSupabaseError)
     .then((d) => d.body)
 }
@@ -36,7 +36,7 @@ export function DeleteOrganismeToSupabase(data: Types.Canonical.OrganismeParleme
   return supabaseClient
     .from<Types.Canonical.OrganismeParlementaire>('OrganismeParlementaire')
     .delete()
-    .match({ Id: data.Id })
+    .match({ Slug: data.Slug })
     .then(handleSupabaseError)
     .then((d) => d.body)
 }

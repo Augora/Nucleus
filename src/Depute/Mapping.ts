@@ -178,10 +178,7 @@ export function MapDepute(
     AutreMandat: depute.autres_mandats.map((am) => MapAutreMandat(am.mandat)),
     AncienMandat: depute.anciens_mandats.map((am) =>
       MapAncienMandat(am.mandat)
-    ),
-    OrganismeParlementaire: depute.responsabilites.map((r) => ({
-      Nom: r.responsabilite.organisme,
-    })),
+    )
   }
 }
 
