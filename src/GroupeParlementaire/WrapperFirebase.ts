@@ -1,5 +1,6 @@
-import { DocumentData, QueryDocumentSnapshot } from 'firebase-admin/firestore'
 import {
+  DocumentData,
+  QueryDocumentSnapshot,
   getFirestore,
   Query,
   CollectionReference,

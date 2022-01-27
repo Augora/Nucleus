@@ -1,6 +1,6 @@
 import { initializeApp, cert } from 'firebase-admin/app'
 
-var serviceAccount: any = {
+const serviceAccount: any = {
   type: process.env.FIREBASE_TYPE,
   project_id: process.env.FIREBASE_PROJECTID,
   private_key_id: process.env.FIREBASE_PRIVATEKEYID,
