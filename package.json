@@ -8,7 +8,7 @@
     "@types/color": "^3.0.2",
     "axios": "^0.24.0",
     "color": "^4.1.0",
-    "command-line-args": "^5.2.0",
+    "command-line-args": "^5.2.1",
     "dayjs": "^1.10.7",
     "faunadb": "^4.4.1",
     "firebase-admin": "^10.0.1",
