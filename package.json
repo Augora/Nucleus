@@ -10,7 +10,7 @@
     "color": "^4.1.0",
     "command-line-args": "^5.2.1",
     "dayjs": "^1.10.7",
-    "faunadb": "^4.4.1",
+    "faunadb": "^4.4.2",
     "firebase-admin": "^10.0.1",
     "lodash": "^4.17.21",
     "rxjs": "^7.5.1",
