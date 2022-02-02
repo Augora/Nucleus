@@ -11,5 +11,6 @@ declare namespace Types.Canonical {
     ParticipationEnHemicycle?: number
     Question?: number
     Vacances?: number
+    AvantMandat?: number
   }
 }

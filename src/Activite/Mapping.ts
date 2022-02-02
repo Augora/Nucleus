@@ -1,22 +1,21 @@
 import dayjs from 'dayjs'
 
 export function MapActivites(
-  slug: string,
+  depute: Types.Canonical.Depute,
   activites: Types.External.NosDeputesFR.Activite
 ): Types.Canonical.Activite[] {
   return Object.keys(activites.labels).map((weekNumber) => {
     const weekNumberAsInt = parseInt(weekNumber, 10)
+    const dateDeDebut = dayjs(activites.date_debut, 'YYYY-MM-DD')
+      .startOf('w')
+      .add(weekNumberAsInt, 'w')
+    const isWeekBeforeMandat = dateDeDebut.isBefore(dayjs(depute.DebutDuMandat))
+
     return {
-      Id: `${slug}_${weekNumber}`,
-      DeputeSlug: slug,
-      DateDeDebut: dayjs(activites.date_debut, 'YYYY-MM-DD')
-        .startOf('w')
-        .add(weekNumberAsInt, 'w')
-        .format('YYYY-MM-DDTHH:mm:ss'),
-      DateDeFin: dayjs(activites.date_debut, 'YYYY-MM-DD')
-        .startOf('w')
-        .add(weekNumberAsInt + 1, 'w')
-        .format('YYYY-MM-DDTHH:mm:ss'),
+      Id: `${depute.Slug}_${weekNumber}`,
+      DeputeSlug: depute.Slug,
+      DateDeDebut: dateDeDebut.format('YYYY-MM-DDTHH:mm:ss'),
+      DateDeFin: dateDeDebut.add(1, 'w').format('YYYY-MM-DDTHH:mm:ss'),
       NumeroDeSemaine: weekNumberAsInt,
       PresencesEnCommission: Math.ceil(
         activites.n_presences.commission[weekNumber]
@@ -31,7 +30,10 @@ export function MapActivites(
         activites.n_participations.hemicycle[weekNumber]
       ),
       Question: Math.ceil(activites.n_questions[weekNumber]),
-      Vacances: Math.ceil(activites.vacances[weekNumber]),
+      Vacances: isWeekBeforeMandat
+        ? 0
+        : Math.ceil(activites.vacances[weekNumber]),
+      AvantMandat: isWeekBeforeMandat ? 20 : 0,
     }
   })
 }
