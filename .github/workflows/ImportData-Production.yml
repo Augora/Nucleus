@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: master
+          ref: develop
 
       - name: Use Node.js 16.x
         uses: actions/setup-node@v1
@@ -23,12 +23,26 @@ jobs:
       - name: yarn install
         run: yarn install
 
-      - name: yarn start
-        run: yarn start
+      - name: Import groupes
+        run: yarn start -g
         env:
-          FAUNADB_TOKEN: ${{ secrets.FAUNADB_TOKEN_PRODUCTION_ADMIN }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL_PRODUCTION }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_PRODUCTION }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          FAUNADB_ENV: production
+
+      - name: Import deputes
+        run: yarn start -d
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL_PRODUCTION }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_PRODUCTION }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Import activites
+        run: yarn start -a
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL_PRODUCTION }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_PRODUCTION }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
       - name: Upload logs as artifact
         uses: actions/upload-artifact@v1
@@ -47,8 +61,8 @@ jobs:
           fields: workflow,job,commit
           custom_payload: |
             {
-              username: '[Nucleus]',
-              icon_emoji: ':atom_symbol:',
+              username: 'Github Actions',
+              icon_emoji: ':rocket:',
               attachments: [
                 {
                   color: '${{ job.status }}' === 'success' ? '#28a745' : '${{ job.status }}' === 'failure' ? '#dc3545' : '#ffc107',
@@ -57,7 +71,7 @@ jobs:
                       "type": "section",
                       "text": {
                         "type": "mrkdwn",
-                        "text": '${{ job.status }}' === 'success' ? "Data successfully imported in Production :sunglasses::tada:" : "Error while importing data in Production"
+                        "text": '${{ job.status }}' === 'success' ? "Data successfully imported in Supabase Production :sunglasses::tada:" : "Error while importing data in Supabase Production"
                       }
                     }
                   ]

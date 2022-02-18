@@ -16,17 +16,18 @@ import {
 
 export async function ManageActivites() {
   const detputesFromSupabase = await GetDeputesFromSupabase()
-  const slugs = detputesFromSupabase.map((d) => d.Slug)
-  return from(slugs)
+  return from(detputesFromSupabase)
     .pipe(
-      mergeMap(async (slug: string) => {
+      mergeMap(async (depute: Types.Canonical.Depute) => {
         const activitesFromNosDeputesFR =
-          await GetActiviesBySlugFromNosDeputesFR(slug)
+          await GetActiviesBySlugFromNosDeputesFR(depute.Slug)
         const canonicalActivitesFromNosDeputesFR = MapActivites(
-          slug,
+          depute,
           activitesFromNosDeputesFR
         )
-        const activiteFromSupabase = await GetActivitesBySlugFromSupabase(slug)
+        const activiteFromSupabase = await GetActivitesBySlugFromSupabase(
+          depute.Slug
+        )
         const res = CompareLists(
           canonicalActivitesFromNosDeputesFR,
           activiteFromSupabase,
