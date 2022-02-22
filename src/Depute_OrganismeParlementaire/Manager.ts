@@ -30,7 +30,11 @@ export async function ManageDeputeOrganismeParlementaire() {
     deputesInOrganisme
       .flatMap((org) =>
         org.deputes.map((d) => {
-          return MapDeputeOrganismeParlementaire(org.organismeSlug, d.slug)
+          return MapDeputeOrganismeParlementaire(
+            org.organismeSlug,
+            d.slug,
+            d.fonction
+          )
         })
       )
       .filter((d) => d.DeputeSlug !== undefined)
@@ -41,7 +45,8 @@ export async function ManageDeputeOrganismeParlementaire() {
     (a, b) =>
       a.Id === b.Id &&
       a.DeputeSlug === b.DeputeSlug &&
-      a.OrganismeSlug === b.OrganismeSlug,
+      a.OrganismeSlug === b.OrganismeSlug &&
+      a.Fonction === b.Fonction,
     'Id',
     true
   )

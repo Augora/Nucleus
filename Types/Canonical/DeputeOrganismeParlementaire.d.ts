@@ -3,5 +3,6 @@ declare namespace Types.Canonical {
     Id: string
     DeputeSlug: string
     OrganismeSlug: string
+    Fonction: string
   }
 }
