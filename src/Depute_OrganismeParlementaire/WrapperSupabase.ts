@@ -9,7 +9,7 @@ function handleSupabaseError({ error, ...rest }) {
 }
 
 function handleSupabasePagination(from: number, to: number) {
-  return function (res) {
+  return (res) => {
     if (res.body.length === 1000) {
       return GetDeputeOrganismeParlementaireFromSupabase(to, to + 1000).then(
         (r) => {
