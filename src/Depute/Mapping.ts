@@ -11,6 +11,7 @@ import {
   lowerCase,
   replace,
   trim,
+  isEmpty,
 } from 'lodash'
 
 import Departements from '../StaticData/Deputes/departments.json'
@@ -100,7 +101,9 @@ export function MapDepute(
     NomCirconscription: depute.nom_circo,
     NumeroCirconscription: depute.num_circo,
     DebutDuMandat: depute.mandat_debut,
-    RattachementFinancier: depute.parti_ratt_financier,
+    RattachementFinancier: isEmpty(depute.parti_ratt_financier)
+      ? 'Non déclaré(s)'
+      : depute.parti_ratt_financier,
     Profession: depute.profession ? depute.profession : '',
     PlaceEnHemicycle: depute.place_en_hemicycle,
     URLAssembleeNationale: depute.url_an,
