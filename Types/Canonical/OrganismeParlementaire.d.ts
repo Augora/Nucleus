@@ -3,7 +3,7 @@ declare namespace Types.Canonical {
     Slug: string
     Nom?: string
     Type?: string
-    EstPermanant?: boolean
+    EstPermanent?: boolean
     URLNosdeputes?: string
     URLNosdeputesAPI?: string
   }

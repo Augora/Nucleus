@@ -16,7 +16,7 @@ export function MapOrganismeParlementaire(
     Nom: organisme.nom,
     Slug: organisme.slug,
     Type: organisme.type,
-    EstPermanant: commissionsPermanentes.includes(organisme.slug),
+    EstPermanent: commissionsPermanentes.includes(organisme.slug),
     URLNosdeputes: organisme.url_nosdeputes,
     URLNosdeputesAPI: organisme.url_nosdeputes_api,
   }
