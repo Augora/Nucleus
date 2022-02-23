@@ -16,6 +16,7 @@ import {
 
 import Departements from '../StaticData/Deputes/departments.json'
 import Regions from '../StaticData/Deputes/regions.json'
+import { MapOrganismeParlementaire } from '../OrganismeParlementaire/Mapping'
 
 function processNomDepartement(numeroDepartement: string, slug: string) {
   if (!numeroDepartement) return undefined
@@ -180,7 +181,7 @@ export function MapDepute(
     AutreMandat: depute.autres_mandats.map((am) => MapAutreMandat(am.mandat)),
     AncienMandat: depute.anciens_mandats.map((am) =>
       MapAncienMandat(am.mandat)
-    ),
+    )
   }
 }
 
