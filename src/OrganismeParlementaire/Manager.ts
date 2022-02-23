@@ -27,8 +27,9 @@ export async function ManageOrganismes() {
   const res = CompareLists(
     canonicalOrganismesFromNosDeputesFR,
     organismesFromSupabase,
-    (a, b) => a.Nom === b.Nom && a.Nom === b.Nom,
-    'Sigle',
+    (a, b) =>
+      a.Nom === b.Nom && a.Type === b.Type && a.EstPermanent === b.EstPermanent,
+    'Slug',
     true
   )
   GetLogger().info('Comparison:', res)
@@ -40,26 +41,22 @@ export async function ManageOrganismes() {
         })
         if (action.Action === Action.Create) {
           GetLogger().info('Creating Organisme:', { Nom: action.NewData.Nom })
-          return CreateOrganismeToSupabase(action.NewData).then(
-            () => {
-              GetLogger().info('Created Organisme:', {
-                Nom: action.NewData.Nom,
-              })
-              // return SendNewGroupeParlementaireNotification(action.NewData)
-            }
-          )
+          return CreateOrganismeToSupabase(action.NewData).then(() => {
+            GetLogger().info('Created Organisme:', {
+              Nom: action.NewData.Nom,
+            })
+            // return SendNewGroupeParlementaireNotification(action.NewData)
+          })
         } else if (action.Action === Action.Update) {
           GetLogger().info('Updating OrganismeParlementaire:', {
             Nom: action.NewData.Nom,
           })
-          return UpdateOrganismeToSupabase(action.NewData).then(
-            () => {
-              GetLogger().info('Updated OrganismeParlementaire', {
-                Nom: action.NewData.Nom,
-              })
-              // return SendNewGroupeParlementaireNotification(action.NewData)
-            }
-          )
+          return UpdateOrganismeToSupabase(action.NewData).then(() => {
+            GetLogger().info('Updated OrganismeParlementaire', {
+              Nom: action.NewData.Nom,
+            })
+            // return SendNewGroupeParlementaireNotification(action.NewData)
+          })
         } else {
           GetLogger().info('Nothing to do on OrganismeParlementaire:', {
             Nom: action.NewData.Nom,
