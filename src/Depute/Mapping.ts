@@ -103,7 +103,7 @@ export function MapDepute(
     NumeroCirconscription: depute.num_circo,
     DebutDuMandat: depute.mandat_debut,
     RattachementFinancier: isEmpty(depute.parti_ratt_financier)
-      ? 'Non déclaré(s)'
+      ? depute.sexe === 'F' ? 'Non rattachée':'Non rattaché'
       : depute.parti_ratt_financier,
     Profession: depute.profession ? depute.profession : '',
     PlaceEnHemicycle: depute.place_en_hemicycle,
