@@ -131,3 +131,25 @@ export function SendUpdateGroupeParlementaireNotification(
     ],
   })
 }
+
+export function SendNewOrganismeParlementaireNotification(organisme: Types.Canonical.OrganismeParlementaire) {
+  return axios.post(process.env.SLACK_WEBHOOK_URL, {
+    username: 'Nucleus',
+    icon_emoji: ':rocket:',
+    attachments: [
+      {
+        color: '#ffc107',
+        blocks: [
+          {
+            type: 'section',
+            text: {
+              type: 'mrkdwn',
+              text: `L'organisme parlementaire ${organisme.Nom} a été crée.`,
+            },
+          },
+          messageContext,
+        ],
+      },
+    ],
+  })
+}
