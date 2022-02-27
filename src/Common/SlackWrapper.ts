@@ -59,6 +59,20 @@ export function SendDeputeChangeGroupNotification(previousDepute: Types.Canonica
     ],
   })
 }
+
+export function SendStopDeputeMandatNotification(depute: Types.Canonical.Depute) {
+  return axios.post(process.env.SLACK_WEBHOOK_URL, {
+    username: 'Nucleus',
+    icon_emoji: ':rocket:',
+    attachments: [
+      {
+        color: '#ffc107',
+        blocks: [
+          {
+            type: 'section',
+            text: {
+              type: 'mrkdwn',
+              text: `<https://${augoraDomain}/depute/${depute.Slug}|${depute.Nom}> n'est plus en mandat.`,
             },
           },
           messageContext,
