@@ -37,6 +37,28 @@ export function SendNewDeputeNotification(depute: Types.Canonical.Depute) {
     ],
   })
 }
+
+export function SendDeputeChangeGroupNotification(previousDepute: Types.Canonical.Depute, depute: Types.Canonical.Depute) {
+  return axios.post(process.env.SLACK_WEBHOOK_URL, {
+    username: 'Nucleus',
+    icon_emoji: ':rocket:',
+    attachments: [
+      {
+        color: '#ffc107',
+        blocks: [
+          {
+            type: 'section',
+            text: {
+              type: 'mrkdwn',
+              text: `<https://${augoraDomain}/depute/${depute.Slug}|${depute.Nom}> a changé de groupe parlementaire :  transition de ${previousDepute.GroupeParlementaire} à ${depute.GroupeParlementaire}.`,
+            },
+          },
+          messageContext,
+        ],
+      },
+    ],
+  })
+}
             },
           },
           messageContext,

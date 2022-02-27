@@ -9,7 +9,10 @@ import {
   GetDeputesFromNosDeputesFR,
   GetDeputesBySlugFromNosDeputesFR,
 } from './WrapperNosDeputesFR'
-import { SendNewDeputeNotification } from '../Common/SlackWrapper'
+import {
+  SendNewDeputeNotification,
+  SendDeputeChangeGroupNotification,
+} from '../Common/SlackWrapper'
 import {
   GetDeputesFromSupabase,
   CreateDeputeToSupabase,
@@ -60,6 +63,13 @@ export async function ManageDeputes() {
           GetLogger().info('Updating Depute:', { Slug: action.NewData.Slug })
           return UpdateDeputeToSupabase(action.NewData).then(() => {
             GetLogger().info('Updated Depute:', { Slug: action.NewData.Slug })
+            if(action.PreviousData.GroupeParlementaire != action.NewData.GroupeParlementaire) {
+              return SendDeputeChangeGroupNotification(action.PreviousData,action.NewData).then(() => {
+                GetLogger().info('Notification sent for Depute changing group:', {
+                  Slug: action.NewData.Slug,
+                })
+              })
+            }
           })
           // .catch((err) => {
           //   GetLogger().error('Error while updating Depute:', {
