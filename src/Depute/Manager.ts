@@ -43,11 +43,11 @@ export async function ManageDeputes() {
           GetLogger().info('Creating Depute:', action.NewData)
           return CreateDeputeToSupabase(action.NewData).then(() => {
             GetLogger().info('Created Depute:', { Slug: action.NewData.Slug })
-            // return SendNewDeputeNotification(action.NewData).then(() => {
-            //   GetLogger().info('Notification sent for Depute creation:', {
-            //     Slug: action.NewData.Slug,
-            //   })
-            // })
+            return SendNewDeputeNotification(action.NewData).then(() => {
+              GetLogger().info('Notification sent for Depute creation:', {
+                Slug: action.NewData.Slug,
+              })
+            })
           })
           // .catch((err) => {
           //   GetLogger().error('Error while creating Depute:', {

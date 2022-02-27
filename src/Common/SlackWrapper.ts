@@ -28,7 +28,15 @@ export function SendNewDeputeNotification(depute: Types.Canonical.Depute) {
             type: 'section',
             text: {
               type: 'mrkdwn',
-              text: `<https://${augoraDomain}/depute/${depute.Slug}|${depute.Nom}>, député ${depute.GroupeParlementaire.Sigle} a été ajouté en base.`,
+              text: `<https://${augoraDomain}/depute/${depute.Slug}|${depute.Nom}>, député ${depute.GroupeParlementaire} a été ajouté en base.`,
+            },
+          },
+          messageContext,
+        ],
+      },
+    ],
+  })
+}
             },
           },
           messageContext,
