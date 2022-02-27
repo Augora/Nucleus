@@ -64,14 +64,14 @@ export async function ManageDeputes() {
           GetLogger().info('Updating Depute:', { Slug: action.NewData.Slug })
           return UpdateDeputeToSupabase(action.NewData).then(() => {
             GetLogger().info('Updated Depute:', { Slug: action.NewData.Slug })
-            if(action.PreviousData.GroupeParlementaire != action.NewData.GroupeParlementaire) {
+            if(action.PreviousData.GroupeParlementaire !== action.NewData.GroupeParlementaire) {
               return SendDeputeChangeGroupNotification(action.PreviousData,action.NewData).then(() => {
                 GetLogger().info('Notification sent for Depute changing group:', {
                   Slug: action.NewData.Slug,
                 })
               })
             }
-            if(action.PreviousData.EstEnMandat != action.NewData.EstEnMandat) {
+            if(action.PreviousData.EstEnMandat !== action.NewData.EstEnMandat) {
               return SendStopDeputeMandatNotification(action.NewData).then(() => {
                 GetLogger().info('Notification sent for Depute stopping his mandate:', {
                   Slug: action.NewData.Slug,
