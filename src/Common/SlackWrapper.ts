@@ -28,7 +28,51 @@ export function SendNewDeputeNotification(depute: Types.Canonical.Depute) {
             type: 'section',
             text: {
               type: 'mrkdwn',
-              text: `<https://${augoraDomain}/depute/${depute.Slug}|${depute.Nom}>, député ${depute.GroupeParlementaire.Sigle} a été ajouté en base.`,
+              text: `<https://${augoraDomain}/depute/${depute.Slug}|${depute.Nom}>, député ${depute.GroupeParlementaire} a été ajouté en base.`,
+            },
+          },
+          messageContext,
+        ],
+      },
+    ],
+  })
+}
+
+export function SendDeputeChangeGroupNotification(previousDepute: Types.Canonical.Depute, depute: Types.Canonical.Depute) {
+  return axios.post(process.env.SLACK_WEBHOOK_URL, {
+    username: 'Nucleus',
+    icon_emoji: ':rocket:',
+    attachments: [
+      {
+        color: '#ffc107',
+        blocks: [
+          {
+            type: 'section',
+            text: {
+              type: 'mrkdwn',
+              text: `<https://${augoraDomain}/depute/${depute.Slug}|${depute.Nom}> a changé de groupe parlementaire :  transition de ${previousDepute.GroupeParlementaire} à ${depute.GroupeParlementaire}.`,
+            },
+          },
+          messageContext,
+        ],
+      },
+    ],
+  })
+}
+
+export function SendStopDeputeMandatNotification(depute: Types.Canonical.Depute) {
+  return axios.post(process.env.SLACK_WEBHOOK_URL, {
+    username: 'Nucleus',
+    icon_emoji: ':rocket:',
+    attachments: [
+      {
+        color: '#ffc107',
+        blocks: [
+          {
+            type: 'section',
+            text: {
+              type: 'mrkdwn',
+              text: `<https://${augoraDomain}/depute/${depute.Slug}|${depute.Nom}> n'est plus en mandat.`,
             },
           },
           messageContext,
@@ -79,6 +123,28 @@ export function SendUpdateGroupeParlementaireNotification(
               text: `Le groupe ${groupe.NomComplet} est devenu ${
                 groupe.Actif ? 'actif' : 'inactif'
               }.`,
+            },
+          },
+          messageContext,
+        ],
+      },
+    ],
+  })
+}
+
+export function SendNewOrganismeParlementaireNotification(organisme: Types.Canonical.OrganismeParlementaire) {
+  return axios.post(process.env.SLACK_WEBHOOK_URL, {
+    username: 'Nucleus',
+    icon_emoji: ':rocket:',
+    attachments: [
+      {
+        color: '#ffc107',
+        blocks: [
+          {
+            type: 'section',
+            text: {
+              type: 'mrkdwn',
+              text: `L'organisme parlementaire ${organisme.Nom} a été crée.`,
             },
           },
           messageContext,

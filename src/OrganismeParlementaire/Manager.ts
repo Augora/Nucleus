@@ -10,6 +10,7 @@ import {
   CreateOrganismeToSupabase,
   UpdateOrganismeToSupabase,
 } from './WrapperSupabase'
+import { SendNewOrganismeParlementaireNotification } from '../Common/SlackWrapper'
 
 export async function ManageOrganismes() {
   const organismesFromNosDeputesFR =
@@ -45,7 +46,7 @@ export async function ManageOrganismes() {
             GetLogger().info('Created Organisme:', {
               Nom: action.NewData.Nom,
             })
-            // return SendNewGroupeParlementaireNotification(action.NewData)
+            return SendNewOrganismeParlementaireNotification(action.NewData)
           })
         } else if (action.Action === Action.Update) {
           GetLogger().info('Updating OrganismeParlementaire:', {

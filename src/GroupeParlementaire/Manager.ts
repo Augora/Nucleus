@@ -48,7 +48,7 @@ export async function ManageGroupes() {
               GetLogger().info('Created Groupe:', {
                 Sigle: action.NewData.Sigle,
               })
-              // return SendNewGroupeParlementaireNotification(action.NewData)
+              return SendNewGroupeParlementaireNotification(action.NewData)
             }
           )
         } else if (action.Action === Action.Update) {
