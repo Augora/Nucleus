@@ -71,7 +71,7 @@ export async function ManageDeputes() {
                 })
               })
             }
-            if(action.PreviousData.EstEnMandat !== action.NewData.EstEnMandat) {
+            if(action.PreviousData.EstEnMandat === true && action.NewData.EstEnMandat === false) {
               return SendStopDeputeMandatNotification(action.NewData).then(() => {
                 GetLogger().info('Notification sent for Depute stopping his mandate:', {
                   Slug: action.NewData.Slug,
