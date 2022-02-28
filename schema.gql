@@ -79,6 +79,14 @@ type Adresse {
   Deputes: [Depute!]! @relation
 }
 
+type OrganismeParlementaire {
+  Id: Int! @unique @index
+  Slug: String!
+  Nom: String!
+  Type: String
+  Deputes: [Depute!]! @relation
+}
+
 type Depute {
   # Attributes
   Slug: String! @unique @index
@@ -127,6 +135,7 @@ type Depute {
   AdressesDetails: [Adresse!]! @relation
   AnciensMandats: [AncienMandat!]! @relation
   AutresMandats: [AutreMandat!]! @relation
+  OrganismesParlementaires: [OrganismeParlementaire!]! @relation
 }
 
 type Query {
@@ -139,4 +148,7 @@ type Query {
 
   GroupesParlementairesDetails: [GroupeParlementaire!]!
   GroupesParlementairesDetailsActifs(Actif: Boolean!): [GroupeParlementaire!]!
+
+  OrganismesParlementaires: [OrganismeParlementaire!]!
+  OrganismeParlementaire(Slug: String): [OrganismeParlementaire!]!
 }

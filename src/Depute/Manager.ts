@@ -9,7 +9,11 @@ import {
   GetDeputesFromNosDeputesFR,
   GetDeputesBySlugFromNosDeputesFR,
 } from './WrapperNosDeputesFR'
-import { SendNewDeputeNotification } from '../Common/SlackWrapper'
+import {
+  SendNewDeputeNotification,
+  SendDeputeChangeGroupNotification,
+  SendStopDeputeMandatNotification 
+} from '../Common/SlackWrapper'
 import {
   GetDeputesFromSupabase,
   CreateDeputeToSupabase,
@@ -43,11 +47,11 @@ export async function ManageDeputes() {
           GetLogger().info('Creating Depute:', action.NewData)
           return CreateDeputeToSupabase(action.NewData).then(() => {
             GetLogger().info('Created Depute:', { Slug: action.NewData.Slug })
-            // return SendNewDeputeNotification(action.NewData).then(() => {
-            //   GetLogger().info('Notification sent for Depute creation:', {
-            //     Slug: action.NewData.Slug,
-            //   })
-            // })
+            return SendNewDeputeNotification(action.NewData).then(() => {
+              GetLogger().info('Notification sent for Depute creation:', {
+                Slug: action.NewData.Slug,
+              })
+            })
           })
           // .catch((err) => {
           //   GetLogger().error('Error while creating Depute:', {
@@ -60,6 +64,20 @@ export async function ManageDeputes() {
           GetLogger().info('Updating Depute:', { Slug: action.NewData.Slug })
           return UpdateDeputeToSupabase(action.NewData).then(() => {
             GetLogger().info('Updated Depute:', { Slug: action.NewData.Slug })
+            if(action.PreviousData.GroupeParlementaire !== action.NewData.GroupeParlementaire) {
+              return SendDeputeChangeGroupNotification(action.PreviousData,action.NewData).then(() => {
+                GetLogger().info('Notification sent for Depute changing group:', {
+                  Slug: action.NewData.Slug,
+                })
+              })
+            }
+            if(action.PreviousData.EstEnMandat === true && action.NewData.EstEnMandat === false) {
+              return SendStopDeputeMandatNotification(action.NewData).then(() => {
+                GetLogger().info('Notification sent for Depute stopping his mandate:', {
+                  Slug: action.NewData.Slug,
+                })
+              })
+            }
           })
           // .catch((err) => {
           //   GetLogger().error('Error while updating Depute:', {

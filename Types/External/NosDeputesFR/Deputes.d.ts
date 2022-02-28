@@ -66,6 +66,7 @@ declare namespace Types.External.NosDeputesFR {
     nb_mandats: number
     twitter: string
     ancien_depute?: number
+    function?: string
   }
 
   interface Activite {

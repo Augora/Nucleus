@@ -11,10 +11,12 @@ import {
   lowerCase,
   replace,
   trim,
+  isEmpty,
 } from 'lodash'
 
 import Departements from '../StaticData/Deputes/departments.json'
 import Regions from '../StaticData/Deputes/regions.json'
+import { MapOrganismeParlementaire } from '../OrganismeParlementaire/Mapping'
 
 function processNomDepartement(numeroDepartement: string, slug: string) {
   if (!numeroDepartement) return undefined
@@ -100,7 +102,9 @@ export function MapDepute(
     NomCirconscription: depute.nom_circo,
     NumeroCirconscription: depute.num_circo,
     DebutDuMandat: depute.mandat_debut,
-    RattachementFinancier: depute.parti_ratt_financier,
+    RattachementFinancier: isEmpty(depute.parti_ratt_financier)
+      ? depute.sexe === 'F' ? 'Non rattachée':'Non rattaché'
+      : depute.parti_ratt_financier,
     Profession: depute.profession ? depute.profession : '',
     PlaceEnHemicycle: depute.place_en_hemicycle,
     URLAssembleeNationale: depute.url_an,
@@ -177,7 +181,7 @@ export function MapDepute(
     AutreMandat: depute.autres_mandats.map((am) => MapAutreMandat(am.mandat)),
     AncienMandat: depute.anciens_mandats.map((am) =>
       MapAncienMandat(am.mandat)
-    ),
+    )
   }
 }
 
