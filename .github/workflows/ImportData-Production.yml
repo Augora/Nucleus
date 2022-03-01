@@ -23,22 +23,36 @@ jobs:
       - name: yarn install
         run: yarn install
 
-      - name: Import groupes
+      - name: Import GroupeParlementaire
         run: yarn start -g
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_PRODUCTION }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_PRODUCTION }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-      - name: Import deputes
+      - name: Import Depute
         run: yarn start -d
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_PRODUCTION }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_PRODUCTION }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-      - name: Import activites
+      - name: Import Activite
         run: yarn start -a
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL_PRODUCTION }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_PRODUCTION }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Import OrganismeParlementaire
+        run: yarn start -o
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL_PRODUCTION }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_PRODUCTION }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Import Deputes_OrganismeParlementaire
+        run: yarn start -p
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_PRODUCTION }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_PRODUCTION }}
