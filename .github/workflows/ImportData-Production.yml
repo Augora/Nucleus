@@ -2,7 +2,7 @@ name: Import data in production
 
 on:
   repository_dispatch:
-    types: import-data-production
+    types: [import-data-production]
   schedule:
     - cron: '0 4 * * *'
 
