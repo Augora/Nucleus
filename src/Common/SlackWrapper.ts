@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const envFullName =
-  process.env.FAUNADB_ENV === 'production' ? 'Production' : 'Staging'
+  process.env.SUPABASE_ENV === 'production' ? 'Production' : 'Staging'
 
 const messageContext = {
   type: 'context',
@@ -14,7 +14,7 @@ const messageContext = {
 }
 
 const augoraDomain =
-  process.env.FAUNADB_ENV === 'production' ? 'augora.fr' : 'preprod.augora.fr'
+  process.env.SUPABASE_ENV === 'production' ? 'augora.fr' : 'preprod.augora.fr'
 
 export function SendNewDeputeNotification(depute: Types.Canonical.Depute) {
   return axios.post(process.env.SLACK_WEBHOOK_URL, {

@@ -29,6 +29,7 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_PRODUCTION }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_PRODUCTION }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SUPABASE_ENV: Production
 
       - name: Import Depute
         run: yarn start -d
@@ -36,6 +37,7 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_PRODUCTION }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_PRODUCTION }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SUPABASE_ENV: Production
 
       - name: Import Activite
         run: yarn start -a
@@ -43,6 +45,7 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_PRODUCTION }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_PRODUCTION }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SUPABASE_ENV: Production
 
       - name: Import OrganismeParlementaire
         run: yarn start -o
@@ -50,6 +53,7 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_PRODUCTION }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_PRODUCTION }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SUPABASE_ENV: Production
 
       - name: Import Deputes_OrganismeParlementaire
         run: yarn start -p
@@ -57,6 +61,7 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_PRODUCTION }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_PRODUCTION }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SUPABASE_ENV: Production
 
       - name: Upload logs as artifact
         uses: actions/upload-artifact@v1
