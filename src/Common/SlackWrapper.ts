@@ -17,139 +17,158 @@ const augoraDomain =
   process.env.SUPABASE_ENV === 'production' ? 'augora.fr' : 'preprod.augora.fr'
 
 export function SendNewDeputeNotification(depute: Types.Canonical.Depute) {
-  return axios.post(process.env.SLACK_WEBHOOK_URL, {
-    username: 'Nucleus',
-    icon_emoji: ':rocket:',
-    attachments: [
-      {
-        color: '#ffc107',
-        blocks: [
+  return process.env.SLACK_NOTIFICATION
+    ? axios.post(process.env.SLACK_WEBHOOK_URL, {
+        username: 'Nucleus',
+        icon_emoji: ':rocket:',
+        attachments: [
           {
-            type: 'section',
-            text: {
-              type: 'mrkdwn',
-              text: `<https://${augoraDomain}/depute/${depute.Slug}|${depute.Nom}>, député ${depute.GroupeParlementaire} a été ajouté en base.`,
-            },
+            color: '#ffc107',
+            blocks: [
+              {
+                type: 'section',
+                text: {
+                  type: 'mrkdwn',
+                  text: `<https://${augoraDomain}/depute/${depute.Slug}|${depute.Nom}>, député ${depute.GroupeParlementaire} a été ajouté en base.`,
+                },
+              },
+              messageContext,
+            ],
           },
-          messageContext,
         ],
-      },
-    ],
-  })
+      })
+    : null
 }
 
-export function SendDeputeChangeGroupNotification(previousDepute: Types.Canonical.Depute, depute: Types.Canonical.Depute) {
-  return axios.post(process.env.SLACK_WEBHOOK_URL, {
-    username: 'Nucleus',
-    icon_emoji: ':rocket:',
-    attachments: [
-      {
-        color: '#ffc107',
-        blocks: [
+export function SendDeputeChangeGroupNotification(
+  previousDepute: Types.Canonical.Depute,
+  depute: Types.Canonical.Depute
+) {
+  return process.env.SLACK_NOTIFICATION
+    ? axios.post(process.env.SLACK_WEBHOOK_URL, {
+        username: 'Nucleus',
+        icon_emoji: ':rocket:',
+        attachments: [
           {
-            type: 'section',
-            text: {
-              type: 'mrkdwn',
-              text: `<https://${augoraDomain}/depute/${depute.Slug}|${depute.Nom}> a changé de groupe parlementaire :  transition de ${previousDepute.GroupeParlementaire} à ${depute.GroupeParlementaire}.`,
-            },
+            color: '#ffc107',
+            blocks: [
+              {
+                type: 'section',
+                text: {
+                  type: 'mrkdwn',
+                  text: `<https://${augoraDomain}/depute/${depute.Slug}|${depute.Nom}> a changé de groupe parlementaire :  transition de ${previousDepute.GroupeParlementaire} à ${depute.GroupeParlementaire}.`,
+                },
+              },
+              messageContext,
+            ],
           },
-          messageContext,
         ],
-      },
-    ],
-  })
+      })
+    : null
 }
 
-export function SendStopDeputeMandatNotification(depute: Types.Canonical.Depute) {
-  return axios.post(process.env.SLACK_WEBHOOK_URL, {
-    username: 'Nucleus',
-    icon_emoji: ':rocket:',
-    attachments: [
-      {
-        color: '#ffc107',
-        blocks: [
+export function SendStopDeputeMandatNotification(
+  depute: Types.Canonical.Depute
+) {
+  return process.env.SLACK_NOTIFICATION
+    ? axios.post(process.env.SLACK_WEBHOOK_URL, {
+        username: 'Nucleus',
+        icon_emoji: ':rocket:',
+        attachments: [
           {
-            type: 'section',
-            text: {
-              type: 'mrkdwn',
-              text: `<https://${augoraDomain}/depute/${depute.Slug}|${depute.Nom}> n'est plus en mandat.`,
-            },
+            color: '#ffc107',
+            blocks: [
+              {
+                type: 'section',
+                text: {
+                  type: 'mrkdwn',
+                  text: `<https://${augoraDomain}/depute/${depute.Slug}|${depute.Nom}> n'est plus en mandat.`,
+                },
+              },
+              messageContext,
+            ],
           },
-          messageContext,
         ],
-      },
-    ],
-  })
+      })
+    : null
 }
 
 export function SendNewGroupeParlementaireNotification(
   groupe: Types.Canonical.GroupeParlementaire
 ) {
-  return axios.post(process.env.SLACK_WEBHOOK_URL, {
-    username: 'Nucleus',
-    icon_emoji: ':rocket:',
-    attachments: [
-      {
-        color: '#ffc107',
-        blocks: [
+  return process.env.SLACK_NOTIFICATION
+    ? axios.post(process.env.SLACK_WEBHOOK_URL, {
+        username: 'Nucleus',
+        icon_emoji: ':rocket:',
+        attachments: [
           {
-            type: 'section',
-            text: {
-              type: 'mrkdwn',
-              text: `Le groupe ${groupe.NomComplet} a été ajouté en base.`,
-            },
+            color: '#ffc107',
+            blocks: [
+              {
+                type: 'section',
+                text: {
+                  type: 'mrkdwn',
+                  text: `Le groupe ${groupe.NomComplet} a été ajouté en base.`,
+                },
+              },
+              messageContext,
+            ],
           },
-          messageContext,
         ],
-      },
-    ],
-  })
+      })
+    : null
 }
 
 export function SendUpdateGroupeParlementaireNotification(
   groupe: Types.Canonical.GroupeParlementaire
 ) {
-  return axios.post(process.env.SLACK_WEBHOOK_URL, {
-    username: 'Nucleus',
-    icon_emoji: ':rocket:',
-    attachments: [
-      {
-        color: '#ffc107',
-        blocks: [
+  return process.env.SLACK_NOTIFICATION
+    ? axios.post(process.env.SLACK_WEBHOOK_URL, {
+        username: 'Nucleus',
+        icon_emoji: ':rocket:',
+        attachments: [
           {
-            type: 'section',
-            text: {
-              type: 'mrkdwn',
-              text: `Le groupe ${groupe.NomComplet} est devenu ${
-                groupe.Actif ? 'actif' : 'inactif'
-              }.`,
-            },
+            color: '#ffc107',
+            blocks: [
+              {
+                type: 'section',
+                text: {
+                  type: 'mrkdwn',
+                  text: `Le groupe ${groupe.NomComplet} est devenu ${
+                    groupe.Actif ? 'actif' : 'inactif'
+                  }.`,
+                },
+              },
+              messageContext,
+            ],
           },
-          messageContext,
         ],
-      },
-    ],
-  })
+      })
+    : null
 }
 
-export function SendNewOrganismeParlementaireNotification(organisme: Types.Canonical.OrganismeParlementaire) {
-  return axios.post(process.env.SLACK_WEBHOOK_URL, {
-    username: 'Nucleus',
-    icon_emoji: ':rocket:',
-    attachments: [
-      {
-        color: '#ffc107',
-        blocks: [
+export function SendNewOrganismeParlementaireNotification(
+  organisme: Types.Canonical.OrganismeParlementaire
+) {
+  return process.env.SLACK_NOTIFICATION
+    ? axios.post(process.env.SLACK_WEBHOOK_URL, {
+        username: 'Nucleus',
+        icon_emoji: ':rocket:',
+        attachments: [
           {
-            type: 'section',
-            text: {
-              type: 'mrkdwn',
-              text: `L'organisme parlementaire ${organisme.Nom} a été crée.`,
-            },
+            color: '#ffc107',
+            blocks: [
+              {
+                type: 'section',
+                text: {
+                  type: 'mrkdwn',
+                  text: `L'organisme parlementaire ${organisme.Nom} a été crée.`,
+                },
+              },
+              messageContext,
+            ],
           },
-          messageContext,
         ],
-      },
-    ],
-  })
+      })
+    : null
 }

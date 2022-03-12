@@ -29,6 +29,7 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_NOTIFICATION: ${{ secrets.SLACK_NOTIFICATION }}
           SUPABASE_ENV: Staging
 
       - name: Import Depute
@@ -37,6 +38,7 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_NOTIFICATION: ${{ secrets.SLACK_NOTIFICATION }}
           SUPABASE_ENV: Staging
 
       - name: Import Activite
@@ -45,6 +47,7 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_NOTIFICATION: ${{ secrets.SLACK_NOTIFICATION }}
           SUPABASE_ENV: Staging
 
       - name: Import OrganismeParlementaire
@@ -53,6 +56,7 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_NOTIFICATION: ${{ secrets.SLACK_NOTIFICATION }}
           SUPABASE_ENV: Staging
 
       - name: Import Deputes_OrganismeParlementaire
@@ -61,6 +65,7 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_NOTIFICATION: ${{ secrets.SLACK_NOTIFICATION }}
           SUPABASE_ENV: Staging
 
       - name: Upload logs as artifact
