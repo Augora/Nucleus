@@ -6,7 +6,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^1.30.5",
     "@types/color": "^3.0.3",
-    "axios": "^0.24.0",
+    "axios": "^0.26.1",
     "color": "^4.2.1",
     "command-line-args": "^5.2.1",
     "dayjs": "^1.10.7",
