@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { from } from 'rxjs'
-import { mergeMap, toArray, retry } from 'rxjs/operators'
+import { mergeMap, toArray, retry, delay } from 'rxjs/operators'
 
 import { GetLogger } from '../Common/Logger'
 
@@ -25,10 +25,14 @@ export function GetDeputesBySlugFromNosDeputesFR(
   GetLogger().info('GetDeputesBySlugFromNosDeputesFR', slugs)
   return from(slugs)
     .pipe(
-      mergeMap((val) => GetDeputeFromNosDeputesFR(val), 5),
+      mergeMap((val) => GetDeputeFromNosDeputesFR(val), 1),
       toArray()
     )
     .toPromise()
+}
+
+function delayedResolve<T>(ms, value: T): Promise<T> {
+  return new Promise((resolve) => setTimeout(() => resolve(value), ms))
 }
 
 export function GetDeputeFromNosDeputesFR(
@@ -44,7 +48,7 @@ export function GetDeputeFromNosDeputesFR(
           )
           .then((res) => {
             GetLogger().info('Retrieved from nosdeputes.fr:', { Slug: slug })
-            return res
+            return delayedResolve(1000, res)
           })
           .then((res) => res.data.depute)
       }, 10),
