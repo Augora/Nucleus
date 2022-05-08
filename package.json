@@ -11,7 +11,7 @@
     "command-line-args": "^5.2.1",
     "dayjs": "^1.10.7",
     "faunadb": "^4.4.2",
-    "firebase-admin": "^10.0.1",
+    "firebase-admin": "^10.2.0",
     "lodash": "^4.17.21",
     "rxjs": "^7.5.4",
     "ts-node": "^10.5.0",
