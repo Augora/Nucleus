@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { from } from 'rxjs'
-import { mergeMap, toArray, retry, delay } from 'rxjs/operators'
+import { from, lastValueFrom } from 'rxjs'
+import { mergeMap, toArray, retry } from 'rxjs/operators'
 
 import { GetLogger } from '../Common/Logger'
 
@@ -23,12 +23,12 @@ export function GetDeputesBySlugFromNosDeputesFR(
   slugs: string[]
 ): Promise<Types.External.NosDeputesFR.Depute[]> {
   GetLogger().info('GetDeputesBySlugFromNosDeputesFR', slugs)
-  return from(slugs)
-    .pipe(
+  return lastValueFrom(
+    from(slugs).pipe(
       mergeMap((val) => GetDeputeFromNosDeputesFR(val), 1),
       toArray()
     )
-    .toPromise()
+  )
 }
 
 function delayedResolve<T>(ms, value: T): Promise<T> {
@@ -39,8 +39,9 @@ export function GetDeputeFromNosDeputesFR(
   slug: string
 ): Promise<Types.External.NosDeputesFR.Depute> {
   GetLogger().info('GetDeputeFromNosDeputesFR:', { Slug: slug })
-  return from([slug])
-    .pipe(
+  let retryCount = 0
+  return lastValueFrom(
+    from([slug]).pipe(
       mergeMap((_slug) => {
         return axios
           .get<Types.External.NosDeputesFR.DeputeWrapper>(
@@ -51,8 +52,16 @@ export function GetDeputeFromNosDeputesFR(
             return delayedResolve(1000, res)
           })
           .then((res) => res.data.depute)
-      }, 10),
+          .catch((e) => {
+            GetLogger().error(
+              `An error occured while retriving depute from nosdeputes.fr:`,
+              { Slug: slug, retryCount }
+            )
+            retryCount = retryCount + 1
+            throw e
+          })
+      }, 1),
       retry(2)
     )
-    .toPromise()
+  )
 }
