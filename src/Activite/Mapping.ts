@@ -1,4 +1,7 @@
 import dayjs from 'dayjs'
+import ceil from 'lodash/ceil'
+import isUndefined from 'lodash/isUndefined'
+import isNull from 'lodash/isNull'
 
 export function MapActivites(
   depute: Types.Canonical.Depute,
@@ -17,22 +20,19 @@ export function MapActivites(
       DateDeDebut: dateDeDebut.format('YYYY-MM-DDTHH:mm:ss'),
       DateDeFin: dateDeDebut.add(1, 'w').format('YYYY-MM-DDTHH:mm:ss'),
       NumeroDeSemaine: weekNumberAsInt,
-      PresencesEnCommission: Math.ceil(
-        activites.n_presences.commission[weekNumber]
-      ),
-      PresenceEnHemicycle: Math.ceil(
-        activites.n_presences.hemicycle[weekNumber]
-      ),
-      ParticipationsEnCommission: Math.ceil(
+      PresencesEnCommission: ceil(activites.n_presences.commission[weekNumber]),
+      PresenceEnHemicycle: ceil(activites.n_presences.hemicycle[weekNumber]),
+      ParticipationsEnCommission: ceil(
         activites.n_participations.commission[weekNumber]
       ),
-      ParticipationEnHemicycle: Math.ceil(
+      ParticipationEnHemicycle: ceil(
         activites.n_participations.hemicycle[weekNumber]
       ),
-      Question: Math.ceil(activites.n_questions[weekNumber]),
-      Vacances: isWeekBeforeMandat
-        ? 0
-        : Math.ceil(activites.vacances[weekNumber]),
+      Question:
+        isUndefined(activites.n_questions) || isNull(activites.n_questions)
+          ? 0
+          : ceil(activites.n_questions[weekNumber]),
+      Vacances: isWeekBeforeMandat ? 0 : ceil(activites.vacances[weekNumber]),
       AvantMandat: isWeekBeforeMandat ? 20 : 0,
     }
   })
