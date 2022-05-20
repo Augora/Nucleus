@@ -116,7 +116,7 @@ export function MapDepute(
     EstEnMandat: depute.ancien_depute !== 1,
     Age: dayjs().diff(depute.date_naissance, 'years', false),
     URLPhotoAssembleeNationale: `http://www2.assemblee-nationale.fr/static/tribun/15/photos/${depute.id_an}.jpg`,
-    URLPhotoAugora: `https://static.augora.fr/depute/${depute.slug}`,
+    URLPhotoAugora: `https://static.augora.fr/depute/${depute.slug}.jpg`,
     URLTwitter: depute.sites_web
       .map((s) => s.site)
       .find((s) => isWebSiteTwitter(s)),
