@@ -31,6 +31,10 @@ export function GetDeputesBySlugFromNosDeputesFR(
   )
 }
 
+function delayedResolve<T>(ms, value: T): Promise<T> {
+  return new Promise((resolve) => setTimeout(() => resolve(value), ms))
+}
+
 export function GetDeputeFromNosDeputesFR(
   slug: string
 ): Promise<Types.External.NosDeputesFR.Depute> {
@@ -45,7 +49,7 @@ export function GetDeputeFromNosDeputesFR(
           )
           .then((res) => {
             GetLogger().info('Retrieved from nosdeputes.fr:', { Slug: slug })
-            return res
+            return delayedResolve(1000, res)
           })
           .then((res) => res.data.depute)
           .catch((e) => {
