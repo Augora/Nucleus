@@ -18,6 +18,7 @@ import { ManageActivites } from './Activite/Manager'
 import { ManageOrganismes } from './OrganismeParlementaire/Manager'
 import { GetLogger } from './Common/Logger'
 import { ManageDeputeOrganismeParlementaire } from './Depute_OrganismeParlementaire/Manager'
+import { SendWarningNotification } from './Common/SlackWrapper'
 
 if (options.groupes) {
   ManageGroupes()
@@ -26,7 +27,7 @@ if (options.groupes) {
     })
     .catch((err) => {
       GetLogger().error(err)
-      throw err
+      SendWarningNotification("GroupeParlementaire")
     })
 }
 
@@ -37,7 +38,7 @@ if (options.deputes) {
     })
     .catch((err) => {
       GetLogger().error(err)
-      throw err
+      SendWarningNotification("Depute")
     })
 }
 
@@ -48,7 +49,7 @@ if (options.activites) {
     })
     .catch((err) => {
       GetLogger().error(err)
-      throw err
+      SendWarningNotification("Activite")
     })
 }
 
@@ -59,7 +60,7 @@ if (options.organismes) {
     })
     .catch((err) => {
       GetLogger().error(err)
-      throw err
+      SendWarningNotification("OrganismeParlementaire")
     })
 }
 
@@ -70,6 +71,6 @@ if (options.organismesParlementaire) {
     })
     .catch((err) => {
       GetLogger().error(err)
-      throw err
+      SendWarningNotification("Deputes_OrganismeParlementaire")
     })
 }

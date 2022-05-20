@@ -172,3 +172,28 @@ export function SendNewOrganismeParlementaireNotification(
       })
     : null
 }
+
+export function SendWarningNotification(
+  option: string
+) {
+  return process.env.SLACK_NOTIFICATION
+    ? axios.post(process.env.SLACK_WEBHOOK_URL, {
+        username: 'Nucleus',
+        icon_emoji: ':rocket:',
+        attachments: [
+          {
+            color: '#ffc107',
+            blocks: [
+              {
+                type: 'section',
+                text: {
+                  type: 'mrkdwn',
+                  text: `Error while importing ${option} in ${envFullName}, please refer to logs.`,
+                },
+              },
+            ],
+          },
+        ],
+      })
+    : null
+}
