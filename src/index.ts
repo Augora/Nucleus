@@ -24,6 +24,7 @@ if (options.groupes) {
   ManageGroupes()
     .then(() => {
       GetLogger().info('Imported groupes')
+      SendWarningNotification("GroupeParlementaire")
     })
     .catch((err) => {
       GetLogger().error(err)
@@ -35,6 +36,7 @@ if (options.deputes) {
   ManageDeputes()
     .then(() => {
       GetLogger().info('Imported deputes')
+      SendWarningNotification("Depute")
     })
     .catch((err) => {
       GetLogger().error(err)
@@ -46,6 +48,7 @@ if (options.activites) {
   ManageActivites()
     .then(() => {
       GetLogger().info('Imported activites')
+      SendWarningNotification("Activite")
     })
     .catch((err) => {
       GetLogger().error(err)
@@ -57,6 +60,7 @@ if (options.organismes) {
   ManageOrganismes()
     .then(() => {
       GetLogger().info('Imported organismes')
+      SendWarningNotification("OrganismeParlementaire")
     })
     .catch((err) => {
       GetLogger().error(err)
@@ -68,6 +72,7 @@ if (options.organismesParlementaire) {
   ManageDeputeOrganismeParlementaire()
     .then(() => {
       GetLogger().info('Imported depute organismes')
+      SendWarningNotification("Deputes_OrganismeParlementaire")
     })
     .catch((err) => {
       GetLogger().error(err)
