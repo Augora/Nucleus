@@ -89,8 +89,8 @@ declare namespace Types.External.NosDeputesFR {
   }
 
   interface PresencesMedi {
-    commission: { [key: string]: number | string }
-    hemicycle: { [key: string]: number | string }
-    total: { [key: string]: number | string }
+    commission: { [key: string]: number }
+    hemicycle: { [key: string]: number }
+    total: { [key: string]: number }
   }
 }

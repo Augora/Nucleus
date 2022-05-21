@@ -13,6 +13,9 @@ export function AreTheSameActivites(
     actA.PresenceEnHemicycle === actB.PresenceEnHemicycle &&
     actA.PresencesEnCommission === actB.PresencesEnCommission &&
     actA.Question === actB.Question &&
-    actA.Vacances === actB.Vacances
+    actA.Vacances === actB.Vacances &&
+    actA.MedianeCommission === actB.MedianeCommission &&
+    actA.MedianeHemicycle === actB.MedianeHemicycle &&
+    actA.MedianeTotal === actB.MedianeTotal
   )
 }
