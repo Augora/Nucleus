@@ -34,6 +34,9 @@ export function MapActivites(
           : ceil(activites.n_questions[weekNumber]),
       Vacances: isWeekBeforeMandat ? 0 : ceil(activites.vacances[weekNumber]),
       AvantMandat: isWeekBeforeMandat ? 20 : 0,
+      MedianeCommission: ceil(activites.presences_medi.commission[weekNumber]),
+      MedianeHemicycle: ceil(activites.presences_medi.hemicycle[weekNumber]),
+      MedianeTotal: ceil(activites.presences_medi.total[weekNumber]),
     }
   })
 }
