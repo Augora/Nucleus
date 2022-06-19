@@ -1754,10 +1754,10 @@ fast-json-stable-stringify@2.x, fast-json-stable-stringify@^2.0.0:
   resolved "https://registry.yarnpkg.com/fast-json-stable-stringify/-/fast-json-stable-stringify-2.1.0.tgz#874bf69c6f404c2b5d99c481341399fd55892633"
   integrity sha512-lhd/wF+Lk98HZoTCtlVraHtfh5XYijIjalXck7saUtuanSDyLMxnHhSXEDJqHxD7msR8D0uCmqlkwjCV8xvwHw==
 
-faunadb@^4.5.4:
-  version "4.5.4"
-  resolved "https://registry.yarnpkg.com/faunadb/-/faunadb-4.5.4.tgz#9ca4a12faf21a487bfc26d9d3563ff138f2be6fe"
-  integrity sha512-v0e1aXPhitIGMtuC7NFtp//hyr0d2NtHFcGqsEJgWx49rRJoonZQl6hLQ3lBjhA/LPg26U4R/BAlmDFE2pzsUA==
+faunadb@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/faunadb/-/faunadb-4.6.0.tgz#86ffe4a2b9e6efdf29103d61623edfbaba53dd60"
+  integrity sha512-lBCS9wOLIdoeQmhzFvNAXM9B4T3Ptv2HUf0RrPsC2LA1zPtTQFBtdhH7fvTlwRyUawIKDjs1wn5pk2o8g0Cylg==
   dependencies:
     base64-js "^1.2.0"
     boxen "^5.0.1"

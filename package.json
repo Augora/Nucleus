@@ -10,7 +10,7 @@
     "color": "^4.2.3",
     "command-line-args": "^5.2.1",
     "dayjs": "^1.11.2",
-    "faunadb": "^4.5.4",
+    "faunadb": "^4.6.0",
     "lodash": "^4.17.21",
     "rxjs": "^7.5.5",
     "ts-node": "^10.8.0",
