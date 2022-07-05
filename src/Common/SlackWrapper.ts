@@ -37,7 +37,7 @@ export function SendNewDeputeNotification(depute: Types.Canonical.Depute) {
           },
         ],
       })
-    : null
+    : Promise.resolve()
 }
 
 export function SendDeputeChangeGroupNotification(
@@ -64,7 +64,7 @@ export function SendDeputeChangeGroupNotification(
           },
         ],
       })
-    : null
+    : Promise.resolve()
 }
 
 export function SendStopDeputeMandatNotification(
@@ -90,7 +90,7 @@ export function SendStopDeputeMandatNotification(
           },
         ],
       })
-    : null
+    : Promise.resolve()
 }
 
 export function SendNewGroupeParlementaireNotification(
@@ -116,7 +116,7 @@ export function SendNewGroupeParlementaireNotification(
           },
         ],
       })
-    : null
+    : Promise.resolve()
 }
 
 export function SendUpdateGroupeParlementaireNotification(
@@ -144,7 +144,7 @@ export function SendUpdateGroupeParlementaireNotification(
           },
         ],
       })
-    : null
+    : Promise.resolve()
 }
 
 export function SendNewOrganismeParlementaireNotification(
@@ -170,12 +170,10 @@ export function SendNewOrganismeParlementaireNotification(
           },
         ],
       })
-    : null
+    : Promise.resolve()
 }
 
-export function SendWarningNotification(
-  option: string
-) {
+export function SendWarningNotification(option: string) {
   return process.env.SLACK_NOTIFICATION
     ? axios.post(process.env.SLACK_WEBHOOK_URL, {
         username: 'Nucleus',
@@ -195,5 +193,5 @@ export function SendWarningNotification(
           },
         ],
       })
-    : null
+    : Promise.resolve()
 }
