@@ -10,7 +10,7 @@ export function GetDeputesFromNosDeputesFR(): Promise<
   GetLogger().info('Retrieving deputes from nosdeputes.fr...')
   return axios
     .get<Types.External.NosDeputesFR.DeputesWrapper>(
-      `https://www.nosdeputes.fr/deputes/json`
+      `${process.env.NOSDEPUTES_BASE_URL}/deputes/json`
     )
     .then((res) => {
       GetLogger().info('Retrieved deputes from nosdeputes.fr.')
@@ -45,11 +45,11 @@ export function GetDeputeFromNosDeputesFR(
       mergeMap((_slug) => {
         return axios
           .get<Types.External.NosDeputesFR.DeputeWrapper>(
-            `https://www.nosdeputes.fr/${_slug}/json`
+            `${process.env.NOSDEPUTES_BASE_URL}/${_slug}/json`
           )
           .then((res) => {
             GetLogger().info('Retrieved from nosdeputes.fr:', { Slug: slug })
-            return delayedResolve(1000, res)
+            return delayedResolve(1, res)
           })
           .then((res) => res.data.depute)
           .catch((e) => {
@@ -60,7 +60,7 @@ export function GetDeputeFromNosDeputesFR(
             retryCount = retryCount + 1
             throw e
           })
-      }, 1),
+      }, 10),
       retry(2)
     )
   )
