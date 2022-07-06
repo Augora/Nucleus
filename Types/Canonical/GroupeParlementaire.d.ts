@@ -9,6 +9,7 @@ declare namespace Types.Canonical {
     Actif?: boolean
     IDWikipedia?: string
     DescriptionWikipedia?: string
+    IDAssembleeNationale?: string
   }
 
   interface CouleurDetail {
