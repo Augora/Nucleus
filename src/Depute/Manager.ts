@@ -12,7 +12,7 @@ import {
 import {
   SendNewDeputeNotification,
   SendDeputeChangeGroupNotification,
-  SendStopDeputeMandatNotification 
+  SendStopDeputeMandatNotification,
 } from '../Common/SlackWrapper'
 import {
   GetDeputesFromSupabase,
@@ -28,9 +28,9 @@ export async function ManageDeputes() {
   const canonicalDeputesFromNosDeputesFR = deputesFromNosDeputesFR.map((d) =>
     MapDepute(d)
   )
-  GetLogger().info('deputesFromNosDeputesFR:', canonicalDeputesFromNosDeputesFR)
+  // GetLogger().info('deputesFromNosDeputesFR:', canonicalDeputesFromNosDeputesFR)
   const deputesFromSupabase = await GetDeputesFromSupabase()
-  GetLogger().info('deputesFromSupabase:', deputesFromSupabase)
+  // GetLogger().info('deputesFromSupabase:', deputesFromSupabase)
   const res = CompareLists(
     canonicalDeputesFromNosDeputesFR,
     deputesFromSupabase,
@@ -38,7 +38,7 @@ export async function ManageDeputes() {
     'Slug',
     true
   )
-  GetLogger().info('Modifications to make:', res)
+  // GetLogger().info('Modifications to make:', res)
   return from(res)
     .pipe(
       mergeMap((action: DiffType<Types.Canonical.Depute>) => {
@@ -64,19 +64,36 @@ export async function ManageDeputes() {
           GetLogger().info('Updating Depute:', { Slug: action.NewData.Slug })
           return UpdateDeputeToSupabase(action.NewData).then(() => {
             GetLogger().info('Updated Depute:', { Slug: action.NewData.Slug })
-            if(action.PreviousData.GroupeParlementaire !== action.NewData.GroupeParlementaire) {
-              return SendDeputeChangeGroupNotification(action.PreviousData,action.NewData).then(() => {
-                GetLogger().info('Notification sent for Depute changing group:', {
-                  Slug: action.NewData.Slug,
-                })
+            if (
+              action.PreviousData.GroupeParlementaire !==
+              action.NewData.GroupeParlementaire
+            ) {
+              return SendDeputeChangeGroupNotification(
+                action.PreviousData,
+                action.NewData
+              ).then(() => {
+                GetLogger().info(
+                  'Notification sent for Depute changing group:',
+                  {
+                    Slug: action.NewData.Slug,
+                  }
+                )
               })
             }
-            if(action.PreviousData.EstEnMandat === true && action.NewData.EstEnMandat === false) {
-              return SendStopDeputeMandatNotification(action.NewData).then(() => {
-                GetLogger().info('Notification sent for Depute stopping his mandate:', {
-                  Slug: action.NewData.Slug,
-                })
-              })
+            if (
+              action.PreviousData.EstEnMandat === true &&
+              action.NewData.EstEnMandat === false
+            ) {
+              return SendStopDeputeMandatNotification(action.NewData).then(
+                () => {
+                  GetLogger().info(
+                    'Notification sent for Depute stopping his mandate:',
+                    {
+                      Slug: action.NewData.Slug,
+                    }
+                  )
+                }
+              )
             }
           })
           // .catch((err) => {

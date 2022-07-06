@@ -7,6 +7,8 @@ declare namespace Types.Canonical {
     URLImage?: string
     Ordre?: number
     Actif?: boolean
+    IDWikipedia?: string
+    DescriptionWikipedia?: string
   }
 
   interface CouleurDetail {

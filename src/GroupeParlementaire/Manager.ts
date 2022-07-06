@@ -1,5 +1,5 @@
-import { from } from 'rxjs'
-import { mergeMap } from 'rxjs/operators'
+import { from, lastValueFrom } from 'rxjs'
+import { delay, mergeMap, toArray, retry } from 'rxjs/operators'
 
 import { GetDeputesFromNosDeputesFR } from './WrapperNosDeputesFR'
 import { MapGroupeParlementaire } from './Mapping'
@@ -14,6 +14,11 @@ import {
   CreateGroupeParlementaireToSupabase,
   UpdateGroupeParlementaireToSupabase,
 } from './WrapperSupabase'
+import { GetGroupeParlementaireExplainText } from './WrapperWikipedia'
+
+function delayedResolve<T>(ms, value: T): Promise<T> {
+  return new Promise((resolve) => setTimeout(() => resolve(value), ms))
+}
 
 export async function ManageGroupes() {
   const groupesFromNosDeputesFR = await GetDeputesFromNosDeputesFR()
@@ -25,12 +30,46 @@ export async function ManageGroupes() {
     'canonicalGroupesFromNosDeputesFR:',
     canonicalGroupesFromNosDeputesFR
   )
-  const groupesFromSupabase = await GetGroupesFromSupabase()
-  GetLogger().info('groupesFromFaunaDB:', groupesFromSupabase)
+  const groupesFromSupabase: Types.Canonical.GroupeParlementaire[] =
+    await GetGroupesFromSupabase()
+  GetLogger().info('groupesFromSupabase:', groupesFromSupabase)
+  const groupeDescriptions = await lastValueFrom(
+    from(groupesFromSupabase).pipe(
+      mergeMap(async (gp) => {
+        if (gp.IDWikipedia === null) {
+          return Promise.resolve({ title: gp.Sigle, desc: '' })
+        }
+
+        return delayedResolve(1000, {
+          title: gp.Sigle,
+          desc: await GetGroupeParlementaireExplainText(
+            encodeURI(gp.IDWikipedia)
+          ),
+        })
+      }, 1),
+      toArray()
+    )
+  )
+  GetLogger().info('groupeDescriptions:', groupeDescriptions)
+  const canonicalGroupesFromNosDeputesFRWithDesc =
+    canonicalGroupesFromNosDeputesFR.map((gp, i) =>
+      Object.assign({}, gp, {
+        DescriptionWikipedia: groupeDescriptions.find(
+          (gpd) => gpd.title === gp.Sigle
+        ).desc,
+      })
+    )
+  GetLogger().info(
+    'canonicalGroupesFromNosDeputesFRWithDesc:',
+    canonicalGroupesFromNosDeputesFRWithDesc
+  )
   const res = CompareLists(
-    canonicalGroupesFromNosDeputesFR,
+    canonicalGroupesFromNosDeputesFRWithDesc,
     groupesFromSupabase,
-    (a, b) => a.Sigle === b.Sigle && a.Actif === b.Actif,
+    (a, b) =>
+      a.Sigle === b.Sigle &&
+      a.Actif === b.Actif &&
+      a.DescriptionWikipedia === b.DescriptionWikipedia,
     'Sigle',
     true
   )

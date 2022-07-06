@@ -18,25 +18,27 @@ const augoraDomain =
 
 export function SendNewDeputeNotification(depute: Types.Canonical.Depute) {
   return process.env.SLACK_NOTIFICATION
-    ? axios.post(process.env.SLACK_WEBHOOK_URL, {
-        username: 'Nucleus',
-        icon_emoji: ':rocket:',
-        attachments: [
-          {
-            color: '#ffc107',
-            blocks: [
-              {
-                type: 'section',
-                text: {
-                  type: 'mrkdwn',
-                  text: `<https://${augoraDomain}/depute/${depute.Slug}|${depute.Nom}>, député ${depute.GroupeParlementaire} a été ajouté en base.`,
+    ? axios
+        .post(process.env.SLACK_WEBHOOK_URL, {
+          username: 'Nucleus',
+          icon_emoji: ':rocket:',
+          attachments: [
+            {
+              color: '#ffc107',
+              blocks: [
+                {
+                  type: 'section',
+                  text: {
+                    type: 'mrkdwn',
+                    text: `<https://${augoraDomain}/depute/${depute.Slug}|${depute.Nom}>, député ${depute.GroupeParlementaire} a été ajouté en base.`,
+                  },
                 },
-              },
-              messageContext,
-            ],
-          },
-        ],
-      })
+                messageContext,
+              ],
+            },
+          ],
+        })
+        .then((res) => res.data)
     : Promise.resolve()
 }
 
@@ -45,25 +47,27 @@ export function SendDeputeChangeGroupNotification(
   depute: Types.Canonical.Depute
 ) {
   return process.env.SLACK_NOTIFICATION
-    ? axios.post(process.env.SLACK_WEBHOOK_URL, {
-        username: 'Nucleus',
-        icon_emoji: ':rocket:',
-        attachments: [
-          {
-            color: '#ffc107',
-            blocks: [
-              {
-                type: 'section',
-                text: {
-                  type: 'mrkdwn',
-                  text: `<https://${augoraDomain}/depute/${depute.Slug}|${depute.Nom}> a changé de groupe parlementaire :  transition de ${previousDepute.GroupeParlementaire} à ${depute.GroupeParlementaire}.`,
+    ? axios
+        .post(process.env.SLACK_WEBHOOK_URL, {
+          username: 'Nucleus',
+          icon_emoji: ':rocket:',
+          attachments: [
+            {
+              color: '#ffc107',
+              blocks: [
+                {
+                  type: 'section',
+                  text: {
+                    type: 'mrkdwn',
+                    text: `<https://${augoraDomain}/depute/${depute.Slug}|${depute.Nom}> a changé de groupe parlementaire :  transition de ${previousDepute.GroupeParlementaire} à ${depute.GroupeParlementaire}.`,
+                  },
                 },
-              },
-              messageContext,
-            ],
-          },
-        ],
-      })
+                messageContext,
+              ],
+            },
+          ],
+        })
+        .then((res) => res.data)
     : Promise.resolve()
 }
 
@@ -71,25 +75,27 @@ export function SendStopDeputeMandatNotification(
   depute: Types.Canonical.Depute
 ) {
   return process.env.SLACK_NOTIFICATION
-    ? axios.post(process.env.SLACK_WEBHOOK_URL, {
-        username: 'Nucleus',
-        icon_emoji: ':rocket:',
-        attachments: [
-          {
-            color: '#ffc107',
-            blocks: [
-              {
-                type: 'section',
-                text: {
-                  type: 'mrkdwn',
-                  text: `<https://${augoraDomain}/depute/${depute.Slug}|${depute.Nom}> n'est plus en mandat.`,
+    ? axios
+        .post(process.env.SLACK_WEBHOOK_URL, {
+          username: 'Nucleus',
+          icon_emoji: ':rocket:',
+          attachments: [
+            {
+              color: '#ffc107',
+              blocks: [
+                {
+                  type: 'section',
+                  text: {
+                    type: 'mrkdwn',
+                    text: `<https://${augoraDomain}/depute/${depute.Slug}|${depute.Nom}> n'est plus en mandat.`,
+                  },
                 },
-              },
-              messageContext,
-            ],
-          },
-        ],
-      })
+                messageContext,
+              ],
+            },
+          ],
+        })
+        .then((res) => res.data)
     : Promise.resolve()
 }
 
@@ -97,25 +103,27 @@ export function SendNewGroupeParlementaireNotification(
   groupe: Types.Canonical.GroupeParlementaire
 ) {
   return process.env.SLACK_NOTIFICATION
-    ? axios.post(process.env.SLACK_WEBHOOK_URL, {
-        username: 'Nucleus',
-        icon_emoji: ':rocket:',
-        attachments: [
-          {
-            color: '#ffc107',
-            blocks: [
-              {
-                type: 'section',
-                text: {
-                  type: 'mrkdwn',
-                  text: `Le groupe ${groupe.NomComplet} a été ajouté en base.`,
+    ? axios
+        .post(process.env.SLACK_WEBHOOK_URL, {
+          username: 'Nucleus',
+          icon_emoji: ':rocket:',
+          attachments: [
+            {
+              color: '#ffc107',
+              blocks: [
+                {
+                  type: 'section',
+                  text: {
+                    type: 'mrkdwn',
+                    text: `Le groupe ${groupe.NomComplet} a été ajouté en base.`,
+                  },
                 },
-              },
-              messageContext,
-            ],
-          },
-        ],
-      })
+                messageContext,
+              ],
+            },
+          ],
+        })
+        .then((res) => res.data)
     : Promise.resolve()
 }
 
@@ -123,27 +131,29 @@ export function SendUpdateGroupeParlementaireNotification(
   groupe: Types.Canonical.GroupeParlementaire
 ) {
   return process.env.SLACK_NOTIFICATION
-    ? axios.post(process.env.SLACK_WEBHOOK_URL, {
-        username: 'Nucleus',
-        icon_emoji: ':rocket:',
-        attachments: [
-          {
-            color: '#ffc107',
-            blocks: [
-              {
-                type: 'section',
-                text: {
-                  type: 'mrkdwn',
-                  text: `Le groupe ${groupe.NomComplet} est devenu ${
-                    groupe.Actif ? 'actif' : 'inactif'
-                  }.`,
+    ? axios
+        .post(process.env.SLACK_WEBHOOK_URL, {
+          username: 'Nucleus',
+          icon_emoji: ':rocket:',
+          attachments: [
+            {
+              color: '#ffc107',
+              blocks: [
+                {
+                  type: 'section',
+                  text: {
+                    type: 'mrkdwn',
+                    text: `Le groupe ${groupe.NomComplet} est devenu ${
+                      groupe.Actif ? 'actif' : 'inactif'
+                    }.`,
+                  },
                 },
-              },
-              messageContext,
-            ],
-          },
-        ],
-      })
+                messageContext,
+              ],
+            },
+          ],
+        })
+        .then((res) => res.data)
     : Promise.resolve()
 }
 
@@ -175,23 +185,25 @@ export function SendNewOrganismeParlementaireNotification(
 
 export function SendWarningNotification(option: string) {
   return process.env.SLACK_NOTIFICATION
-    ? axios.post(process.env.SLACK_WEBHOOK_URL, {
-        username: 'Nucleus',
-        icon_emoji: ':rocket:',
-        attachments: [
-          {
-            color: '#ffc107',
-            blocks: [
-              {
-                type: 'section',
-                text: {
-                  type: 'mrkdwn',
-                  text: `Error while importing ${option} in ${envFullName}, please refer to logs.`,
+    ? axios
+        .post(process.env.SLACK_WEBHOOK_URL, {
+          username: 'Nucleus',
+          icon_emoji: ':rocket:',
+          attachments: [
+            {
+              color: '#ffc107',
+              blocks: [
+                {
+                  type: 'section',
+                  text: {
+                    type: 'mrkdwn',
+                    text: `Error while importing ${option} in ${envFullName}, please refer to logs.`,
+                  },
                 },
-              },
-            ],
-          },
-        ],
-      })
+              ],
+            },
+          ],
+        })
+        .then((res) => res.data)
     : Promise.resolve()
 }
