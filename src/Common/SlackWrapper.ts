@@ -19,7 +19,7 @@ const augoraDomain =
     : 'preprod.augora.fr'
 
 export function SendNewDeputeNotification(depute: Types.Canonical.Depute) {
-  return process.env.SLACK_NOTIFICATION
+  return process.env.SLACK_NOTIFICATION === 'true'
     ? axios
         .post(process.env.SLACK_WEBHOOK_URL, {
           username: 'Nucleus',
@@ -48,7 +48,7 @@ export function SendDeputeChangeGroupNotification(
   previousDepute: Types.Canonical.Depute,
   depute: Types.Canonical.Depute
 ) {
-  return process.env.SLACK_NOTIFICATION
+  return process.env.SLACK_NOTIFICATION === 'true'
     ? axios
         .post(process.env.SLACK_WEBHOOK_URL, {
           username: 'Nucleus',
@@ -76,7 +76,7 @@ export function SendDeputeChangeGroupNotification(
 export function SendStopDeputeMandatNotification(
   depute: Types.Canonical.Depute
 ) {
-  return process.env.SLACK_NOTIFICATION
+  return process.env.SLACK_NOTIFICATION === 'true'
     ? axios
         .post(process.env.SLACK_WEBHOOK_URL, {
           username: 'Nucleus',
@@ -104,7 +104,7 @@ export function SendStopDeputeMandatNotification(
 export function SendNewGroupeParlementaireNotification(
   groupe: Types.Canonical.GroupeParlementaire
 ) {
-  return process.env.SLACK_NOTIFICATION
+  return process.env.SLACK_NOTIFICATION === 'true'
     ? axios
         .post(process.env.SLACK_WEBHOOK_URL, {
           username: 'Nucleus',
@@ -132,7 +132,7 @@ export function SendNewGroupeParlementaireNotification(
 export function SendUpdateGroupeParlementaireNotification(
   groupe: Types.Canonical.GroupeParlementaire
 ) {
-  return process.env.SLACK_NOTIFICATION
+  return process.env.SLACK_NOTIFICATION === 'true'
     ? axios
         .post(process.env.SLACK_WEBHOOK_URL, {
           username: 'Nucleus',
@@ -162,7 +162,7 @@ export function SendUpdateGroupeParlementaireNotification(
 export function SendNewOrganismeParlementaireNotification(
   organisme: Types.Canonical.OrganismeParlementaire
 ) {
-  return process.env.SLACK_NOTIFICATION
+  return process.env.SLACK_NOTIFICATION === 'true'
     ? axios.post(process.env.SLACK_WEBHOOK_URL, {
         username: 'Nucleus',
         icon_emoji: ':rocket:',
@@ -186,7 +186,7 @@ export function SendNewOrganismeParlementaireNotification(
 }
 
 export function SendWarningNotification(option: string) {
-  return process.env.SLACK_NOTIFICATION
+  return process.env.SLACK_NOTIFICATION === 'true'
     ? axios
         .post(process.env.SLACK_WEBHOOK_URL, {
           username: 'Nucleus',
