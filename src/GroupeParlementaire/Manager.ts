@@ -21,18 +21,21 @@ function delayedResolve<T>(ms, value: T): Promise<T> {
 }
 
 export async function ManageGroupes() {
+  const groupesFromSupabase: Types.Canonical.GroupeParlementaire[] =
+    await GetGroupesFromSupabase()
+  GetLogger().info('groupesFromSupabase:', groupesFromSupabase)
   const groupesFromNosDeputesFR = await GetDeputesFromNosDeputesFR()
   GetLogger().info('groupesFromNosDeputesFR:', groupesFromNosDeputesFR)
   const canonicalGroupesFromNosDeputesFR = groupesFromNosDeputesFR.map((gp) =>
-    MapGroupeParlementaire(gp)
+    MapGroupeParlementaire(
+      gp,
+      groupesFromSupabase.find((g) => g.Sigle === gp.acronyme)
+    )
   )
   GetLogger().info(
     'canonicalGroupesFromNosDeputesFR:',
     canonicalGroupesFromNosDeputesFR
   )
-  const groupesFromSupabase: Types.Canonical.GroupeParlementaire[] =
-    await GetGroupesFromSupabase()
-  GetLogger().info('groupesFromSupabase:', groupesFromSupabase)
   const groupeDescriptions = await lastValueFrom(
     from(groupesFromSupabase).pipe(
       mergeMap(async (gp) => {
