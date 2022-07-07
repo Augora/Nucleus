@@ -14,7 +14,9 @@ const messageContext = {
 }
 
 const augoraDomain =
-  process.env.SUPABASE_ENV === 'production' ? 'augora.fr' : 'preprod.augora.fr'
+  process.env.SUPABASE_ENV.toLowerCase() === 'production'
+    ? 'augora.fr'
+    : 'preprod.augora.fr'
 
 export function SendNewDeputeNotification(depute: Types.Canonical.Depute) {
   return process.env.SLACK_NOTIFICATION
