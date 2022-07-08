@@ -5,7 +5,7 @@ export function GetActiviesBySlugFromNosDeputesFR(
 ): Promise<Types.External.NosDeputesFR.Activite> {
   return axios
     .get(
-      `https://www.nosdeputes.fr/${slug}/graphes/legislature/total?questions=true&format=json`
+      `${process.env.NOSDEPUTES_BASE_URL}/${slug}/graphes/legislature/total?questions=true&format=json`
     )
     .then((response) => {
       const { data } = response

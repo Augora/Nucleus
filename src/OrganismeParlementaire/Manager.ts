@@ -46,7 +46,7 @@ export async function ManageOrganismes() {
             GetLogger().info('Created Organisme:', {
               Nom: action.NewData.Nom,
             })
-            return SendNewOrganismeParlementaireNotification(action.NewData)
+            // return SendNewOrganismeParlementaireNotification(action.NewData)
           })
         } else if (action.Action === Action.Update) {
           GetLogger().info('Updating OrganismeParlementaire:', {

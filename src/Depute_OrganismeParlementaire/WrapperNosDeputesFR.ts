@@ -9,7 +9,7 @@ export function GetDeputesInOrganisme(
 ): Promise<Types.External.NosDeputesFR.SimpleDepute[]> {
   return axios
     .get<Types.External.NosDeputesFR.DeputesWrapper>(
-      `https://www.nosdeputes.fr/organisme/${organismeSlug}/json`
+      `${process.env.NOSDEPUTES_BASE_URL}/organisme/${organismeSlug}/json`
     )
     .then((res) => {
       if (res.data && res.data.deputes) {

@@ -10,7 +10,7 @@ export function GetOrganismesParlementairesFromNosDeputesFR(): Promise<
   GetLogger().info('Retrieving organismes from nosdeputes.fr...')
   return axios
     .get<Types.External.NosDeputesFR.OrganismesParlementaires>(
-      `https://www.nosdeputes.fr/organismes/parlementaire/json`
+      `${process.env.NOSDEPUTES_BASE_URL}/organismes/parlementaire/json`
     )
     .then((res) => {
       GetLogger().info('Retrieved organismes from nosdeputes.fr.', res.data)

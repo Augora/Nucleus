@@ -10,7 +10,7 @@ export function GetDeputesFromNosDeputesFR(): Promise<
   GetLogger().info('Retrieving groupes from nosdeputes.fr...')
   return axios
     .get<Types.External.NosDeputesFR.Organismes>(
-      `https://www.nosdeputes.fr/organismes/groupe/json`
+      `${process.env.NOSDEPUTES_BASE_URL}/organismes/groupe/json`
     )
     .then((res) => {
       GetLogger().info('Retrieved groupes from nosdeputes.fr.', res.data)
