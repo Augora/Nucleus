@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const envFullName =
-  process.env.SUPABASE_ENV === 'production' ? 'Production' : 'Staging'
+  process.env.SUPABASE_ENV === 'Production' ? 'Production' : 'Staging'
 
 const messageContext = {
   type: 'context',
@@ -14,7 +14,7 @@ const messageContext = {
 }
 
 const augoraDomain =
-  process.env.SUPABASE_ENV.toLowerCase() === 'production'
+  process.env.SUPABASE_ENV === 'Production'
     ? 'augora.fr'
     : 'preprod.augora.fr'
 
