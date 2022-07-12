@@ -1,10 +1,11 @@
+import { PostgrestResponse } from '@supabase/supabase-js'
 import supabaseClient from '../Common/SupabaseClient'
 
-function handleSupabaseError({ error, ...rest }) {
-  if (error) {
-    throw error
+async function handleSupabaseError<T>(response: PostgrestResponse<T>) {
+  if (response.error) {
+    return Promise.reject(response.error)
   }
-  return rest
+  return Promise.resolve(response.body)
 }
 
 export function GetGroupesFromSupabase() {
@@ -12,7 +13,6 @@ export function GetGroupesFromSupabase() {
     .from<Types.Canonical.GroupeParlementaire>('GroupeParlementaire')
     .select()
     .then(handleSupabaseError)
-    .then((d) => d.body)
 }
 
 export function CreateGroupeParlementaireToSupabase(
@@ -22,7 +22,6 @@ export function CreateGroupeParlementaireToSupabase(
     .from<Types.Canonical.GroupeParlementaire>('GroupeParlementaire')
     .insert([data])
     .then(handleSupabaseError)
-    .then((d) => d.body)
 }
 
 export function UpdateGroupeParlementaireToSupabase(
@@ -33,5 +32,4 @@ export function UpdateGroupeParlementaireToSupabase(
     .update(data)
     .match({ Sigle: data.Sigle })
     .then(handleSupabaseError)
-    .then((d) => d.body)
 }
