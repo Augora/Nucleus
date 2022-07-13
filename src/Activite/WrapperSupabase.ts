@@ -29,7 +29,6 @@ export async function UpdateActiviteToSupabase(data: Types.Canonical.Activite) {
     .update(data)
     .match({ Id: data.Id })
     .then(handleSupabaseError)
-    .then((d) => d.body)
 }
 
 export async function DeleteActiviteToSupabase(data: Types.Canonical.Activite) {

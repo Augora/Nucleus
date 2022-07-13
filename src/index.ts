@@ -27,7 +27,7 @@ if (options.groupes) {
     })
     .catch((err) => {
       GetLogger().error(err)
-      SendWarningNotification("GroupeParlementaire")
+      SendWarningNotification('GroupeParlementaire')
     })
 }
 
@@ -38,7 +38,7 @@ if (options.deputes) {
     })
     .catch((err) => {
       GetLogger().error(err)
-      SendWarningNotification("Depute")
+      SendWarningNotification('Depute')
     })
 }
 
@@ -49,7 +49,7 @@ if (options.activites) {
     })
     .catch((err) => {
       GetLogger().error(err)
-      SendWarningNotification("Activite")
+      SendWarningNotification('Activite')
     })
 }
 
@@ -60,7 +60,7 @@ if (options.organismes) {
     })
     .catch((err) => {
       GetLogger().error(err)
-      SendWarningNotification("OrganismeParlementaire")
+      SendWarningNotification('OrganismeParlementaire')
     })
 }
 
@@ -71,6 +71,6 @@ if (options.organismesParlementaire) {
     })
     .catch((err) => {
       GetLogger().error(err)
-      SendWarningNotification("Deputes_OrganismeParlementaire")
+      SendWarningNotification('Deputes_OrganismeParlementaire')
     })
 }
