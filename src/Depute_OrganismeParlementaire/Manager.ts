@@ -33,7 +33,7 @@ export async function ManageDeputeOrganismeParlementaire() {
           return MapDeputeOrganismeParlementaire(
             org.organismeSlug,
             d.slug,
-            d.fonction
+            d.function
           )
         })
       )

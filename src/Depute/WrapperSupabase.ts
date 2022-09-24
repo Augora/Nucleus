@@ -1,18 +1,18 @@
+import { PostgrestResponse } from '@supabase/supabase-js'
 import supabaseClient from '../Common/SupabaseClient'
 
-function handleSupabaseError({ error, ...rest }) {
-  if (error) {
-    throw error
+async function handleSupabaseError<T>(response: PostgrestResponse<T>) {
+  if (response.error) {
+    return Promise.reject(response.error)
   }
-  return rest
+  return Promise.resolve(response.body)
 }
 
-export function GetDeputesFromSupabase() {
+export async function GetDeputesFromSupabase() {
   return supabaseClient
     .from<Types.Canonical.Depute>('Depute')
     .select()
     .then(handleSupabaseError)
-    .then((d) => d.body)
 }
 
 export function CreateDeputeToSupabase(data: Types.Canonical.Depute) {
@@ -20,7 +20,6 @@ export function CreateDeputeToSupabase(data: Types.Canonical.Depute) {
     .from<Types.Canonical.Depute>('Depute')
     .insert([data])
     .then(handleSupabaseError)
-    .then((d) => d.body)
 }
 
 export function UpdateDeputeToSupabase(data: Types.Canonical.Depute) {
@@ -29,7 +28,6 @@ export function UpdateDeputeToSupabase(data: Types.Canonical.Depute) {
     .update(data)
     .match({ Slug: data.Slug })
     .then(handleSupabaseError)
-    .then((d) => d.body)
 }
 
 export function DeleteDeputeToSupabase(data: Types.Canonical.Depute) {
@@ -38,5 +36,4 @@ export function DeleteDeputeToSupabase(data: Types.Canonical.Depute) {
     .delete()
     .match({ Slug: data.Slug })
     .then(handleSupabaseError)
-    .then((d) => d.body)
 }
