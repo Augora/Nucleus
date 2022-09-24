@@ -20,6 +20,7 @@ import { ManageOrganismes } from './OrganismeParlementaire/Manager'
 import { GetLogger } from './Common/Logger'
 import { ManageDeputeOrganismeParlementaire } from './Depute_OrganismeParlementaire/Manager'
 import { ManageMinisteres } from './Ministere/Manager'
+import { ManageMinistres } from './Ministre/Manager'
 import { SendWarningNotification } from './Common/SlackWrapper'
 
 if (options.groupes) {
@@ -85,5 +86,16 @@ if (options.ministere) {
     .catch((err) => {
       GetLogger().error(err)
       SendWarningNotification('Ministere')
+    })
+}
+
+if (options.ministere) {
+  ManageMinistres()
+    .then(() => {
+      GetLogger().info('Imported Ministres')
+    })
+    .catch((err) => {
+      GetLogger().error(err)
+      SendWarningNotification('Ministre')
     })
 }
