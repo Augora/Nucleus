@@ -5,8 +5,10 @@
   "license": "MIT",
   "dependencies": {
     "@supabase/supabase-js": "^1.35.3",
+    "@types/cheerio": "^0.22.31",
     "@types/color": "^3.0.3",
     "axios": "^0.27.2",
+    "cheerio": "^1.0.0-rc.12",
     "color": "^4.2.3",
     "command-line-args": "^5.2.1",
     "dayjs": "^1.11.2",

@@ -7,6 +7,7 @@ const optionDefinitions = [
   { name: 'organismes', alias: 'o', type: Boolean },
   { name: 'deputes', alias: 'd', type: Boolean },
   { name: 'organismesParlementaire', alias: 'p', type: Boolean },
+  { name: 'ministeres', alias: 'm', type: Boolean },
 ]
 
 import commandLineArgs from 'command-line-args'
@@ -18,6 +19,7 @@ import { ManageActivites } from './Activite/Manager'
 import { ManageOrganismes } from './OrganismeParlementaire/Manager'
 import { GetLogger } from './Common/Logger'
 import { ManageDeputeOrganismeParlementaire } from './Depute_OrganismeParlementaire/Manager'
+import { ManageMinisteres } from './Ministere/Manager'
 import { SendWarningNotification } from './Common/SlackWrapper'
 
 if (options.groupes) {
@@ -27,7 +29,7 @@ if (options.groupes) {
     })
     .catch((err) => {
       GetLogger().error(err)
-      SendWarningNotification("GroupeParlementaire")
+      SendWarningNotification('GroupeParlementaire')
     })
 }
 
@@ -38,7 +40,7 @@ if (options.deputes) {
     })
     .catch((err) => {
       GetLogger().error(err)
-      SendWarningNotification("Depute")
+      SendWarningNotification('Depute')
     })
 }
 
@@ -49,7 +51,7 @@ if (options.activites) {
     })
     .catch((err) => {
       GetLogger().error(err)
-      SendWarningNotification("Activite")
+      SendWarningNotification('Activite')
     })
 }
 
@@ -60,7 +62,7 @@ if (options.organismes) {
     })
     .catch((err) => {
       GetLogger().error(err)
-      SendWarningNotification("OrganismeParlementaire")
+      SendWarningNotification('OrganismeParlementaire')
     })
 }
 
@@ -71,6 +73,17 @@ if (options.organismesParlementaire) {
     })
     .catch((err) => {
       GetLogger().error(err)
-      SendWarningNotification("Deputes_OrganismeParlementaire")
+      SendWarningNotification('Deputes_OrganismeParlementaire')
+    })
+}
+
+if (options.ministere) {
+  ManageMinisteres()
+    .then(() => {
+      GetLogger().info('Imported Ministeres')
+    })
+    .catch((err) => {
+      GetLogger().error(err)
+      SendWarningNotification('Ministere')
     })
 }

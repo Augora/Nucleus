@@ -6,3 +6,5 @@
 /// <reference path="./GroupeParlementaire.d.ts" />
 /// <reference path="./OrganismeParlementaire.d.ts" />
 /// <reference path="./DeputeOrganismeParlementaire.d.ts" />
+/// <reference path="./Ministre.d.ts" />
+/// <reference path="./Ministere.d.ts" />
