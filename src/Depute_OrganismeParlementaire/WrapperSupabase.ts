@@ -10,9 +10,9 @@ async function handleSupabaseError<T>(response: PostgrestResponse<T>) {
 }
 
 function handleSupabasePagination(from: number, to: number) {
-  return async function (
+  return async (
     res: Types.Canonical.DeputeOrganismeParlementaire[]
-  ): Promise<Types.Canonical.DeputeOrganismeParlementaire[]> {
+  ): Promise<Types.Canonical.DeputeOrganismeParlementaire[]> => {
     if (res.length === 1000) {
       return GetDeputeOrganismeParlementaireFromSupabase(from, to).then(
         (r: Types.Canonical.DeputeOrganismeParlementaire[]) => {
