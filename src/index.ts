@@ -7,7 +7,8 @@ const optionDefinitions = [
   { name: 'organismes', alias: 'o', type: Boolean },
   { name: 'deputes', alias: 'd', type: Boolean },
   { name: 'organismesParlementaire', alias: 'p', type: Boolean },
-  { name: 'ministeres', alias: 'm', type: Boolean },
+  { name: 'ministeres', alias: 'ms', type: Boolean },
+  { name: 'ministres', alias: 'm', type: Boolean },
 ]
 
 import commandLineArgs from 'command-line-args'

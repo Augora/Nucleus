@@ -73,6 +73,26 @@ jobs:
           NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_STAGING }}
           SUPABASE_ENV: Staging
 
+      - name: Import Ministeres
+        run: yarn start -ms
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_NOTIFICATION: ${{ secrets.SLACK_NOTIFICATION }}
+          NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_STAGING }}
+          SUPABASE_ENV: Staging
+
+      - name: Import Ministres
+        run: yarn start -m
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_NOTIFICATION: ${{ secrets.SLACK_NOTIFICATION }}
+          NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_STAGING }}
+          SUPABASE_ENV: Staging
+
       - name: Upload logs as artifact
         uses: actions/upload-artifact@v1
         if: always()
