@@ -19,7 +19,12 @@ export async function ManageMinistres() {
   const res = CompareLists(
     ministresFromGouvernementFR,
     ministresFromSupabase,
-    (a, b) => a.Nom === b.Nom && a.Slug === b.Slug,
+    (a, b) =>
+      a.Nom === b.Nom &&
+      a.Slug === b.Slug &&
+      a.Fonction === b.Fonction &&
+      a.FonctionLong === b.FonctionLong &&
+      a.Charge === b.Charge,
     'Slug',
     true
   )
