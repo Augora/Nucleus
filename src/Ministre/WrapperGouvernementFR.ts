@@ -44,9 +44,11 @@ export async function GetMinistresFromGouvernementFR(): Promise<
     const fonctionLong = $(assistant)
       .find('.wrapper-nom-fonction > .ministre-fonction')
       .text()
-    const split = fonctionLong.split(/, chargé |, chargée /)
-    const fonction = split[0].trim()
-    const charge = split[1] ? split[1].trim() : null
+    const split = fonctionLong.split(
+      /^(.*)(, chargé |, chargée )(([a-z\s']+)([A-Z].+)*)*$/
+    )
+    const fonction = split[1] ? split[1].trim() : null
+    const charge = split[5] ? split[5].trim() : null
     ministres.push({
       Slug: slugify(nom),
       Nom: nom,
