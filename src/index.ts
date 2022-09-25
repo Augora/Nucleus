@@ -7,7 +7,7 @@ const optionDefinitions = [
   { name: 'organismes', alias: 'o', type: Boolean },
   { name: 'deputes', alias: 'd', type: Boolean },
   { name: 'organismesParlementaire', alias: 'p', type: Boolean },
-  { name: 'ministeres', alias: 'ms', type: Boolean },
+  { name: 'ministeres', alias: 's', type: Boolean },
   { name: 'ministres', alias: 'm', type: Boolean },
 ]
 
@@ -18,10 +18,10 @@ import { ManageGroupes } from './GroupeParlementaire/Manager'
 import { ManageDeputes } from './Depute/Manager'
 import { ManageActivites } from './Activite/Manager'
 import { ManageOrganismes } from './OrganismeParlementaire/Manager'
-import { GetLogger } from './Common/Logger'
 import { ManageDeputeOrganismeParlementaire } from './Depute_OrganismeParlementaire/Manager'
 import { ManageMinisteres } from './Ministere/Manager'
 import { ManageMinistres } from './Ministre/Manager'
+import { GetLogger } from './Common/Logger'
 import { SendWarningNotification } from './Common/SlackWrapper'
 
 if (options.groupes) {
@@ -79,7 +79,7 @@ if (options.organismesParlementaire) {
     })
 }
 
-if (options.ministere) {
+if (options.ministeres) {
   ManageMinisteres()
     .then(() => {
       GetLogger().info('Imported Ministeres')
@@ -90,7 +90,7 @@ if (options.ministere) {
     })
 }
 
-if (options.ministere) {
+if (options.ministres) {
   ManageMinistres()
     .then(() => {
       GetLogger().info('Imported Ministres')

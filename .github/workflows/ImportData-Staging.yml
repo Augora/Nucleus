@@ -74,7 +74,7 @@ jobs:
           SUPABASE_ENV: Staging
 
       - name: Import Ministeres
-        run: yarn start -ms
+        run: yarn start -s
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
