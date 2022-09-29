@@ -29,11 +29,19 @@ export async function GetMinistresFromGouvernementFR(): Promise<
         '.ministre-grand-ministere > .wrapper-nom-fonction > .ministre-fonction'
       )
       .text()
+    const ministere = slugify(
+      $(ministre)
+        .find('.bloc-grand-ministere-entete > .grand-ministere-titre')
+        .text()
+    )
     ministres.push({
       Slug: slugify(nom),
       Nom: nom,
+      Prenom: nom.split(/(\S+)(\s+)(.+)/)[1],
+      NomDeFamille: nom.split(/(\S+)(\s+)(.+)/)[3],
       Fonction: fonction,
       FonctionLong: fonction,
+      Ministere: ministere ? ministere : 'premier-ministre',
     })
   })
 
@@ -49,12 +57,24 @@ export async function GetMinistresFromGouvernementFR(): Promise<
     )
     const fonction = split[1] ? split[1].trim() : null
     const charge = split[5] ? split[5].trim() : null
+    const ministere = slugify(
+      $(assistant)
+        .parent()
+        .parent()
+        .parent()
+        .find('.grand-ministere-titre')
+        .text()
+    )
+
     ministres.push({
       Slug: slugify(nom),
       Nom: nom,
+      Prenom: nom.split(/(\S+)(\s+)(.+)/)[1],
+      NomDeFamille: nom.split(/(\S+)(\s+)(.+)/)[3],
       Fonction: fonction,
       Charge: charge,
       FonctionLong: fonctionLong,
+      Ministere: ministere ? ministere : 'premier-ministre',
     })
   })
 

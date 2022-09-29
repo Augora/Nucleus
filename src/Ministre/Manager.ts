@@ -20,11 +20,14 @@ export async function ManageMinistres() {
     ministresFromGouvernementFR,
     ministresFromSupabase,
     (a, b) =>
-      a.Nom === b.Nom &&
       a.Slug === b.Slug &&
+      a.Nom === b.Nom &&
+      a.Prenom === b.Prenom &&
+      a.NomDeFamille === b.NomDeFamille &&
       a.Fonction === b.Fonction &&
       a.FonctionLong === b.FonctionLong &&
-      a.Charge === b.Charge,
+      a.Charge === b.Charge &&
+      a.Ministere === b.Ministere,
     'Slug',
     true
   )

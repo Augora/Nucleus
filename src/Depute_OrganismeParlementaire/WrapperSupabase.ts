@@ -1,5 +1,5 @@
-import supabaseClient from '../Common/SupabaseClient'
 import concat from 'lodash/concat'
+import supabaseClient from '../Common/SupabaseClient'
 import { PostgrestResponse } from '@supabase/supabase-js'
 
 async function handleSupabaseError<T>(response: PostgrestResponse<T>) {
