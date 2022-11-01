@@ -12,6 +12,10 @@ import {
   UpdateDeputeOrganismeParlementaireToSupabase,
   DeleteDeputeOrganismeParlementaireToSupabase,
 } from './WrapperSupabase'
+import { Database } from '../../Types/database.types'
+
+type Depute_OrganismeParlementaire =
+  Database['public']['Tables']['Depute_OrganismeParlementaire']['Row']
 
 export async function ManageDeputeOrganismeParlementaire() {
   const organismesFromSupabase = await GetOrganismesFromSupabase()
@@ -26,7 +30,7 @@ export async function ManageDeputeOrganismeParlementaire() {
   const deputeOrganismeParlementaireFromSupabase =
     await GetDeputeOrganismeParlementaireFromSupabase()
 
-  const deputeOrganismesCanonical: Types.Canonical.DeputeOrganismeParlementaire[] =
+  const deputeOrganismesCanonical: Depute_OrganismeParlementaire[] =
     deputesInOrganisme
       .flatMap((org) =>
         org.deputes.map((d) => {
@@ -53,57 +57,54 @@ export async function ManageDeputeOrganismeParlementaire() {
 
   return lastValueFrom(
     from(res).pipe(
-      mergeMap(
-        (action: DiffType<Types.Canonical.DeputeOrganismeParlementaire>) => {
-          GetLogger().info('Processing DeputeOrganismeParlementaire:', {
-            Id: action.NewData.Id,
-            Action: action.Action,
+      mergeMap((action: DiffType<Depute_OrganismeParlementaire>) => {
+        GetLogger().info('Processing DeputeOrganismeParlementaire:', {
+          Id: action.NewData.Id,
+          Action: action.Action,
+        })
+        if (action.Action === Action.Create) {
+          GetLogger().info(
+            'Creating DeputeOrganismeParlementaire:',
+            action.NewData
+          )
+          return CreateDeputeOrganismeParlementaireToSupabase(
+            action.NewData
+          ).then(() => {
+            GetLogger().info('Created DeputeOrganismeParlementaire:', {
+              Id: action.NewData.Id,
+            })
           })
-          if (action.Action === Action.Create) {
-            GetLogger().info(
-              'Creating DeputeOrganismeParlementaire:',
-              action.NewData
-            )
-            return CreateDeputeOrganismeParlementaireToSupabase(
-              action.NewData
-            ).then(() => {
-              GetLogger().info('Created DeputeOrganismeParlementaire:', {
-                Id: action.NewData.Id,
-              })
+        } else if (action.Action === Action.Update) {
+          GetLogger().info(
+            'Updating DeputeOrganismeParlementaire:',
+            action.NewData
+          )
+          return UpdateDeputeOrganismeParlementaireToSupabase(
+            action.NewData
+          ).then(() => {
+            GetLogger().info('Updated DeputeOrganismeParlementaire:', {
+              Id: action.NewData.Id,
             })
-          } else if (action.Action === Action.Update) {
-            GetLogger().info(
-              'Updating DeputeOrganismeParlementaire:',
-              action.NewData
-            )
-            return UpdateDeputeOrganismeParlementaireToSupabase(
-              action.NewData
-            ).then(() => {
-              GetLogger().info('Updated DeputeOrganismeParlementaire:', {
-                Id: action.NewData.Id,
-              })
+          })
+        } else if (action.Action === Action.Remove) {
+          GetLogger().info(
+            'Removing DeputeOrganismeParlementaire:',
+            action.NewData
+          )
+          return DeleteDeputeOrganismeParlementaireToSupabase(
+            action.NewData
+          ).then(() => {
+            GetLogger().info('Removed DeputeOrganismeParlementaire:', {
+              Id: action.NewData.Id,
             })
-          } else if (action.Action === Action.Remove) {
-            GetLogger().info(
-              'Removing DeputeOrganismeParlementaire:',
-              action.NewData
-            )
-            return DeleteDeputeOrganismeParlementaireToSupabase(
-              action.NewData
-            ).then(() => {
-              GetLogger().info('Removed DeputeOrganismeParlementaire:', {
-                Id: action.NewData.Id,
-              })
-            })
-          } else if (action.Action === Action.None) {
-            GetLogger().info('Nothing to do on: ', action.NewData)
-            return Promise.resolve()
-          } else {
-            return Promise.resolve()
-          }
-        },
-        1
-      )
+          })
+        } else if (action.Action === Action.None) {
+          GetLogger().info('Nothing to do on: ', action.NewData)
+          return Promise.resolve()
+        } else {
+          return Promise.resolve()
+        }
+      }, 1)
     )
   )
 }

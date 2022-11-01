@@ -1,33 +1,32 @@
-import supabaseClient from '../Common/SupabaseClient'
+import { PostgrestResponse } from '@supabase/supabase-js'
 
-function handleSupabaseError({ error, ...rest }) {
-  if (error) {
-    throw error
+import supabaseClient from '../Common/SupabaseClient'
+import { Database } from '../../Types/database.types'
+
+type Ministre = Database['public']['Tables']['Ministre']['Row']
+
+async function handleSupabaseError<T>(response: PostgrestResponse<T>) {
+  if (response.error) {
+    return Promise.reject(response.error)
   }
-  return rest
+  return Promise.resolve(response.data)
 }
 
 export function GetMinistresFromSupabase() {
-  return supabaseClient
-    .from<Types.Canonical.Ministre>('Ministre')
-    .select()
-    .then(handleSupabaseError)
-    .then((d) => d.body)
+  return supabaseClient.from('Ministre').select().then(handleSupabaseError)
 }
 
-export function CreateMinistreToSupabase(data: Types.Canonical.Ministre) {
+export function CreateMinistreToSupabase(data: Ministre) {
   return supabaseClient
-    .from<Types.Canonical.Ministre>('Ministre')
+    .from('Ministre')
     .insert([data])
     .then(handleSupabaseError)
-    .then((d) => d.body)
 }
 
-export function UpdateMinistreToSupabase(data: Types.Canonical.Ministre) {
+export function UpdateMinistreToSupabase(data: Ministre) {
   return supabaseClient
-    .from<Types.Canonical.Ministre>('Ministre')
+    .from('Ministre')
     .update(data)
     .match({ Slug: data.Slug })
     .then(handleSupabaseError)
-    .then((d) => d.body)
 }

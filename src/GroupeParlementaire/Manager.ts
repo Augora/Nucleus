@@ -15,13 +15,17 @@ import {
   UpdateGroupeParlementaireToSupabase,
 } from './WrapperSupabase'
 import { GetGroupeParlementaireExplainText } from './WrapperWikipedia'
+import { Database } from '../../Types/database.types'
+
+type GroupeParlementaire =
+  Database['public']['Tables']['GroupeParlementaire']['Row']
 
 function delayedResolve<T>(ms, value: T): Promise<T> {
   return new Promise((resolve) => setTimeout(() => resolve(value), ms))
 }
 
 export async function ManageGroupes() {
-  const groupesFromSupabase: Types.Canonical.GroupeParlementaire[] =
+  const groupesFromSupabase: GroupeParlementaire[] =
     await GetGroupesFromSupabase()
   GetLogger().info('groupesFromSupabase:', groupesFromSupabase)
   const groupesFromNosDeputesFR = await GetDeputesFromNosDeputesFR()
@@ -77,9 +81,9 @@ export async function ManageGroupes() {
     true
   )
   GetLogger().info('Comparison:', res)
-  return from(res)
-    .pipe(
-      mergeMap((action: DiffType<Types.Canonical.GroupeParlementaire>) => {
+  return lastValueFrom(
+    from(res).pipe(
+      mergeMap((action: DiffType<GroupeParlementaire>) => {
         GetLogger().info('Processing GroupeParlementaire:', {
           Sigle: action.NewData.Sigle,
         })
@@ -113,5 +117,5 @@ export async function ManageGroupes() {
         }
       }, 1)
     )
-    .toPromise()
+  )
 }

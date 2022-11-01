@@ -1,4 +1,4 @@
-import { from } from 'rxjs'
+import { from, lastValueFrom } from 'rxjs'
 import { mergeMap, retry } from 'rxjs/operators'
 
 import { MapDepute } from './Mapping'
@@ -20,6 +20,9 @@ import {
   UpdateDeputeToSupabase,
   DeleteDeputeToSupabase,
 } from './WrapperSupabase'
+import { Database } from '../../Types/database.types'
+
+type Depute = Database['public']['Tables']['Depute']['Row']
 
 export async function ManageDeputes() {
   const simpleDeputesFromNosDeputesFR = await GetDeputesFromNosDeputesFR()
@@ -28,9 +31,7 @@ export async function ManageDeputes() {
   const canonicalDeputesFromNosDeputesFR = deputesFromNosDeputesFR.map((d) =>
     MapDepute(d)
   )
-  // GetLogger().info('deputesFromNosDeputesFR:', canonicalDeputesFromNosDeputesFR)
   const deputesFromSupabase = await GetDeputesFromSupabase()
-  // GetLogger().info('deputesFromSupabase:', deputesFromSupabase)
   const res = CompareLists(
     canonicalDeputesFromNosDeputesFR,
     deputesFromSupabase,
@@ -38,10 +39,9 @@ export async function ManageDeputes() {
     'Slug',
     true
   )
-  // GetLogger().info('Modifications to make:', res)
-  return from(res)
-    .pipe(
-      mergeMap((action: DiffType<Types.Canonical.Depute>) => {
+  return lastValueFrom(
+    from(res).pipe(
+      mergeMap((action: DiffType<Depute>) => {
         GetLogger().info('Processing Depute:', { Slug: action.NewData.Slug })
         if (action.Action === Action.Create) {
           GetLogger().info('Creating Depute:', action.NewData)
@@ -53,13 +53,6 @@ export async function ManageDeputes() {
               })
             })
           })
-          // .catch((err) => {
-          //   GetLogger().error('Error while creating Depute:', {
-          //     Slug: action.NewData.Slug,
-          //     error: err,
-          //   })
-          //   process.exitCode = 1
-          // })
         } else if (action.Action === Action.Update) {
           GetLogger().info('Updating Depute:', { Slug: action.NewData.Slug })
           return UpdateDeputeToSupabase(action.NewData).then(() => {
@@ -96,25 +89,11 @@ export async function ManageDeputes() {
               )
             }
           })
-          // .catch((err) => {
-          //   GetLogger().error('Error while updating Depute:', {
-          //     Slug: action.NewData.Slug,
-          //     error: err,
-          //   })
-          //   process.exitCode = 1
-          // })
         } else if (action.Action === Action.Remove) {
           GetLogger().info('Deleting depute:', { Slug: action.NewData.Slug })
           return DeleteDeputeToSupabase(action.NewData).then(() => {
             GetLogger().info('Deleted Depute:', { Slug: action.NewData.Slug })
           })
-          // .catch((err) => {
-          //   GetLogger().error('Error while deleting Depute:', {
-          //     Slug: action.NewData.Slug,
-          //     error: err,
-          //   })
-          //   process.exitCode = 1
-          // })
         } else if (action.Action === Action.None) {
           GetLogger().info('Nothing to do on Depute:', {
             Slug: action.NewData.Slug,
@@ -124,5 +103,5 @@ export async function ManageDeputes() {
       }, 1),
       retry(2)
     )
-    .toPromise()
+  )
 }

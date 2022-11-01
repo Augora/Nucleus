@@ -9,6 +9,9 @@ import {
   CreateMinistereToSupabase,
   UpdateMinistereToSupabase,
 } from './WrapperSupabase'
+import { Database } from '../../Types/database.types'
+
+type Ministere = Database['public']['Tables']['Ministere']['Row']
 
 export async function ManageMinisteres() {
   const ministeresFromGouvernementFR = await GetMinisteresFromGouvernementFR()
@@ -29,7 +32,7 @@ export async function ManageMinisteres() {
   GetLogger().info('Comparison:', res)
   return lastValueFrom(
     from(res).pipe(
-      mergeMap((action: DiffType<Types.Canonical.Ministere>) => {
+      mergeMap((action: DiffType<Ministere>) => {
         GetLogger().info('Processing Ministere:', {
           Nom: action.NewData.Nom,
         })

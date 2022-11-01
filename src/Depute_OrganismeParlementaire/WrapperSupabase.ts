@@ -1,24 +1,26 @@
 import concat from 'lodash/concat'
 import supabaseClient from '../Common/SupabaseClient'
 import { PostgrestResponse } from '@supabase/supabase-js'
+import { Database } from '../../Types/database.types'
+
+type Depute_OrganismeParlementaire =
+  Database['public']['Tables']['Depute_OrganismeParlementaire']['Row']
 
 async function handleSupabaseError<T>(response: PostgrestResponse<T>) {
   if (response.error) {
     return Promise.reject(response.error)
   }
-  return Promise.resolve(response.body)
+  return Promise.resolve(response.data)
 }
 
 function handleSupabasePagination(from: number, to: number) {
   return async (
-    res: Types.Canonical.DeputeOrganismeParlementaire[]
-  ): Promise<Types.Canonical.DeputeOrganismeParlementaire[]> => {
+    res: Depute_OrganismeParlementaire[]
+  ): Promise<Depute_OrganismeParlementaire[]> => {
     if (res.length === 1000) {
       return GetDeputeOrganismeParlementaireFromSupabase(from, to).then(
-        (r: Types.Canonical.DeputeOrganismeParlementaire[]) => {
-          return Promise.resolve(
-            concat<Types.Canonical.DeputeOrganismeParlementaire>(res, r)
-          )
+        (r: Depute_OrganismeParlementaire[]) => {
+          return Promise.resolve(concat<Depute_OrganismeParlementaire>(res, r))
         }
       )
     }
@@ -28,7 +30,7 @@ function handleSupabasePagination(from: number, to: number) {
 
 export async function GetOrganismesFromSupabase() {
   return supabaseClient
-    .from<Types.Canonical.OrganismeParlementaire>('OrganismeParlementaire')
+    .from('OrganismeParlementaire')
     .select()
     .then(handleSupabaseError)
 }
@@ -38,9 +40,7 @@ export async function GetDeputeOrganismeParlementaireFromSupabase(
   to: number = 1000
 ) {
   return supabaseClient
-    .from<Types.Canonical.DeputeOrganismeParlementaire>(
-      'Depute_OrganismeParlementaire'
-    )
+    .from('Depute_OrganismeParlementaire')
     .select()
     .range(from, to)
     .then(handleSupabaseError)
@@ -48,35 +48,29 @@ export async function GetDeputeOrganismeParlementaireFromSupabase(
 }
 
 export async function CreateDeputeOrganismeParlementaireToSupabase(
-  data: Types.Canonical.DeputeOrganismeParlementaire
+  data: Depute_OrganismeParlementaire
 ) {
   return supabaseClient
-    .from<Types.Canonical.DeputeOrganismeParlementaire>(
-      'Depute_OrganismeParlementaire'
-    )
+    .from('Depute_OrganismeParlementaire')
     .insert([data])
     .then(handleSupabaseError)
 }
 
 export function UpdateDeputeOrganismeParlementaireToSupabase(
-  data: Types.Canonical.DeputeOrganismeParlementaire
+  data: Depute_OrganismeParlementaire
 ) {
   return supabaseClient
-    .from<Types.Canonical.DeputeOrganismeParlementaire>(
-      'Depute_OrganismeParlementaire'
-    )
+    .from('Depute_OrganismeParlementaire')
     .update(data)
     .match({ Id: data.Id })
     .then(handleSupabaseError)
 }
 
 export function DeleteDeputeOrganismeParlementaireToSupabase(
-  data: Types.Canonical.DeputeOrganismeParlementaire
+  data: Depute_OrganismeParlementaire
 ) {
   return supabaseClient
-    .from<Types.Canonical.DeputeOrganismeParlementaire>(
-      'Depute_OrganismeParlementaire'
-    )
+    .from('Depute_OrganismeParlementaire')
     .delete()
     .match({ Id: data.Id })
     .then(handleSupabaseError)
