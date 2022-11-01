@@ -13,11 +13,11 @@ async function handleSupabaseError<T>(response: PostgrestResponse<T>) {
 }
 
 export async function GetDeputesFromSupabase() {
-  return await supabaseClient.from('Depute').select().then(handleSupabaseError)
+  return supabaseClient.from('Depute').select().then(handleSupabaseError)
 }
 
 export async function CreateDeputeToSupabase(data: Depute) {
-  return await supabaseClient
+  return supabaseClient
     .from('Depute')
     .insert([data])
     .select()
@@ -25,7 +25,7 @@ export async function CreateDeputeToSupabase(data: Depute) {
 }
 
 export async function UpdateDeputeToSupabase(data: Depute) {
-  return await supabaseClient
+  return supabaseClient
     .from('Depute')
     .update(data)
     .match({ Slug: data.Slug })
@@ -34,7 +34,7 @@ export async function UpdateDeputeToSupabase(data: Depute) {
 }
 
 export async function DeleteDeputeToSupabase(data: Depute) {
-  return await supabaseClient
+  return supabaseClient
     .from('Depute')
     .delete()
     .match({ Slug: data.Slug })
