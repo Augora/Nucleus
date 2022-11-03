@@ -1,9 +1,13 @@
 import Color from 'color'
+import { Database } from '../../Types/database.types'
+
+type GroupeParlementaire =
+  Database['public']['Tables']['GroupeParlementaire']['Insert']
 
 export function MapGroupeParlementaire(
   groupe: Types.External.NosDeputesFR.Organisme,
-  groupeFromSupabase?: Types.Canonical.GroupeParlementaire
-): Types.Canonical.GroupeParlementaire {
+  groupeFromSupabase?: GroupeParlementaire
+): GroupeParlementaire {
   const color = Color.rgb(groupe.couleur.split(',').map((n) => parseInt(n, 10)))
 
   return {

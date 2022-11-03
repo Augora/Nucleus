@@ -1,9 +1,10 @@
 import dayjs from 'dayjs'
 
-export function AreTheSameActivites(
-  actA: Types.Canonical.Activite,
-  actB: Types.Canonical.Activite
-): boolean {
+import { Database } from '../../Types/database.types'
+
+type Activite = Database['public']['Tables']['Activite']['Insert']
+
+export function AreTheSameActivites(actA: Activite, actB: Activite): boolean {
   return (
     actA.NumeroDeSemaine === actB.NumeroDeSemaine &&
     dayjs(actA.DateDeDebut).diff(actB.DateDeDebut, 'days', false) === 0 &&

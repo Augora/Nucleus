@@ -1,5 +1,13 @@
 import axios from 'axios'
 
+import { Database } from '../../Types/database.types'
+
+type GroupeParlementaire =
+  Database['public']['Tables']['GroupeParlementaire']['Insert']
+type Depute = Database['public']['Tables']['Depute']['Insert']
+type OrganismeParlementaire =
+  Database['public']['Tables']['OrganismeParlementaire']['Insert']
+
 const envFullName =
   process.env.SUPABASE_ENV === 'Production' ? 'Production' : 'Staging'
 
@@ -14,11 +22,9 @@ const messageContext = {
 }
 
 const augoraDomain =
-  process.env.SUPABASE_ENV === 'Production'
-    ? 'augora.fr'
-    : 'preprod.augora.fr'
+  process.env.SUPABASE_ENV === 'Production' ? 'augora.fr' : 'preprod.augora.fr'
 
-export function SendNewDeputeNotification(depute: Types.Canonical.Depute) {
+export function SendNewDeputeNotification(depute: Depute) {
   return process.env.SLACK_NOTIFICATION === 'true'
     ? axios
         .post(process.env.SLACK_WEBHOOK_URL, {
@@ -45,8 +51,8 @@ export function SendNewDeputeNotification(depute: Types.Canonical.Depute) {
 }
 
 export function SendDeputeChangeGroupNotification(
-  previousDepute: Types.Canonical.Depute,
-  depute: Types.Canonical.Depute
+  previousDepute: Depute,
+  depute: Depute
 ) {
   return process.env.SLACK_NOTIFICATION === 'true'
     ? axios
@@ -73,9 +79,7 @@ export function SendDeputeChangeGroupNotification(
     : Promise.resolve()
 }
 
-export function SendStopDeputeMandatNotification(
-  depute: Types.Canonical.Depute
-) {
+export function SendStopDeputeMandatNotification(depute: Depute) {
   return process.env.SLACK_NOTIFICATION === 'true'
     ? axios
         .post(process.env.SLACK_WEBHOOK_URL, {
@@ -102,7 +106,7 @@ export function SendStopDeputeMandatNotification(
 }
 
 export function SendNewGroupeParlementaireNotification(
-  groupe: Types.Canonical.GroupeParlementaire
+  groupe: GroupeParlementaire
 ) {
   return process.env.SLACK_NOTIFICATION === 'true'
     ? axios
@@ -130,7 +134,7 @@ export function SendNewGroupeParlementaireNotification(
 }
 
 export function SendUpdateGroupeParlementaireNotification(
-  groupe: Types.Canonical.GroupeParlementaire
+  groupe: GroupeParlementaire
 ) {
   return process.env.SLACK_NOTIFICATION === 'true'
     ? axios
@@ -160,7 +164,7 @@ export function SendUpdateGroupeParlementaireNotification(
 }
 
 export function SendNewOrganismeParlementaireNotification(
-  organisme: Types.Canonical.OrganismeParlementaire
+  organisme: OrganismeParlementaire
 ) {
   return process.env.SLACK_NOTIFICATION === 'true'
     ? axios.post(process.env.SLACK_WEBHOOK_URL, {

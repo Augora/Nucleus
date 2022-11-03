@@ -1,3 +1,8 @@
+import { Database } from '../../Types/database.types'
+
+type OrganismeParlementaire =
+  Database['public']['Tables']['OrganismeParlementaire']['Insert']
+
 const commissionsPermanentes = [
   'commission-des-affaires-culturelles-et-de-l-education',
   'commission-des-affaires-economiques',
@@ -11,7 +16,7 @@ const commissionsPermanentes = [
 
 export function MapOrganismeParlementaire(
   organisme: Types.External.NosDeputesFR.OrganismeParlementaire
-): Types.Canonical.OrganismeParlementaire {
+): OrganismeParlementaire {
   return {
     Nom: organisme.nom,
     Slug: organisme.slug,

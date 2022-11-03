@@ -5,12 +5,13 @@ import axios from 'axios'
 
 import { GetLogger } from '../Common/Logger'
 import { slugify } from '../Tools/String'
+import { Database } from '../../Types/database.types'
 
-export async function GetMinisteresFromGouvernementFR(): Promise<
-  Types.Canonical.Ministere[]
-> {
+type Ministere = Database['public']['Tables']['Ministere']['Insert']
+
+export async function GetMinisteresFromGouvernementFR(): Promise<Ministere[]> {
   GetLogger().info('Retrieving ministeres from gouvernement.fr...')
-  const ministeres: Types.Canonical.Ministere[] = [
+  const ministeres: Ministere[] = [
     {
       Slug: slugify('Premier Ministre'),
       Nom: 'Premier Ministre',

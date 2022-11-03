@@ -11,6 +11,10 @@ import {
   UpdateOrganismeToSupabase,
 } from './WrapperSupabase'
 import { SendNewOrganismeParlementaireNotification } from '../Common/SlackWrapper'
+import { Database } from '../../Types/database.types'
+
+type OrganismeParlementaire =
+  Database['public']['Tables']['OrganismeParlementaire']['Insert']
 
 export async function ManageOrganismes() {
   const organismesFromNosDeputesFR =
@@ -36,7 +40,7 @@ export async function ManageOrganismes() {
   GetLogger().info('Comparison:', res)
   return from(res)
     .pipe(
-      mergeMap((action: DiffType<Types.Canonical.OrganismeParlementaire>) => {
+      mergeMap((action: DiffType<OrganismeParlementaire>) => {
         GetLogger().info('Processing OrganismeParlementaire:', {
           Nom: action.NewData.Nom,
         })
