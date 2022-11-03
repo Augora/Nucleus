@@ -2,6 +2,9 @@ import { difference, isArray, isObject } from 'lodash'
 import dayjs from 'dayjs'
 import 'dayjs/locale/fr'
 import { CompareLists } from '../Tools/Comparison'
+import { Database } from '../../Types/database.types'
+
+type Depute = Database['public']['Tables']['Depute']['Insert']
 
 function areArraysTheSame(arr1: any[], arr2: any[]) {
   return (
@@ -9,10 +12,7 @@ function areArraysTheSame(arr1: any[], arr2: any[]) {
   )
 }
 
-export function areTheSameAdresses(
-  adA: Types.Canonical.Adresse,
-  adB: Types.Canonical.Adresse
-) {
+export function areTheSameAdresses(adA, adB) {
   return (
     adA.AdresseComplete === adB.AdresseComplete &&
     adA.Adresse === adB.Adresse &&
@@ -21,10 +21,7 @@ export function areTheSameAdresses(
   )
 }
 
-function areAdresseArraysTheSame(
-  arr1: Types.Canonical.Adresse[],
-  arr2: Types.Canonical.Adresse[]
-) {
+function areAdresseArraysTheSame(arr1, arr2) {
   return (
     isArray(arr1) &&
     isArray(arr2) &&
@@ -32,10 +29,7 @@ function areAdresseArraysTheSame(
   )
 }
 
-function areAncienMandatArraysTheSame(
-  arr1: Types.Canonical.AncienMandat[],
-  arr2: Types.Canonical.AncienMandat[]
-) {
+function areAncienMandatArraysTheSame(arr1, arr2) {
   return (
     isArray(arr1) &&
     isArray(arr2) &&
@@ -44,10 +38,7 @@ function areAncienMandatArraysTheSame(
   )
 }
 
-function areAutreMandatArraysTheSame(
-  arr1: Types.Canonical.AutreMandat[],
-  arr2: Types.Canonical.AutreMandat[]
-) {
+function areAutreMandatArraysTheSame(arr1, arr2) {
   return (
     isArray(arr1) &&
     isArray(arr2) &&
@@ -56,10 +47,7 @@ function areAutreMandatArraysTheSame(
   )
 }
 
-export function areTheSameAnciensMandats(
-  amA: Types.Canonical.AncienMandat,
-  amB: Types.Canonical.AncienMandat
-): boolean {
+export function areTheSameAnciensMandats(amA, amB): boolean {
   return (
     amA.AncienMandatComplet === amB.AncienMandatComplet &&
     dayjs(amA.DateDeDebut).diff(amB.DateDeDebut, 'days', false) === 0 &&
@@ -68,10 +56,7 @@ export function areTheSameAnciensMandats(
   )
 }
 
-export function areTheSameAutresMandats(
-  amA: Types.Canonical.AutreMandat,
-  amB: Types.Canonical.AutreMandat
-): boolean {
+export function areTheSameAutresMandats(amA, amB): boolean {
   return (
     amA.AutreMandatComplet === amB.AutreMandatComplet &&
     amA.Institution === amB.Institution &&
@@ -80,10 +65,7 @@ export function areTheSameAutresMandats(
   )
 }
 
-export function AreTheSameDeputes(
-  depA: Types.Canonical.Depute,
-  depB: Types.Canonical.Depute
-): boolean {
+export function AreTheSameDeputes(depA: Depute, depB: Depute): boolean {
   return (
     depA.Slug === depB.Slug &&
     depA.Nom === depB.Nom &&
@@ -118,8 +100,8 @@ export function AreTheSameDeputes(
     areAncienMandatArraysTheSame(depA.AncienMandat, depB.AncienMandat) &&
     areAutreMandatArraysTheSame(depA.AutreMandat, depB.AutreMandat) &&
     areArraysTheSame(depA.Collaborateurs, depB.Collaborateurs) &&
-    depA?.GroupeParlementaire === depB?.GroupeParlementaire &&
-    depA?.ResponsabiliteGroupe?.Fonction ===
-      depB?.ResponsabiliteGroupe?.Fonction
+    depA?.GroupeParlementaire === depB?.GroupeParlementaire
+    // depA?.ResponsabiliteGroupe?.Fonction ===
+    //   depB?.ResponsabiliteGroupe?.Fonction
   )
 }

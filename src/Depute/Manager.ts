@@ -22,7 +22,7 @@ import {
 } from './WrapperSupabase'
 import { Database } from '../../Types/database.types'
 
-type Depute = Database['public']['Tables']['Depute']['Row']
+type Depute = Database['public']['Tables']['Depute']['Insert']
 
 export async function ManageDeputes() {
   const simpleDeputesFromNosDeputesFR = await GetDeputesFromNosDeputesFR()

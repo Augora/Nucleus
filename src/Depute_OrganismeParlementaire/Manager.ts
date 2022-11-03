@@ -15,7 +15,7 @@ import {
 import { Database } from '../../Types/database.types'
 
 type Depute_OrganismeParlementaire =
-  Database['public']['Tables']['Depute_OrganismeParlementaire']['Row']
+  Database['public']['Tables']['Depute_OrganismeParlementaire']['Insert']
 
 export async function ManageDeputeOrganismeParlementaire() {
   const organismesFromSupabase = await GetOrganismesFromSupabase()

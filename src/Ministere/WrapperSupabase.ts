@@ -3,7 +3,7 @@ import { PostgrestResponse } from '@supabase/supabase-js'
 import supabaseClient from '../Common/SupabaseClient'
 import { Database } from '../../Types/database.types'
 
-type Ministere = Database['public']['Tables']['Ministere']['Row']
+type Ministere = Database['public']['Tables']['Ministere']['Insert']
 
 async function handleSupabaseError<T>(response: PostgrestResponse<T>) {
   if (response.error) {

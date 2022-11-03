@@ -3,7 +3,7 @@ import supabaseClient from '../Common/SupabaseClient'
 import { Database } from '../../Types/database.types'
 
 type GroupeParlementaire =
-  Database['public']['Tables']['GroupeParlementaire']['Row']
+  Database['public']['Tables']['GroupeParlementaire']['Insert']
 
 async function handleSupabaseError<T>(response: PostgrestResponse<T>) {
   if (response.error) {

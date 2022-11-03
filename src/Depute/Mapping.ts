@@ -16,7 +16,9 @@ import {
 
 import Departements from '../StaticData/Deputes/departments.json'
 import Regions from '../StaticData/Deputes/regions.json'
-import { MapOrganismeParlementaire } from '../OrganismeParlementaire/Mapping'
+import { Database } from '../../Types/database.types'
+
+type Depute = Database['public']['Tables']['Depute']['Insert']
 
 function processNomDepartement(numeroDepartement: string, slug: string) {
   if (!numeroDepartement) return undefined
@@ -84,9 +86,7 @@ function isWebSiteLinkedIn(website: string) {
   return includes(lowerCase(website), 'linkedin')
 }
 
-export function MapDepute(
-  depute: Types.External.NosDeputesFR.Depute
-): Types.Canonical.Depute {
+export function MapDepute(depute: Types.External.NosDeputesFR.Depute): Depute {
   return {
     Slug: depute.slug,
     Nom: depute.nom,
@@ -103,7 +103,9 @@ export function MapDepute(
     NumeroCirconscription: depute.num_circo,
     DebutDuMandat: depute.mandat_debut,
     RattachementFinancier: isEmpty(depute.parti_ratt_financier)
-      ? depute.sexe === 'F' ? 'Non rattachée':'Non rattaché'
+      ? depute.sexe === 'F'
+        ? 'Non rattachée'
+        : 'Non rattaché'
       : depute.parti_ratt_financier,
     Profession: depute.profession ? depute.profession : '',
     PlaceEnHemicycle: depute.place_en_hemicycle,
@@ -181,11 +183,11 @@ export function MapDepute(
     AutreMandat: depute.autres_mandats.map((am) => MapAutreMandat(am.mandat)),
     AncienMandat: depute.anciens_mandats.map((am) =>
       MapAncienMandat(am.mandat)
-    )
+    ),
   }
 }
 
-export function MapAdresse(adresse: string): Types.Canonical.Adresse {
+export function MapAdresse(adresse: string) {
   const CPRegex = /\ ([0-9]{5})/
   const PhoneRegex =
     /Téléphone : (((\+|00)\s?[0-9]{2})?\s?(?:[\s.-]?\d{1}){10})/
@@ -220,9 +222,7 @@ export function MapAdresse(adresse: string): Types.Canonical.Adresse {
   }
 }
 
-export function MapAutreMandat(
-  autreMandat: string
-): Types.Canonical.AutreMandat {
+export function MapAutreMandat(autreMandat: string) {
   const [Localite, Institution, Intitule] = autreMandat.split(' / ')
   return {
     AutreMandatComplet: autreMandat,
@@ -232,9 +232,7 @@ export function MapAutreMandat(
   }
 }
 
-export function MapAncienMandat(
-  ancienMandat: string
-): Types.Canonical.AncienMandat {
+export function MapAncienMandat(ancienMandat: string) {
   const [dateDebut, dateFin, intitule] = ancienMandat
     .split(' /')
     .map((s) => trim(s))

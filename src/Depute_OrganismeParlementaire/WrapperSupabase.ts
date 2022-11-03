@@ -4,7 +4,7 @@ import { PostgrestResponse } from '@supabase/supabase-js'
 import { Database } from '../../Types/database.types'
 
 type Depute_OrganismeParlementaire =
-  Database['public']['Tables']['Depute_OrganismeParlementaire']['Row']
+  Database['public']['Tables']['Depute_OrganismeParlementaire']['Insert']
 
 async function handleSupabaseError<T>(response: PostgrestResponse<T>) {
   if (response.error) {

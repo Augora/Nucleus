@@ -3,10 +3,15 @@ import ceil from 'lodash/ceil'
 import isUndefined from 'lodash/isUndefined'
 import isNull from 'lodash/isNull'
 
+import { Database } from '../../Types/database.types'
+
+type Depute = Database['public']['Tables']['Depute']['Insert']
+type Activite = Database['public']['Tables']['Activite']['Insert']
+
 export function MapActivites(
-  depute: Types.Canonical.Depute,
+  depute: Depute,
   activites: Types.External.NosDeputesFR.Activite
-): Types.Canonical.Activite[] {
+): Activite[] {
   return Object.keys(activites.labels).map((weekNumber) => {
     const weekNumberAsInt = parseInt(weekNumber, 10)
     const dateDeDebut = dayjs(activites.date_debut, 'YYYY-MM-DD')

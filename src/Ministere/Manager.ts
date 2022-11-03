@@ -11,7 +11,7 @@ import {
 } from './WrapperSupabase'
 import { Database } from '../../Types/database.types'
 
-type Ministere = Database['public']['Tables']['Ministere']['Row']
+type Ministere = Database['public']['Tables']['Ministere']['Insert']
 
 export async function ManageMinisteres() {
   const ministeresFromGouvernementFR = await GetMinisteresFromGouvernementFR()

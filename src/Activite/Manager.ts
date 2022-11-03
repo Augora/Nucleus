@@ -1,4 +1,4 @@
-import { from } from 'rxjs'
+import { from, lastValueFrom } from 'rxjs'
 import { mergeMap, retry } from 'rxjs/operators'
 
 import { MapActivites } from './Mapping'
@@ -13,12 +13,16 @@ import {
   UpdateActiviteToSupabase,
   DeleteActiviteToSupabase,
 } from './WrapperSupabase'
+import { Database } from '../../Types/database.types'
+
+type Depute = Database['public']['Tables']['Depute']['Insert']
+type Activite = Database['public']['Tables']['Activite']['Insert']
 
 export async function ManageActivites() {
   const detputesFromSupabase = await GetDeputesFromSupabase()
-  return from(detputesFromSupabase)
-    .pipe(
-      mergeMap(async (depute: Types.Canonical.Depute) => {
+  return lastValueFrom(
+    from(detputesFromSupabase).pipe(
+      mergeMap(async (depute: Depute) => {
         const activitesFromNosDeputesFR =
           await GetActiviesBySlugFromNosDeputesFR(depute.Slug)
         const canonicalActivitesFromNosDeputesFR = MapActivites(
@@ -34,9 +38,9 @@ export async function ManageActivites() {
           AreTheSameActivites,
           'NumeroDeSemaine'
         )
-        return from(res)
-          .pipe(
-            mergeMap((action: DiffType<Types.Canonical.Activite>) => {
+        return lastValueFrom(
+          from(res).pipe(
+            mergeMap((action: DiffType<Activite>) => {
               if (action.Action === Action.Create) {
                 GetLogger().info('Creating activite:', action.NewData)
                 return CreateActiviteToSupabase(action.NewData)
@@ -53,9 +57,9 @@ export async function ManageActivites() {
             }, 20),
             retry(2)
           )
-          .toPromise()
+        )
       }, 1),
       retry(2)
     )
-    .toPromise()
+  )
 }

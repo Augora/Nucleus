@@ -18,7 +18,7 @@ import { GetGroupeParlementaireExplainText } from './WrapperWikipedia'
 import { Database } from '../../Types/database.types'
 
 type GroupeParlementaire =
-  Database['public']['Tables']['GroupeParlementaire']['Row']
+  Database['public']['Tables']['GroupeParlementaire']['Insert']
 
 function delayedResolve<T>(ms, value: T): Promise<T> {
   return new Promise((resolve) => setTimeout(() => resolve(value), ms))
