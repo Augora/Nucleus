@@ -24,89 +24,79 @@ import { ManageMinistres } from './Ministre/Manager'
 import { GetLogger } from './Common/Logger'
 import { SendWarningNotification } from './Common/SlackWrapper'
 
-// if (options.groupes) {
-//   ManageGroupes()
-//     .then(() => {
-//       GetLogger().info('Imported groupes')
-//     })
-//     .catch((err) => {
-//       GetLogger().error(err)
-//       SendWarningNotification('GroupeParlementaire')
-//     })
-// }
+if (options.groupes) {
+  ManageGroupes()
+    .then(() => {
+      GetLogger().info('Imported groupes')
+    })
+    .catch((err) => {
+      GetLogger().error(err)
+      SendWarningNotification('GroupeParlementaire')
+    })
+}
 
-// if (options.deputes) {
-//   ManageDeputes()
-//     .then(() => {
-//       GetLogger().info('Imported deputes')
-//     })
-//     .catch((err) => {
-//       GetLogger().error(err)
-//       SendWarningNotification('Depute')
-//     })
-// }
+if (options.deputes) {
+  ManageDeputes()
+    .then(() => {
+      GetLogger().info('Imported deputes')
+    })
+    .catch((err) => {
+      GetLogger().error(err)
+      SendWarningNotification('Depute')
+    })
+}
 
-// if (options.activites) {
-//   ManageActivites()
-//     .then(() => {
-//       GetLogger().info('Imported activites')
-//     })
-//     .catch((err) => {
-//       GetLogger().error(err)
-//       SendWarningNotification('Activite')
-//     })
-// }
+if (options.activites) {
+  ManageActivites()
+    .then(() => {
+      GetLogger().info('Imported activites')
+    })
+    .catch((err) => {
+      GetLogger().error(err)
+      SendWarningNotification('Activite')
+    })
+}
 
-// if (options.organismes) {
-//   ManageOrganismes()
-//     .then(() => {
-//       GetLogger().info('Imported organismes')
-//     })
-//     .catch((err) => {
-//       GetLogger().error(err)
-//       SendWarningNotification('OrganismeParlementaire')
-//     })
-// }
+if (options.organismes) {
+  ManageOrganismes()
+    .then(() => {
+      GetLogger().info('Imported organismes')
+    })
+    .catch((err) => {
+      GetLogger().error(err)
+      SendWarningNotification('OrganismeParlementaire')
+    })
+}
 
-// if (options.organismesParlementaire) {
-//   ManageDeputeOrganismeParlementaire()
-//     .then(() => {
-//       GetLogger().info('Imported depute organismes')
-//     })
-//     .catch((err) => {
-//       GetLogger().error(err)
-//       SendWarningNotification('Deputes_OrganismeParlementaire')
-//     })
-// }
+if (options.organismesParlementaire) {
+  ManageDeputeOrganismeParlementaire()
+    .then(() => {
+      GetLogger().info('Imported depute organismes')
+    })
+    .catch((err) => {
+      GetLogger().error(err)
+      SendWarningNotification('Deputes_OrganismeParlementaire')
+    })
+}
 
-// if (options.ministeres) {
-//   ManageMinisteres()
-//     .then(() => {
-//       GetLogger().info('Imported Ministeres')
-//     })
-//     .catch((err) => {
-//       GetLogger().error(err)
-//       SendWarningNotification('Ministere')
-//     })
-// }
+if (options.ministeres) {
+  ManageMinisteres()
+    .then(() => {
+      GetLogger().info('Imported Ministeres')
+    })
+    .catch((err) => {
+      GetLogger().error(err)
+      SendWarningNotification('Ministere')
+    })
+}
 
-// if (options.ministres) {
-//   ManageMinistres()
-//     .then(() => {
-//       GetLogger().info('Imported Ministres')
-//     })
-//     .catch((err) => {
-//       GetLogger().error(err)
-//       SendWarningNotification('Ministre')
-//     })
-// }
-
-import { GetDeputesFromSupabaseWithRetries } from './Depute/WrapperSupabase'
-
-GetDeputesFromSupabaseWithRetries()
-  .then((ds) => {
-    console.log('Deputes retrieved:', ds)
-  })
-  .catch((err) => {
-    console.error(err)
-  })
+if (options.ministres) {
+  ManageMinistres()
+    .then(() => {
+      GetLogger().info('Imported Ministres')
+    })
+    .catch((err) => {
+      GetLogger().error(err)
+      SendWarningNotification('Ministre')
+    })
+}
