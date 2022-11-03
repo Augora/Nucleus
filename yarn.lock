@@ -2794,6 +2794,11 @@ pretty-format@^29.0.0, pretty-format@^29.0.3:
     ansi-styles "^5.0.0"
     react-is "^18.0.0"
 
+promise-throttle-all@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/promise-throttle-all/-/promise-throttle-all-1.1.1.tgz#982585b419bbb70278fc072d6a5e0c1664ff79de"
+  integrity sha512-AvTiJleGQaL5dw9Sq92gltktlhdSLj/Hs1LN1D2OxJNfiuZv5l4HfC3RhWMUneUu2eXergw3MBHo5Fd8ZZo7lg==
+
 prompts@^2.0.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/prompts/-/prompts-2.3.1.tgz#b63a9ce2809f106fa9ae1277c275b167af46ea05"
