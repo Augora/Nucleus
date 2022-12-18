@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@supabase/supabase-js": "^1.35.7",
+    "@supabase/supabase-js": "^2.2.1",
     "@types/cheerio": "^0.22.31",
     "@types/color": "^3.0.3",
     "axios": "^0.27.2",
