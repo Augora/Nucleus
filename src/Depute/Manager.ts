@@ -1,24 +1,30 @@
 import { throttleAll } from 'promise-throttle-all'
 
-import { MapDepute } from './Mapping'
-import { AreTheSameDeputes } from './Comparison'
-import { CompareLists, Action, DiffType } from '../Tools/Comparison'
-import { GetLogger } from '../Common/Logger'
 import {
-  GetDeputesFromNosDeputesFR,
-  GetDeputesBySlugFromNosDeputesFR,
-} from './WrapperNosDeputesFR'
+  CompareLists,
+  Action,
+  DiffType,
+  CompareGenericObjects,
+} from '../Tools/Comparison'
+import { GetLogger } from '../Common/Logger'
 import {
   SendNewDeputeNotification,
   SendDeputeChangeGroupNotification,
   SendStopDeputeMandatNotification,
 } from '../Common/SlackWrapper'
+
+import { MapDepute } from './Mapping'
+import {
+  GetDeputesFromNosDeputesFR,
+  GetDeputesBySlugFromNosDeputesFR,
+} from './WrapperNosDeputesFR'
 import {
   GetDeputesFromSupabase,
   CreateDeputeToSupabase,
   UpdateDeputeToSupabase,
   DeleteDeputeToSupabase,
 } from './WrapperSupabase'
+
 import { Database } from '../../Types/database.types'
 
 type Depute = Database['public']['Tables']['Depute']['Insert']
@@ -31,13 +37,16 @@ export async function ManageDeputes() {
     MapDepute(d)
   )
   const deputesFromSupabase = await GetDeputesFromSupabase()
+  GetLogger().info('Processing diffs...')
   const res = CompareLists(
     canonicalDeputesFromNosDeputesFR,
     deputesFromSupabase,
-    AreTheSameDeputes,
+    CompareGenericObjects,
     'Slug',
     true
   )
+  GetLogger().info('Processed diffs:', { diffCount: res.length })
+
   return throttleAll(
     1,
     res.map((action: DiffType<Depute>) => () => {
@@ -53,7 +62,10 @@ export async function ManageDeputes() {
           })
         })
       } else if (action.Action === Action.Update) {
-        GetLogger().info('Updating Depute:', { Slug: action.NewData.Slug })
+        GetLogger().info('Updating Depute:', {
+          Slug: action.NewData.Slug,
+          diffs: action.Diffs,
+        })
         return UpdateDeputeToSupabase(action.NewData).then(() => {
           GetLogger().info('Updated Depute:', { Slug: action.NewData.Slug })
           if (
