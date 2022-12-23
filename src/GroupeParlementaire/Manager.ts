@@ -3,7 +3,12 @@ import { delay, mergeMap, toArray, retry } from 'rxjs/operators'
 
 import { GetDeputesFromNosDeputesFR } from './WrapperNosDeputesFR'
 import { MapGroupeParlementaire } from './Mapping'
-import { CompareLists, Action, DiffType } from '../Tools/Comparison'
+import {
+  CompareLists,
+  Action,
+  DiffType,
+  CompareGenericObjects,
+} from '../Tools/Comparison'
 import { GetLogger } from '../Common/Logger'
 import {
   SendNewGroupeParlementaireNotification,
@@ -73,10 +78,7 @@ export async function ManageGroupes() {
   const res = CompareLists(
     canonicalGroupesFromNosDeputesFRWithDesc,
     groupesFromSupabase,
-    (a, b) =>
-      a.Sigle === b.Sigle &&
-      a.Actif === b.Actif &&
-      a.DescriptionWikipedia === b.DescriptionWikipedia,
+    CompareGenericObjects,
     'Sigle',
     true
   )
@@ -100,6 +102,7 @@ export async function ManageGroupes() {
         } else if (action.Action === Action.Update) {
           GetLogger().info('Updating GroupeParlementaire:', {
             Sigle: action.NewData.Sigle,
+            diffs: action.Diffs,
           })
           return UpdateGroupeParlementaireToSupabase(action.NewData).then(
             () => {

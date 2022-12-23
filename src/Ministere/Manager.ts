@@ -2,7 +2,12 @@ import { from, lastValueFrom } from 'rxjs'
 import { mergeMap } from 'rxjs/operators'
 
 import { GetMinisteresFromGouvernementFR } from './WrapperGouvernementFR'
-import { CompareLists, Action, DiffType } from '../Tools/Comparison'
+import {
+  CompareLists,
+  Action,
+  DiffType,
+  CompareGenericObjects,
+} from '../Tools/Comparison'
 import { GetLogger } from '../Common/Logger'
 import {
   GetMinisteresFromSupabase,
@@ -25,7 +30,7 @@ export async function ManageMinisteres() {
   const res = CompareLists(
     ministeresFromGouvernementFR,
     ministeresFromSupabase,
-    (a, b) => a.Nom === b.Nom && a.Slug === b.Slug,
+    CompareGenericObjects,
     'Slug',
     true
   )
@@ -46,6 +51,7 @@ export async function ManageMinisteres() {
         } else if (action.Action === Action.Update) {
           GetLogger().info('Updating Ministere:', {
             Nom: action.NewData.Nom,
+            diffs: action.Diffs,
           })
           return UpdateMinistereToSupabase(action.NewData).then(() => {
             GetLogger().info('Updated Ministere', {

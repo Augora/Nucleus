@@ -3,7 +3,12 @@ import { mergeMap } from 'rxjs/operators'
 
 import { GetOrganismesParlementairesFromNosDeputesFR } from './WrapperNosDeputesFR'
 import { MapOrganismeParlementaire } from './Mapping'
-import { CompareLists, Action, DiffType } from '../Tools/Comparison'
+import {
+  CompareLists,
+  Action,
+  DiffType,
+  CompareGenericObjects,
+} from '../Tools/Comparison'
 import { GetLogger } from '../Common/Logger'
 import {
   GetOrganismesFromSupabase,
@@ -32,8 +37,7 @@ export async function ManageOrganismes() {
   const res = CompareLists(
     canonicalOrganismesFromNosDeputesFR,
     organismesFromSupabase,
-    (a, b) =>
-      a.Nom === b.Nom && a.Type === b.Type && a.EstPermanent === b.EstPermanent,
+    CompareGenericObjects,
     'Slug',
     true
   )
@@ -59,6 +63,7 @@ export async function ManageOrganismes() {
           return UpdateOrganismeToSupabase(action.NewData).then(() => {
             GetLogger().info('Updated OrganismeParlementaire', {
               Nom: action.NewData.Nom,
+              diffs: action.Diffs,
             })
             // return SendNewGroupeParlementaireNotification(action.NewData)
           })

@@ -3,7 +3,12 @@ import { mergeMap } from 'rxjs/operators'
 
 import { GetDeputesInOrganisme } from './WrapperNosDeputesFR'
 import { MapDeputeOrganismeParlementaire } from './Mapping'
-import { CompareLists, Action, DiffType } from '../Tools/Comparison'
+import {
+  CompareLists,
+  Action,
+  DiffType,
+  CompareGenericObjects,
+} from '../Tools/Comparison'
 import { GetLogger } from '../Common/Logger'
 import {
   CreateDeputeOrganismeParlementaireToSupabase,
@@ -46,11 +51,7 @@ export async function ManageDeputeOrganismeParlementaire() {
   const res = CompareLists(
     deputeOrganismesCanonical,
     deputeOrganismeParlementaireFromSupabase,
-    (a, b) =>
-      a.Id === b.Id &&
-      a.DeputeSlug === b.DeputeSlug &&
-      a.OrganismeSlug === b.OrganismeSlug &&
-      a.Fonction === b.Fonction,
+    CompareGenericObjects,
     'Id',
     true
   )
@@ -75,10 +76,10 @@ export async function ManageDeputeOrganismeParlementaire() {
             })
           })
         } else if (action.Action === Action.Update) {
-          GetLogger().info(
-            'Updating DeputeOrganismeParlementaire:',
-            action.NewData
-          )
+          GetLogger().info('Updating DeputeOrganismeParlementaire:', {
+            Id: action.NewData.Id,
+            diffs: action.Diffs,
+          })
           return UpdateDeputeOrganismeParlementaireToSupabase(
             action.NewData
           ).then(() => {

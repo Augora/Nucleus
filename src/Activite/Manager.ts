@@ -2,8 +2,12 @@ import { from, lastValueFrom } from 'rxjs'
 import { mergeMap, retry } from 'rxjs/operators'
 
 import { MapActivites } from './Mapping'
-import { AreTheSameActivites } from './Comparison'
-import { CompareLists, Action, DiffType } from '../Tools/Comparison'
+import {
+  CompareLists,
+  Action,
+  DiffType,
+  CompareGenericObjects,
+} from '../Tools/Comparison'
 import { GetLogger } from '../Common/Logger'
 import { GetActiviesBySlugFromNosDeputesFR } from './WrapperNosDeputesFR'
 import { GetDeputesFromSupabase } from '../Depute/WrapperSupabase'
@@ -35,7 +39,7 @@ export async function ManageActivites() {
         const res = CompareLists(
           canonicalActivitesFromNosDeputesFR,
           activiteFromSupabase,
-          AreTheSameActivites,
+          CompareGenericObjects,
           'NumeroDeSemaine'
         )
         return lastValueFrom(
@@ -46,8 +50,8 @@ export async function ManageActivites() {
                 return CreateActiviteToSupabase(action.NewData)
               } else if (action.Action === Action.Update) {
                 GetLogger().info('Updating activite:', {
-                  from: action.PreviousData,
-                  to: action.NewData,
+                  Id: action.NewData.Id,
+                  diffs: action.Diffs,
                 })
                 return UpdateActiviteToSupabase(action.NewData)
               } else if (action.Action === Action.Remove) {
