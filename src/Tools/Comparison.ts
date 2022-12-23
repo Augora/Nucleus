@@ -74,7 +74,6 @@ export function CompareGenericObjects<T>(
   itemB: T,
   prefix: string = ''
 ): FieldDiff[] {
-  GetLogger().info('Comparing:', { itemA, itemB })
   const fields = Object.keys(itemA)
     // .concat(Object.keys(itemB)) // Not sure if we include destination fields
     .filter((v, i, a) => a.indexOf(v) === i)
@@ -107,22 +106,12 @@ export function CompareGenericObjects<T>(
     if (itemA[field] instanceof Array) {
       return itemA[field].flatMap((_, index) => {
         if (itemA[field][index] instanceof Object) {
-          GetLogger().info('Array of object:', {
-            itemA: itemA[field][index],
-            itemB: itemB[field][index],
-            prefix: `${field}[${index}]`,
-          })
           return CompareGenericObjects(
             itemA[field][index],
             itemB[field][index],
             `${field}[${index}]`
           )
         } else {
-          GetLogger().info('Array of values:', {
-            itemA: itemA[field][index],
-            itemB: itemB[field][index],
-            prefix: `${field}[${index}]`,
-          })
           return [
             {
               FieldName: `${prefix ? prefix + '.' : ''}${field}[${index}]`,
@@ -136,11 +125,6 @@ export function CompareGenericObjects<T>(
     }
 
     if (itemA[field] instanceof Object) {
-      GetLogger().info('Object:', {
-        itemA: itemA[field],
-        itemB: itemB[field],
-        prefix: processFieldName(field, prefix),
-      })
       return CompareGenericObjects(
         itemA[field],
         itemB[field],
@@ -148,11 +132,6 @@ export function CompareGenericObjects<T>(
       )
     }
 
-    GetLogger().info('field:', {
-      itemA: itemA[field],
-      itemB: itemB[field],
-      prefix: processFieldName(field, prefix),
-    })
     return CompareGenericFields(
       itemA[field],
       itemB[field],
@@ -183,10 +162,6 @@ export function CompareLists<T>(
     .map((itemInNewList) => {
       const itemInPreviousList =
         normalizedPreviousList[RetrieveIdByPath(itemInNewList, pathToID)]
-      GetLogger().info('CompareLists:', {
-        itemInPreviousList,
-        itemInNewList,
-      })
       if (itemInPreviousList) {
         const diff = areTheSameFunction(itemInNewList, itemInPreviousList)
         if (diff.length == 0) {
