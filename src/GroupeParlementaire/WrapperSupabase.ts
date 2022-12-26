@@ -12,21 +12,25 @@ async function handleSupabaseError<T>(response: PostgrestResponse<T>) {
   return Promise.resolve(response.data)
 }
 
-export function GetGroupesFromSupabase() {
+export async function GetGroupesFromSupabase() {
   return supabaseClient
     .from('GroupeParlementaire')
     .select()
     .then(handleSupabaseError)
 }
 
-export function CreateGroupeParlementaireToSupabase(data: GroupeParlementaire) {
+export async function CreateGroupeParlementaireToSupabase(
+  data: GroupeParlementaire
+) {
   return supabaseClient
     .from('GroupeParlementaire')
     .insert([data])
     .then(handleSupabaseError)
 }
 
-export function UpdateGroupeParlementaireToSupabase(data: GroupeParlementaire) {
+export async function UpdateGroupeParlementaireToSupabase(
+  data: GroupeParlementaire
+) {
   return supabaseClient
     .from('GroupeParlementaire')
     .update(data)

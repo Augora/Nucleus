@@ -12,18 +12,18 @@ async function handleSupabaseError<T>(response: PostgrestResponse<T>) {
   return Promise.resolve(response.data)
 }
 
-export function GetMinisteresFromSupabase() {
+export async function GetMinisteresFromSupabase() {
   return supabaseClient.from('Ministere').select().then(handleSupabaseError)
 }
 
-export function CreateMinistereToSupabase(data: Ministere) {
+export async function CreateMinistereToSupabase(data: Ministere) {
   return supabaseClient
     .from('Ministere')
     .insert([data])
     .then(handleSupabaseError)
 }
 
-export function UpdateMinistereToSupabase(data: Ministere) {
+export async function UpdateMinistereToSupabase(data: Ministere) {
   return supabaseClient
     .from('Ministere')
     .update(data)

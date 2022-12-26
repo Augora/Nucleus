@@ -1,5 +1,4 @@
-import { from, lastValueFrom } from 'rxjs'
-import { mergeMap, retry } from 'rxjs/operators'
+import { throttleAll } from 'promise-throttle-all'
 
 import { MapActivites } from './Mapping'
 import {
@@ -24,46 +23,43 @@ type Activite = Database['public']['Tables']['Activite']['Insert']
 
 export async function ManageActivites() {
   const detputesFromSupabase = await GetDeputesFromSupabase()
-  return lastValueFrom(
-    from(detputesFromSupabase).pipe(
-      mergeMap(async (depute: Depute) => {
-        const activitesFromNosDeputesFR =
-          await GetActiviesBySlugFromNosDeputesFR(depute.Slug)
-        const canonicalActivitesFromNosDeputesFR = MapActivites(
-          depute,
-          activitesFromNosDeputesFR
-        )
-        const activiteFromSupabase = await GetActivitesBySlugFromSupabase(
-          depute.Slug
-        )
-        const res = CompareLists(
-          canonicalActivitesFromNosDeputesFR,
-          activiteFromSupabase,
-          CompareGenericObjects,
-          'NumeroDeSemaine'
-        )
-        return lastValueFrom(
-          from(res).pipe(
-            mergeMap((action: DiffType<Activite>) => {
-              if (action.Action === Action.Create) {
-                GetLogger().info('Creating activite:', action.NewData)
-                return CreateActiviteToSupabase(action.NewData)
-              } else if (action.Action === Action.Update) {
-                GetLogger().info('Updating activite:', {
-                  Id: action.NewData.Id,
-                  diffs: action.Diffs,
-                })
-                return UpdateActiviteToSupabase(action.NewData)
-              } else if (action.Action === Action.Remove) {
-                GetLogger().info('Updating activite:', action.PreviousData)
-                return DeleteActiviteToSupabase(action.PreviousData)
-              }
-            }, 20),
-            retry(2)
-          )
-        )
-      }, 1),
-      retry(2)
-    )
+  return throttleAll(
+    1,
+    detputesFromSupabase.map((depute: Depute) => async () => {
+      const activitesFromNosDeputesFR = await GetActiviesBySlugFromNosDeputesFR(
+        depute.Slug
+      )
+      const canonicalActivitesFromNosDeputesFR = MapActivites(
+        depute,
+        activitesFromNosDeputesFR
+      )
+      const activiteFromSupabase = await GetActivitesBySlugFromSupabase(
+        depute.Slug
+      )
+      const res = CompareLists(
+        canonicalActivitesFromNosDeputesFR,
+        activiteFromSupabase,
+        CompareGenericObjects,
+        'NumeroDeSemaine'
+      )
+      return throttleAll(
+        1,
+        res.map((action: DiffType<Activite>) => async () => {
+          if (action.Action === Action.Create) {
+            GetLogger().info('Creating activite:', action.NewData)
+            return CreateActiviteToSupabase(action.NewData)
+          } else if (action.Action === Action.Update) {
+            GetLogger().info('Updating activite:', {
+              Id: action.NewData.Id,
+              diffs: action.Diffs,
+            })
+            return UpdateActiviteToSupabase(action.NewData)
+          } else if (action.Action === Action.Remove) {
+            GetLogger().info('Updating activite:', action.PreviousData)
+            return DeleteActiviteToSupabase(action.PreviousData)
+          }
+        })
+      )
+    })
   )
 }

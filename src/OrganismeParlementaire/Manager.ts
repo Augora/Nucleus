@@ -1,5 +1,4 @@
-import { from } from 'rxjs'
-import { mergeMap } from 'rxjs/operators'
+import { throttleAll } from 'promise-throttle-all'
 
 import { GetOrganismesParlementairesFromNosDeputesFR } from './WrapperNosDeputesFR'
 import { MapOrganismeParlementaire } from './Mapping'
@@ -38,42 +37,40 @@ export async function ManageOrganismes() {
     canonicalOrganismesFromNosDeputesFR,
     organismesFromSupabase,
     CompareGenericObjects,
-    'Slug',
-    true
+    'Slug'
   )
   GetLogger().info('Comparison:', res)
-  return from(res)
-    .pipe(
-      mergeMap((action: DiffType<OrganismeParlementaire>) => {
-        GetLogger().info('Processing OrganismeParlementaire:', {
+  return throttleAll(
+    1,
+    res.map((action: DiffType<OrganismeParlementaire>) => () => {
+      GetLogger().info('Processing OrganismeParlementaire:', {
+        Nom: action.NewData.Nom,
+      })
+      if (action.Action === Action.Create) {
+        GetLogger().info('Creating Organisme:', { Nom: action.NewData.Nom })
+        return CreateOrganismeToSupabase(action.NewData).then(() => {
+          GetLogger().info('Created Organisme:', {
+            Nom: action.NewData.Nom,
+          })
+          // return SendNewOrganismeParlementaireNotification(action.NewData)
+        })
+      } else if (action.Action === Action.Update) {
+        GetLogger().info('Updating OrganismeParlementaire:', {
           Nom: action.NewData.Nom,
         })
-        if (action.Action === Action.Create) {
-          GetLogger().info('Creating Organisme:', { Nom: action.NewData.Nom })
-          return CreateOrganismeToSupabase(action.NewData).then(() => {
-            GetLogger().info('Created Organisme:', {
-              Nom: action.NewData.Nom,
-            })
-            // return SendNewOrganismeParlementaireNotification(action.NewData)
-          })
-        } else if (action.Action === Action.Update) {
-          GetLogger().info('Updating OrganismeParlementaire:', {
+        return UpdateOrganismeToSupabase(action.NewData).then(() => {
+          GetLogger().info('Updated OrganismeParlementaire', {
             Nom: action.NewData.Nom,
+            diffs: action.Diffs,
           })
-          return UpdateOrganismeToSupabase(action.NewData).then(() => {
-            GetLogger().info('Updated OrganismeParlementaire', {
-              Nom: action.NewData.Nom,
-              diffs: action.Diffs,
-            })
-            // return SendNewGroupeParlementaireNotification(action.NewData)
-          })
-        } else {
-          GetLogger().info('Nothing to do on OrganismeParlementaire:', {
-            Nom: action.NewData.Nom,
-          })
-          return Promise.resolve()
-        }
-      }, 1)
-    )
-    .toPromise()
+          // return SendNewGroupeParlementaireNotification(action.NewData)
+        })
+      } else {
+        GetLogger().info('Nothing to do on OrganismeParlementaire:', {
+          Nom: action.NewData.Nom,
+        })
+        return Promise.resolve()
+      }
+    })
+  )
 }

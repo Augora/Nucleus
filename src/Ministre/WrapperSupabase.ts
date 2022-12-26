@@ -12,21 +12,30 @@ async function handleSupabaseError<T>(response: PostgrestResponse<T>) {
   return Promise.resolve(response.data)
 }
 
-export function GetMinistresFromSupabase() {
+export async function GetMinistresFromSupabase() {
   return supabaseClient.from('Ministre').select().then(handleSupabaseError)
 }
 
-export function CreateMinistreToSupabase(data: Ministre) {
+export async function CreateMinistreToSupabase(data: Ministre) {
   return supabaseClient
     .from('Ministre')
     .insert([data])
     .then(handleSupabaseError)
 }
 
-export function UpdateMinistreToSupabase(data: Ministre) {
+export async function UpdateMinistreToSupabase(data: Ministre) {
   return supabaseClient
     .from('Ministre')
     .update(data)
     .match({ Slug: data.Slug })
+    .then(handleSupabaseError)
+}
+
+export async function DeleteMinistreToSupabase(data: Ministre) {
+  return supabaseClient
+    .from('Ministre')
+    .delete()
+    .match({ Slug: data.Slug })
+    .select()
     .then(handleSupabaseError)
 }

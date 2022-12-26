@@ -13,21 +13,21 @@ async function handleSupabaseError<T>(response: PostgrestResponse<T>) {
   return Promise.resolve(response.data)
 }
 
-export function GetOrganismesFromSupabase() {
+export async function GetOrganismesFromSupabase() {
   return supabaseClient
     .from('OrganismeParlementaire')
     .select()
     .then(handleSupabaseError)
 }
 
-export function CreateOrganismeToSupabase(data: OrganismeParlementaire) {
+export async function CreateOrganismeToSupabase(data: OrganismeParlementaire) {
   return supabaseClient
     .from('OrganismeParlementaire')
     .insert([data])
     .then(handleSupabaseError)
 }
 
-export function UpdateOrganismeToSupabase(data: OrganismeParlementaire) {
+export async function UpdateOrganismeToSupabase(data: OrganismeParlementaire) {
   return supabaseClient
     .from('OrganismeParlementaire')
     .update(data)
@@ -35,7 +35,7 @@ export function UpdateOrganismeToSupabase(data: OrganismeParlementaire) {
     .then(handleSupabaseError)
 }
 
-export function DeleteOrganismeToSupabase(data: OrganismeParlementaire) {
+export async function DeleteOrganismeToSupabase(data: OrganismeParlementaire) {
   return supabaseClient
     .from('OrganismeParlementaire')
     .delete()

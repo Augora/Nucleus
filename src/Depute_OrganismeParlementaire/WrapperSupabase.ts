@@ -56,7 +56,7 @@ export async function CreateDeputeOrganismeParlementaireToSupabase(
     .then(handleSupabaseError)
 }
 
-export function UpdateDeputeOrganismeParlementaireToSupabase(
+export async function UpdateDeputeOrganismeParlementaireToSupabase(
   data: Depute_OrganismeParlementaire
 ) {
   return supabaseClient
@@ -66,7 +66,7 @@ export function UpdateDeputeOrganismeParlementaireToSupabase(
     .then(handleSupabaseError)
 }
 
-export function DeleteDeputeOrganismeParlementaireToSupabase(
+export async function DeleteDeputeOrganismeParlementaireToSupabase(
   data: Depute_OrganismeParlementaire
 ) {
   return supabaseClient

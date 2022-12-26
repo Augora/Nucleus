@@ -1,5 +1,4 @@
-import { from, lastValueFrom } from 'rxjs'
-import { mergeMap } from 'rxjs/operators'
+import { throttleAll } from 'promise-throttle-all'
 
 import { GetDeputesInOrganisme } from './WrapperNosDeputesFR'
 import { MapDeputeOrganismeParlementaire } from './Mapping'
@@ -42,7 +41,7 @@ export async function ManageDeputeOrganismeParlementaire() {
           return MapDeputeOrganismeParlementaire(
             org.organismeSlug,
             d.slug,
-            d.function
+            d.fonction
           )
         })
       )
@@ -52,60 +51,61 @@ export async function ManageDeputeOrganismeParlementaire() {
     deputeOrganismesCanonical,
     deputeOrganismeParlementaireFromSupabase,
     CompareGenericObjects,
-    'Id',
-    true
+    'Id'
   )
+  GetLogger().info('deputeOrganismeParlementaireFromSupabase:', {
+    deputeOrganismeParlementaireFromSupabase,
+  })
 
-  return lastValueFrom(
-    from(res).pipe(
-      mergeMap((action: DiffType<Depute_OrganismeParlementaire>) => {
-        GetLogger().info('Processing DeputeOrganismeParlementaire:', {
-          Id: action.NewData.Id,
-          Action: action.Action,
-        })
-        if (action.Action === Action.Create) {
-          GetLogger().info(
-            'Creating DeputeOrganismeParlementaire:',
-            action.NewData
-          )
-          return CreateDeputeOrganismeParlementaireToSupabase(
-            action.NewData
-          ).then(() => {
-            GetLogger().info('Created DeputeOrganismeParlementaire:', {
-              Id: action.NewData.Id,
-            })
-          })
-        } else if (action.Action === Action.Update) {
-          GetLogger().info('Updating DeputeOrganismeParlementaire:', {
+  return throttleAll(
+    1,
+    res.map((action: DiffType<Depute_OrganismeParlementaire>) => () => {
+      GetLogger().info('Processing DeputeOrganismeParlementaire:', {
+        Id: action.NewData.Id,
+        Action: action.Action,
+      })
+      if (action.Action === Action.Create) {
+        GetLogger().info(
+          'Creating DeputeOrganismeParlementaire:',
+          action.NewData
+        )
+        return CreateDeputeOrganismeParlementaireToSupabase(
+          action.NewData
+        ).then(() => {
+          GetLogger().info('Created DeputeOrganismeParlementaire:', {
             Id: action.NewData.Id,
-            diffs: action.Diffs,
           })
-          return UpdateDeputeOrganismeParlementaireToSupabase(
-            action.NewData
-          ).then(() => {
-            GetLogger().info('Updated DeputeOrganismeParlementaire:', {
-              Id: action.NewData.Id,
-            })
+        })
+      } else if (action.Action === Action.Update) {
+        GetLogger().info('Updating DeputeOrganismeParlementaire:', {
+          Id: action.NewData.Id,
+          diffs: action.Diffs,
+        })
+        return UpdateDeputeOrganismeParlementaireToSupabase(
+          action.NewData
+        ).then(() => {
+          GetLogger().info('Updated DeputeOrganismeParlementaire:', {
+            Id: action.NewData.Id,
           })
-        } else if (action.Action === Action.Remove) {
-          GetLogger().info(
-            'Removing DeputeOrganismeParlementaire:',
-            action.NewData
-          )
-          return DeleteDeputeOrganismeParlementaireToSupabase(
-            action.NewData
-          ).then(() => {
-            GetLogger().info('Removed DeputeOrganismeParlementaire:', {
-              Id: action.NewData.Id,
-            })
+        })
+      } else if (action.Action === Action.Remove) {
+        GetLogger().info(
+          'Removing DeputeOrganismeParlementaire:',
+          action.NewData
+        )
+        return DeleteDeputeOrganismeParlementaireToSupabase(
+          action.NewData
+        ).then(() => {
+          GetLogger().info('Removed DeputeOrganismeParlementaire:', {
+            Id: action.NewData.Id,
           })
-        } else if (action.Action === Action.None) {
-          GetLogger().info('Nothing to do on: ', action.NewData)
-          return Promise.resolve()
-        } else {
-          return Promise.resolve()
-        }
-      }, 1)
-    )
+        })
+      } else if (action.Action === Action.None) {
+        GetLogger().info('Nothing to do on: ', action.NewData)
+        return Promise.resolve()
+      } else {
+        return Promise.resolve()
+      }
+    })
   )
 }

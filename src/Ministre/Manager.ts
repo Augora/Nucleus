@@ -1,5 +1,4 @@
-import { from, lastValueFrom } from 'rxjs'
-import { mergeMap } from 'rxjs/operators'
+import { throttleAll } from 'promise-throttle-all'
 
 import { GetMinistresFromGouvernementFR } from './WrapperGouvernementFR'
 import {
@@ -13,6 +12,7 @@ import {
   GetMinistresFromSupabase,
   CreateMinistreToSupabase,
   UpdateMinistreToSupabase,
+  DeleteMinistreToSupabase,
 } from './WrapperSupabase'
 import { Database } from '../../Types/database.types'
 
@@ -28,40 +28,49 @@ export async function ManageMinistres() {
     ministresFromGouvernementFR,
     ministresFromSupabase,
     CompareGenericObjects,
-    'Slug',
-    true
+    'Slug'
   )
   GetLogger().info('Comparison:', res)
-  return lastValueFrom(
-    from(res).pipe(
-      mergeMap((action: DiffType<Ministre>) => {
-        GetLogger().info('Processing Ministre:', {
+
+  return throttleAll(
+    1,
+    res.map((action: DiffType<Ministre>) => () => {
+      GetLogger().info('Processing Ministre:', {
+        Nom: action.NewData.Nom,
+      })
+      if (action.Action === Action.Create) {
+        GetLogger().info('Creating Ministre:', { Nom: action.NewData.Nom })
+        return CreateMinistreToSupabase(action.NewData).then(() => {
+          GetLogger().info('Created Ministre:', {
+            Nom: action.NewData.Nom,
+          })
+        })
+      } else if (action.Action === Action.Update) {
+        GetLogger().info('Updating Ministre:', {
+          Nom: action.NewData.Nom,
+          diffs: action.Diffs,
+        })
+        return UpdateMinistreToSupabase(action.NewData).then(() => {
+          GetLogger().info('Updated Ministre', {
+            Nom: action.NewData.Nom,
+          })
+        })
+      }
+      if (action.Action === Action.Remove) {
+        GetLogger().info('Removing Ministre:', {
           Nom: action.NewData.Nom,
         })
-        if (action.Action === Action.Create) {
-          GetLogger().info('Creating Ministre:', { Nom: action.NewData.Nom })
-          return CreateMinistreToSupabase(action.NewData).then(() => {
-            GetLogger().info('Created Ministre:', {
-              Nom: action.NewData.Nom,
-            })
-          })
-        } else if (action.Action === Action.Update) {
-          GetLogger().info('Updating Ministre:', {
-            Nom: action.NewData.Nom,
-            diffs: action.Diffs,
-          })
-          return UpdateMinistreToSupabase(action.NewData).then(() => {
-            GetLogger().info('Updated Ministre', {
-              Nom: action.NewData.Nom,
-            })
-          })
-        } else {
-          GetLogger().info('Nothing to do on Ministre:', {
+        return DeleteMinistreToSupabase(action.NewData).then(() => {
+          GetLogger().info('Removed Ministre', {
             Nom: action.NewData.Nom,
           })
-          return Promise.resolve()
-        }
-      }, 1)
-    )
+        })
+      } else {
+        GetLogger().info('Nothing to do on Ministre:', {
+          Nom: action.NewData.Nom,
+        })
+        return Promise.resolve()
+      }
+    })
   )
 }
