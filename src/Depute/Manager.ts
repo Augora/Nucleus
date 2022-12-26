@@ -46,8 +46,6 @@ export async function ManageDeputes() {
   )
   GetLogger().info('Processed diffs:', { diffCount: res.length, diffs: res })
 
-  return Promise.resolve()
-
   return throttleAll(
     1,
     res.map((action: DiffType<Depute>) => () => {
