@@ -41,6 +41,18 @@ export function CompareGenericFields<T>(
   fieldB: T,
   fieldName: string
 ): FieldDiff {
+  if (
+    (isUndefined(fieldA) || isNull(fieldA)) &&
+    (isUndefined(fieldB) || isNull(fieldB))
+  ) {
+    return {
+      FieldAValue: fieldA,
+      FieldBValue: fieldB,
+      FieldName: fieldName,
+      Reason: 'Both fields are Null of Undefined',
+      IsSame: true,
+    }
+  }
   if (isUndefined(fieldA) || isNull(fieldA)) {
     return {
       FieldAValue: fieldA,

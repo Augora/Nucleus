@@ -179,6 +179,27 @@ describe('CompareLists function', () => {
       expect(res[0].Diffs[0].IsSame).toBe(false)
     })
 
+    it('should compare two lists, but a field is missing in desination', () => {
+      const listA = [
+        {
+          Slug: 'kbs',
+          Age: null,
+        },
+      ]
+      const listB = [
+        {
+          Slug: 'kbs',
+        },
+      ]
+      const res = CompareLists<ComplexData>(
+        listA,
+        listB,
+        CompareGenericObjects,
+        'Slug'
+      )
+      expect(res.length).toBe(0)
+    })
+
     it('should compare two lists, returns one diff which is Mandat.DebutMandat', () => {
       const listA = [
         {

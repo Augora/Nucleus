@@ -42,10 +42,11 @@ export async function ManageDeputes() {
     canonicalDeputesFromNosDeputesFR,
     deputesFromSupabase,
     CompareGenericObjects,
-    'Slug',
-    true
+    'Slug'
   )
-  GetLogger().info('Processed diffs:', { diffCount: res.length })
+  GetLogger().info('Processed diffs:', { diffCount: res.length, diffs: res })
+
+  return Promise.resolve()
 
   return throttleAll(
     1,
