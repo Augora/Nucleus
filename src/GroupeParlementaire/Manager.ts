@@ -82,7 +82,7 @@ export async function ManageGroupes() {
     'Sigle'
   )
   GetLogger().info('Comparison:', res)
-  return await throttleAll(
+  return throttleAll(
     1,
     res.map((action: DiffType<GroupeParlementaire>) => () => {
       GetLogger().info('Processing GroupeParlementaire:', {

@@ -212,7 +212,7 @@ export function CompareLists<T>(
         normalizedPreviousList[RetrieveIdByPath(itemInNewList, pathToID)]
       if (itemInPreviousList) {
         const diff = areTheSameFunction(itemInNewList, itemInPreviousList)
-        if (diff.length == 0) {
+        if (diff.length === 0) {
           return {
             Action: Action.None,
             NewData: itemInNewList,
@@ -241,7 +241,7 @@ export function CompareLists<T>(
         normalizedNewList[RetrieveIdByPath(itemInPreviousList, pathToID)]
       if (itemInNewList) {
         const diff = areTheSameFunction(itemInNewList, itemInPreviousList)
-        if (diff.length == 0) {
+        if (diff.length === 0) {
           return {
             Action: Action.None,
             NewData: itemInNewList,
