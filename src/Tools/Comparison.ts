@@ -1,4 +1,4 @@
-import { isNull, isUndefined } from 'lodash'
+import { isNull, isUndefined, isString, isArray, isObject } from 'lodash'
 import { GetLogger } from '../Common/Logger'
 
 export interface DiffType<T> {
@@ -21,6 +21,11 @@ export interface FieldDiff {
   FieldBValue: any
   Reason: string
   IsSame: boolean
+}
+
+const IdFromFieldName = {
+  AncienMandat: 'AncienMandatComplet',
+  Adresses: 'AdresseComplete',
 }
 
 export function RetrieveIdByPath<T>(item: T, pathToID: string): string {
@@ -81,6 +86,32 @@ export function CompareGenericFields<T>(
   }
 }
 
+function compareArrayOfStrings(
+  itemA: string[],
+  itemB: string[],
+  prefix: string = ''
+): FieldDiff[] {
+  return itemA.map((ia, i) => {
+    if (!itemB.includes(ia)) {
+      return {
+        FieldName: `${prefix}[${i}]`,
+        FieldAValue: ia,
+        FieldBValue: itemB,
+        Reason: 'Item A is missing in array B',
+        IsSame: false,
+      }
+    } else {
+      return {
+        FieldName: `${prefix}[${i}]`,
+        FieldAValue: ia,
+        FieldBValue: itemB,
+        Reason: 'Item A is in array B',
+        IsSame: true,
+      }
+    }
+  })
+}
+
 export function CompareGenericObjects<T>(
   itemA: T,
   itemB: T,
@@ -115,28 +146,33 @@ export function CompareGenericObjects<T>(
   }
 
   const diffs: FieldDiff[] = fields.flatMap((field) => {
-    if (itemA[field] instanceof Array) {
-      return itemA[field].flatMap((_, index) => {
-        if (itemA[field][index] instanceof Object) {
-          return CompareGenericObjects(
-            itemA[field][index],
-            itemB[field][index],
-            `${field}[${index}]`
-          )
-        } else {
-          return [
-            {
-              FieldName: `${prefix ? prefix + '.' : ''}${field}[${index}]`,
-              FieldAValue: itemA[field][index],
-              FieldBValue: itemB[field][index],
-              IsSame: itemA[field][index] === itemB[field][index],
-            },
-          ]
-        }
-      })
+    if (isArray(itemA[field])) {
+      if (isString(itemA[field][0])) {
+        return compareArrayOfStrings(
+          itemA[field],
+          itemB[field],
+          processFieldName(field, prefix)
+        )
+      }
+
+      return CompareLists(
+        itemA[field],
+        itemB[field],
+        CompareGenericObjects,
+        IdFromFieldName[field]
+      ).flatMap((d) =>
+        d.Diffs.map((ds) =>
+          Object.assign({}, ds, {
+            FieldName: processFieldName(
+              ds.FieldName,
+              processFieldName(field, prefix)
+            ),
+          })
+        )
+      )
     }
 
-    if (itemA[field] instanceof Object) {
+    if (isObject(itemA[field])) {
       return CompareGenericObjects(
         itemA[field],
         itemB[field],

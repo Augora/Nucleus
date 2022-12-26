@@ -137,15 +137,6 @@ describe('CompareLists function', () => {
   })
 
   describe('Complex Model', () => {
-    interface ComplexData {
-      Slug: string
-      Age?: number
-      Mandat?: {
-        DebutMandat: string
-      }
-      Mail?: string[]
-    }
-
     it('should compare two empty lists, returns no diff', () => {
       const listA = []
       const listB = []
@@ -166,14 +157,8 @@ describe('CompareLists function', () => {
           Age: 30,
         },
       ]
-      const res = CompareLists<ComplexData>(
-        listA,
-        listB,
-        CompareGenericObjects,
-        'Slug'
-      )
+      const res = CompareLists(listA, listB, CompareGenericObjects, 'Slug')
       expect(res.length).toBe(1)
-      console.log(res)
       expect(res[0].Diffs.length > 0).toBe(true)
       expect(res[0].Diffs[0].FieldName).toBe('Age')
       expect(res[0].Diffs[0].IsSame).toBe(false)
@@ -191,12 +176,7 @@ describe('CompareLists function', () => {
           Slug: 'kbs',
         },
       ]
-      const res = CompareLists<ComplexData>(
-        listA,
-        listB,
-        CompareGenericObjects,
-        'Slug'
-      )
+      const res = CompareLists(listA, listB, CompareGenericObjects, 'Slug')
       expect(res.length).toBe(0)
     })
 
@@ -264,6 +244,71 @@ describe('CompareLists function', () => {
       expect(res[0].Diffs.length > 0).toBe(true)
       expect(res[0].Diffs[0].FieldName).toBe('Mail[1]')
       expect(res[0].Diffs[0].IsSame).toBe(false)
+    })
+
+    it('should compare two lists, but the values are shuffled', () => {
+      const listA = [
+        {
+          Slug: 'kbs',
+          Mail: ['test', 'lel@oklm.fr'],
+        },
+      ]
+      const listB = [
+        {
+          Slug: 'kbs',
+          Mail: ['lel@oklm.fr', 'test'],
+        },
+      ]
+      const res = CompareLists(listA, listB, CompareGenericObjects, '')
+      expect(res.length).toBe(0)
+    })
+
+    it('should compare two lists, but the objects are shuffled', () => {
+      const listA = [
+        {
+          Slug: 'kbs',
+          AncienMandat: [
+            { AncienMandatComplet: 'testb' },
+            { AncienMandatComplet: 'test' },
+          ],
+        },
+      ]
+      const listB = [
+        {
+          Slug: 'kbs',
+          AncienMandat: [
+            { AncienMandatComplet: 'test' },
+            { AncienMandatComplet: 'testb' },
+          ],
+        },
+      ]
+      const res = CompareLists(listA, listB, CompareGenericObjects, '')
+      expect(res.length).toBe(0)
+    })
+
+    it('should compare two lists, but the objects are shuffled and different', () => {
+      const listA = [
+        {
+          Slug: 'kbs',
+          AncienMandat: [
+            { AncienMandatComplet: 'testb', otherField: 'ok' },
+            { AncienMandatComplet: 'test' },
+          ],
+        },
+      ]
+      const listB = [
+        {
+          Slug: 'kbs',
+          AncienMandat: [
+            { AncienMandatComplet: 'test' },
+            { AncienMandatComplet: 'testb', otherField: 'NOK' },
+          ],
+        },
+      ]
+      const res = CompareLists(listA, listB, CompareGenericObjects, '')
+      expect(res.length).toBe(1)
+      expect(res[0].Diffs.length).toBe(1)
+      expect(res[0].Diffs[0].FieldName).toBe('AncienMandat.otherField')
     })
   })
 })
