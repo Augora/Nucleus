@@ -55,9 +55,7 @@ export async function ManageGroupes() {
 
       return {
         title: gp.Sigle,
-        desc: await GetGroupeParlementaireExplainText(
-          encodeURI(gp.IDWikipedia)
-        ),
+        desc: await GetGroupeParlementaireExplainText(gp.IDWikipedia),
       }
     })
   )
@@ -107,7 +105,7 @@ export async function ManageGroupes() {
           GetLogger().info('Updated GroupeParlementaire', {
             Sigle: action.NewData.Sigle,
           })
-          return SendNewGroupeParlementaireNotification(action.NewData)
+          // return SendNewGroupeParlementaireNotification(action.NewData)
         })
       } else {
         GetLogger().info('Nothing to do on GroupeParlementaire:', {
