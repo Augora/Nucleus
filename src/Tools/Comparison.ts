@@ -5,7 +5,7 @@ export interface DiffType<T> {
   Action: Action
   NewData: T
   PreviousData: T
-  Diffs?: FieldDiff[]
+  Diffs: FieldDiff[]
 }
 
 export enum Action {
@@ -217,6 +217,7 @@ export function CompareLists<T>(
             Action: Action.None,
             NewData: itemInNewList,
             PreviousData: itemInPreviousList,
+            Diffs: [],
           }
         } else {
           return {
@@ -231,6 +232,7 @@ export function CompareLists<T>(
           Action: Action.Create,
           NewData: itemInNewList,
           PreviousData: itemInPreviousList,
+          Diffs: [],
         }
       }
     })
@@ -246,12 +248,14 @@ export function CompareLists<T>(
             Action: Action.None,
             NewData: itemInNewList,
             PreviousData: itemInPreviousList,
+            Diffs: [],
           }
         } else {
           return {
             Action: Action.None,
             NewData: itemInNewList,
             PreviousData: itemInPreviousList,
+            Diffs: [],
           }
         }
       } else {
@@ -259,6 +263,7 @@ export function CompareLists<T>(
           Action: Action.Remove,
           NewData: itemInPreviousList,
           PreviousData: itemInPreviousList,
+          Diffs: [],
         }
       }
     })
