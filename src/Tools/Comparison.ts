@@ -1,4 +1,11 @@
-import { isNull, isUndefined, isString, isArray, isObject } from 'lodash'
+import {
+  isNull,
+  isUndefined,
+  isString,
+  isArray,
+  isObject,
+  toString,
+} from 'lodash'
 import { GetLogger } from '../Common/Logger'
 
 export interface DiffType<T> {
@@ -29,6 +36,9 @@ const IdFromFieldName = {
 }
 
 export function RetrieveIdByPath<T>(item: T, pathToID: string): string {
+  if (isNull(pathToID) || isUndefined(pathToID)) {
+    return toString(item)
+  }
   return pathToID.split('.').reduce((prevValue, currPathToApply) => {
     return prevValue[currPathToApply]
   }, item)
