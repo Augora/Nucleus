@@ -24,10 +24,12 @@ export async function GetMinisteresFromGouvernementFR(): Promise<Ministere[]> {
 
   const $ = cheerio.load(body)
 
-  $('.grand-ministere-titre').map((i, ministere) => {
+  $('.fr-grid-row > .fr-col > h2').map((i, ministre) => {
+    const ministere = $(ministre).text()
+
     ministeres.push({
-      Slug: slugify($(ministere).text()),
-      Nom: $(ministere).text(),
+      Slug: slugify(ministere),
+      Nom: ministere,
     })
   })
 

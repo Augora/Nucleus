@@ -19,22 +19,18 @@ export async function GetMinistresFromGouvernementFR(): Promise<Ministre[]> {
 
   const $ = cheerio.load(body)
 
-  $('div[id*="minister_"]').map((i, ministre) => {
+  $('div.fr-cards-group > .fr-col-12 > .fr-card').map((i, ministre) => {
     const nom = $(ministre)
-      .find(
-        '.ministre-grand-ministere > .wrapper-nom-fonction > .ministre-name-h3'
-      )
+      .find('.fr-card__body > .fr-card__content > .fr-card__title > a')
       .text()
     const fonction = $(ministre)
-      .find(
-        '.ministre-grand-ministere > .wrapper-nom-fonction > .ministre-fonction'
-      )
+      .find('.fr-card__body > .fr-card__content > .fr-card__desc')
       .text()
+    console.log($(ministre).parent().prev().prev().hasClass('fr-grid-row'))
     const ministere = slugify(
-      $(ministre)
-        .find('.bloc-grand-ministere-entete > .grand-ministere-titre')
-        .text()
+      $(ministre).parent().parent().prev().find('.fr-col > h2').text()
     )
+
     ministres.push({
       Slug: slugify(nom),
       Nom: nom,
@@ -42,40 +38,7 @@ export async function GetMinistresFromGouvernementFR(): Promise<Ministre[]> {
       NomDeFamille: nom.split(/(\S+)(\s+)(.+)/)[3],
       Fonction: fonction,
       FonctionLong: fonction,
-      Ministere: ministere ? ministere : 'premier-ministre',
-    })
-  })
-
-  $('.clearfix > .ministre').map((i, assistant) => {
-    const nom = $(assistant)
-      .find('.wrapper-nom-fonction > .ministre-name-h3')
-      .text()
-    const fonctionLong = $(assistant)
-      .find('.wrapper-nom-fonction > .ministre-fonction')
-      .text()
-    const split = fonctionLong.split(
-      /^(.*)(, chargé |, chargée )(([a-z\s']+)([A-Z].+)*)*$/
-    )
-    const fonction = split[1] ? split[1].trim() : null
-    const charge = split[5] ? split[5].trim() : null
-    const ministere = slugify(
-      $(assistant)
-        .parent()
-        .parent()
-        .parent()
-        .find('.grand-ministere-titre')
-        .text()
-    )
-
-    ministres.push({
-      Slug: slugify(nom),
-      Nom: nom,
-      Prenom: nom.split(/(\S+)(\s+)(.+)/)[1],
-      NomDeFamille: nom.split(/(\S+)(\s+)(.+)/)[3],
-      Fonction: fonction,
-      Charge: charge,
-      FonctionLong: fonctionLong,
-      Ministere: ministere ? ministere : 'premier-ministre',
+      Ministere: ministere,
     })
   })
 
