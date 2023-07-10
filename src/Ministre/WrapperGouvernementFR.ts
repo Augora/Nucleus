@@ -26,7 +26,6 @@ export async function GetMinistresFromGouvernementFR(): Promise<Ministre[]> {
     const fonction = $(ministre)
       .find('.fr-card__body > .fr-card__content > .fr-card__desc')
       .text()
-    console.log($(ministre).parent().prev().prev().hasClass('fr-grid-row'))
     const ministere = slugify(
       $(ministre).parent().parent().prev().find('.fr-col > h2').text()
     )
