@@ -41,5 +41,8 @@ export async function GetMinistresFromGouvernementFR(): Promise<Ministre[]> {
     })
   })
 
+  if (ministres.length === 0)
+    return Promise.reject('No ministre retrieved from gouvernement.fr')
+
   return Promise.resolve(ministres)
 }
