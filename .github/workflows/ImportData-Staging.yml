@@ -83,7 +83,7 @@ jobs:
       - name: Send a basic embedded message using YAML
         uses: MineBartekSA/discord-webhook@v2
         with:
-          webhook: ${{ secrets.WEBHOOK_URL }}
+          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
           author:
             name: "GitHub Actions"
             icon_url: https://avatars.githubusercontent.com/u/44036562?s=200&v=4
