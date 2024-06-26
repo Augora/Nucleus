@@ -189,6 +189,9 @@ export function SendNewOrganismeParlementaireNotification(
     : Promise.resolve()
 }
 
+/**
+ * @deprecated Please use DiscordWrapper.ts instead
+ */
 export function SendWarningNotification(option: string) {
   return process.env.SLACK_NOTIFICATION === 'true'
     ? axios

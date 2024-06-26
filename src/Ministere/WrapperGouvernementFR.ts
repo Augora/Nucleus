@@ -1,5 +1,3 @@
-import { from } from 'rxjs'
-import { mergeMap, toArray, retry } from 'rxjs/operators'
 import cheerio from 'cheerio'
 import axios from 'axios'
 

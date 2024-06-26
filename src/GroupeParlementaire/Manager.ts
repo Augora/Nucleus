@@ -11,7 +11,6 @@ import {
 import { GetLogger } from '../Common/Logger'
 import {
   SendNewGroupeParlementaireNotification,
-  SendUpdateGroupeParlementaireNotification,
 } from '../Common/SlackWrapper'
 import {
   GetGroupesFromSupabase,
@@ -20,14 +19,9 @@ import {
 } from './WrapperSupabase'
 import { GetGroupeParlementaireExplainText } from './WrapperWikipedia'
 import { Database } from '../../Types/database.types'
-import { async } from 'rxjs'
 
 type GroupeParlementaire =
   Database['public']['Tables']['GroupeParlementaire']['Row']
-
-function delayedResolve<T>(ms, value: T): Promise<T> {
-  return new Promise((resolve) => setTimeout(() => resolve(value), ms))
-}
 
 export async function ManageGroupes() {
   const groupesFromSupabase: GroupeParlementaire[] =
@@ -62,11 +56,11 @@ export async function ManageGroupes() {
 
   GetLogger().info('groupeDescriptions:', groupeDescriptions)
   const canonicalGroupesFromNosDeputesFRWithDesc =
-    canonicalGroupesFromNosDeputesFR.map((gp, i) =>
+    canonicalGroupesFromNosDeputesFR.map((gp) =>
       Object.assign({}, gp, {
         DescriptionWikipedia: groupeDescriptions.find(
           (gpd) => gpd.title === gp.Sigle
-        ).desc,
+        )?.desc,
       })
     )
   GetLogger().info(
@@ -89,7 +83,7 @@ export async function ManageGroupes() {
       if (action.Action === Action.Create) {
         GetLogger().info('Creating Groupe:', { Sigle: action.NewData.Sigle })
         return CreateGroupeParlementaireToSupabase(action.NewData).then(
-          (data) => {
+          () => {
             GetLogger().info('Created Groupe:', {
               Sigle: action.NewData.Sigle,
             })

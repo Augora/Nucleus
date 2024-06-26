@@ -1,6 +1,5 @@
 import axios from 'axios'
-import { from } from 'rxjs'
-import { mergeMap, toArray, retry } from 'rxjs/operators'
+import { isNull, isEmpty } from 'lodash'
 
 import { GetLogger } from '../Common/Logger'
 
@@ -17,4 +16,10 @@ export function GetDeputesFromNosDeputesFR(): Promise<
       return res
     })
     .then((res) => res.data.organismes.map((d) => d.organisme))
+    .then((res) => {
+      GetLogger().info('Filtering groupes from nosdeputes.fr.', res)
+      return res
+        .filter((g) => !isNull(g.slug) && !isEmpty(g.slug))
+        .filter((g) => !isNull(g.acronyme) && !isEmpty(g.acronyme))
+    })
 }

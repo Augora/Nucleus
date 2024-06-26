@@ -13,18 +13,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: master
+          ref: develop
 
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v3
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: 18.x
+          bun-version: latest
 
-      - name: yarn install
-        run: yarn install
+      - name: Install Dependencies
+        run: bun install --frozen-lockfile
 
       - name: Import GroupeParlementaire
-        run: yarn start -g
+        run: bun start -g
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_PRODUCTION }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_PRODUCTION }}
@@ -34,7 +33,7 @@ jobs:
           SUPABASE_ENV: Production
 
       - name: Import Depute
-        run: yarn start -d
+        run: bun start -d
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_PRODUCTION }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_PRODUCTION }}
@@ -44,7 +43,7 @@ jobs:
           SUPABASE_ENV: Production
 
       - name: Import Activite
-        run: yarn start -a
+        run: bun start -a
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_PRODUCTION }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_PRODUCTION }}
@@ -54,7 +53,7 @@ jobs:
           SUPABASE_ENV: Production
 
       - name: Import OrganismeParlementaire
-        run: yarn start -o
+        run: bun start -o
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_PRODUCTION }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_PRODUCTION }}
@@ -64,7 +63,7 @@ jobs:
           SUPABASE_ENV: Production
 
       - name: Import Deputes_OrganismeParlementaire
-        run: yarn start -p
+        run: bun start -p
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_PRODUCTION }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_PRODUCTION }}
@@ -79,31 +78,3 @@ jobs:
         with:
           name: logs
           path: logs
-
-      - uses: 8398a7/action-slack@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: always()
-        with:
-          status: custom
-          fields: workflow,job,commit
-          custom_payload: |
-            {
-              username: 'Github Actions',
-              icon_emoji: ':rocket:',
-              attachments: [
-                {
-                  color: '${{ job.status }}' === 'success' ? '#28a745' : '${{ job.status }}' === 'failure' ? '#dc3545' : '#ffc107',
-                  "blocks": [
-                    {
-                      "type": "section",
-                      "text": {
-                        "type": "mrkdwn",
-                        "text": '${{ job.status }}' === 'success' ? "Data successfully imported in Supabase Production :sunglasses::tada:" : "Error while importing data in Supabase Production"
-                      }
-                    }
-                  ]
-                }
-              ]
-            }

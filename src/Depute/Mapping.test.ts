@@ -256,7 +256,7 @@ const depute: Types.External.NosDeputesFR.Depute = {
 }
 
 describe('MapDepute function', () => {
-  it('should ', async () => {
+  it('should map the depute and get correct result', async () => {
     const mappedDepute = MapDepute(depute)
     expect(mappedDepute.Slug).toBe('cedric-roussel')
     expect(mappedDepute.SitesWeb.length).toBe(2)

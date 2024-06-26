@@ -6,6 +6,9 @@ on:
   schedule:
     - cron: '0 4 * * *'
 
+env:
+  GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,16 +18,15 @@ jobs:
         with:
           ref: develop
 
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v3
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: 18.x
+          bun-version: latest
 
-      - name: yarn install
-        run: yarn install
+      - name: Install Dependencies
+        run: bun install --frozen-lockfile
 
       - name: Import GroupeParlementaire
-        run: yarn start -g
+        run: bun start -g
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
@@ -32,9 +34,10 @@ jobs:
           SLACK_NOTIFICATION: ${{ secrets.SLACK_NOTIFICATION }}
           NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_STAGING }}
           SUPABASE_ENV: Staging
+          GITHUB_RUN_URL: ${{ env.GITHUB_RUN_URL }}
 
       - name: Import Depute
-        run: yarn start -d
+        run: bun start -d
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
@@ -42,9 +45,10 @@ jobs:
           SLACK_NOTIFICATION: ${{ secrets.SLACK_NOTIFICATION }}
           NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_STAGING }}
           SUPABASE_ENV: Staging
+          GITHUB_RUN_URL: ${{ env.GITHUB_RUN_URL }}
 
       - name: Import Activite
-        run: yarn start -a
+        run: bun start -a
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
@@ -52,9 +56,10 @@ jobs:
           SLACK_NOTIFICATION: ${{ secrets.SLACK_NOTIFICATION }}
           NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_STAGING }}
           SUPABASE_ENV: Staging
+          GITHUB_RUN_URL: ${{ env.GITHUB_RUN_URL }}
 
       - name: Import OrganismeParlementaire
-        run: yarn start -o
+        run: bun start -o
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
@@ -62,9 +67,10 @@ jobs:
           SLACK_NOTIFICATION: ${{ secrets.SLACK_NOTIFICATION }}
           NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_STAGING }}
           SUPABASE_ENV: Staging
+          GITHUB_RUN_URL: ${{ env.GITHUB_RUN_URL }}
 
       - name: Import Deputes_OrganismeParlementaire
-        run: yarn start -p
+        run: bun start -p
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
@@ -72,58 +78,4 @@ jobs:
           SLACK_NOTIFICATION: ${{ secrets.SLACK_NOTIFICATION }}
           NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_STAGING }}
           SUPABASE_ENV: Staging
-
-      - name: Import Ministeres
-        run: yarn start -s
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_NOTIFICATION: ${{ secrets.SLACK_NOTIFICATION }}
-          NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_STAGING }}
-          SUPABASE_ENV: Staging
-
-      - name: Import Ministres
-        run: yarn start -m
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_NOTIFICATION: ${{ secrets.SLACK_NOTIFICATION }}
-          NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_STAGING }}
-          SUPABASE_ENV: Staging
-
-      - name: Upload logs as artifact
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: logs
-          path: logs
-
-      - uses: 8398a7/action-slack@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: always()
-        with:
-          status: custom
-          fields: workflow,job,commit
-          custom_payload: |
-            {
-              username: 'Github Actions',
-              icon_emoji: ':rocket:',
-              attachments: [
-                {
-                  color: '${{ job.status }}' === 'success' ? '#28a745' : '${{ job.status }}' === 'failure' ? '#dc3545' : '#ffc107',
-                  "blocks": [
-                    {
-                      "type": "section",
-                      "text": {
-                        "type": "mrkdwn",
-                        "text": '${{ job.status }}' === 'success' ? "Data successfully imported in Supabase Staging :sunglasses::tada:" : "Error while importing data in Supabase Staging"
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
+          GITHUB_RUN_URL: ${{ env.GITHUB_RUN_URL }}

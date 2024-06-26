@@ -1,8 +1,4 @@
 import axios from 'axios'
-import { from } from 'rxjs'
-import { mergeMap, toArray, retry } from 'rxjs/operators'
-
-import { GetLogger } from '../Common/Logger'
 
 export function GetDeputesInOrganisme(
   organismeSlug: string

@@ -14,7 +14,6 @@ import {
   CreateOrganismeToSupabase,
   UpdateOrganismeToSupabase,
 } from './WrapperSupabase'
-import { SendNewOrganismeParlementaireNotification } from '../Common/SlackWrapper'
 import { Database } from '../../Types/database.types'
 
 type OrganismeParlementaire =

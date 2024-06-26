@@ -6,7 +6,6 @@ import {
   isObject,
   toString,
 } from 'lodash'
-import { GetLogger } from '../Common/Logger'
 
 export interface DiffType<T> {
   Action: Action

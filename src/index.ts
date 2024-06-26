@@ -1,6 +1,3 @@
-import dotenv from 'dotenv'
-dotenv.config()
-
 const optionDefinitions = [
   { name: 'groupes', alias: 'g', type: Boolean },
   { name: 'activites', alias: 'a', type: Boolean },
@@ -22,7 +19,7 @@ import { ManageDeputeOrganismeParlementaire } from './Depute_OrganismeParlementa
 import { ManageMinisteres } from './Ministere/Manager'
 import { ManageMinistres } from './Ministre/Manager'
 import { GetLogger } from './Common/Logger'
-import { SendWarningNotification } from './Common/SlackWrapper'
+import { SendWarningNotification } from './Common/DiscordWrapper'
 
 if (options.groupes) {
   ManageGroupes()
