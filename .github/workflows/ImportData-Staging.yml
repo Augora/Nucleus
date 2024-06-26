@@ -84,13 +84,11 @@ jobs:
         uses: MineBartekSA/discord-webhook@v2
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          author:
-            name: "GitHub Actions"
-            icon_url: https://avatars.githubusercontent.com/u/44036562?s=200&v=4
+          username: 'GitHub Actions'
+          icon_url: https://avatars.githubusercontent.com/u/44036562?s=200&v=4
           embed: |
-          {
-            "title": "Nucleus Staging",
-            "description": ":white_check_mark: Data imported into Staging!",
-            "color": 8311585
-          }
-    
+            {
+              "title": "Nucleus Staging",
+              "description": ":white_check_mark: Data imported into Staging!",
+              "color": 8311585
+            }
