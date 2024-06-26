@@ -4,31 +4,23 @@ on: push
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        # Virtual envs : https://help.github.com/en/articles/virtual-environments-for-github-actions
-        os: [macOS-latest, windows-latest, ubuntu-latest]
-        node-version: [18.x, 19.x]
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: ${{ matrix.node-version }}
+          bun-version: latest
 
-      - name: yarn install
+      - name: Install Dependencies
+        run: bun install --frozen-lockfile
+
+      - name: bun lint
         env:
           CI: true
-        run: yarn install
+        run: bun lint
 
-      - name: yarn lint
+      - name: bun test
         env:
           CI: true
-        run: yarn lint
-
-      - name: yarn test
-        env:
-          CI: true
-        run: yarn test
+        run: bun test
