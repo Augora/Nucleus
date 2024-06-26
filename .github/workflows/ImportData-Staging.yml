@@ -30,8 +30,8 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_NOTIFICATION: ${{ secrets.SLACK_NOTIFICATION }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_NOTIFICATION: ${{ secrets.DISCORD_NOTIFICATION }}
           NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_STAGING }}
           SUPABASE_ENV: Staging
           GITHUB_RUN_URL: ${{ env.GITHUB_RUN_URL }}
@@ -41,8 +41,8 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_NOTIFICATION: ${{ secrets.SLACK_NOTIFICATION }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_NOTIFICATION: ${{ secrets.DISCORD_NOTIFICATION }}
           NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_STAGING }}
           SUPABASE_ENV: Staging
           GITHUB_RUN_URL: ${{ env.GITHUB_RUN_URL }}
@@ -52,8 +52,8 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_NOTIFICATION: ${{ secrets.SLACK_NOTIFICATION }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_NOTIFICATION: ${{ secrets.DISCORD_NOTIFICATION }}
           NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_STAGING }}
           SUPABASE_ENV: Staging
           GITHUB_RUN_URL: ${{ env.GITHUB_RUN_URL }}
@@ -63,8 +63,8 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_NOTIFICATION: ${{ secrets.SLACK_NOTIFICATION }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_NOTIFICATION: ${{ secrets.DISCORD_NOTIFICATION }}
           NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_STAGING }}
           SUPABASE_ENV: Staging
           GITHUB_RUN_URL: ${{ env.GITHUB_RUN_URL }}
@@ -74,8 +74,23 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_NOTIFICATION: ${{ secrets.SLACK_NOTIFICATION }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_NOTIFICATION: ${{ secrets.DISCORD_NOTIFICATION }}
           NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_STAGING }}
           SUPABASE_ENV: Staging
           GITHUB_RUN_URL: ${{ env.GITHUB_RUN_URL }}
+
+      - name: Send a basic embedded message using YAML
+        uses: MineBartekSA/discord-webhook@v2
+        with:
+          webhook: ${{ secrets.WEBHOOK_URL }}
+          author:
+            name: "GitHub Actions"
+            icon_url: https://avatars.githubusercontent.com/u/44036562?s=200&v=4
+          embed: |
+          {
+            "title": "Nucleus Staging",
+            "description": ":white_check_mark: Data imported into Staging!",
+            "color": 8311585
+          }
+    
