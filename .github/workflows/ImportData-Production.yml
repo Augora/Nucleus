@@ -72,9 +72,15 @@ jobs:
           NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_PROD }}
           SUPABASE_ENV: Production
 
-      - name: Upload logs as artifact
-        uses: actions/upload-artifact@v1
-        if: always()
+      - name: Send message to Discord
+        uses: MineBartekSA/discord-webhook@v2
         with:
-          name: logs
-          path: logs
+          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          username: 'GitHub Actions'
+          avatar_url: https://avatars.githubusercontent.com/u/44036562?s=200&v=4
+          embed: |
+            {
+              "title": "Nucleus Production",
+              "description": ":white_check_mark: Data imported into Production!",
+              "color": 8311585
+            }
