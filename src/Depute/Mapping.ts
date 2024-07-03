@@ -1,5 +1,8 @@
 import dayjs from 'dayjs'
 import 'dayjs/locale/fr'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+dayjs.extend(customParseFormat)
+
 import {
   split,
   toLower,
@@ -30,7 +33,7 @@ function processNomDepartement(numeroDepartement: string, slug: string) {
       return departement.name
     } else {
       throw new Error(
-        `${slug}: Département ${numeroDepartement} introuvable dans nos données.`
+        `${slug}: Département ${numeroDepartement} introuvable dans nos données.`,
       )
     }
   }
@@ -47,7 +50,7 @@ function processNumeroRegion(numeroDepartement: string, slug: string) {
       return region.code
     } else {
       throw new Error(
-        `${slug}: Département ${numeroDepartement} introuvable dans nos données.`
+        `${slug}: Département ${numeroDepartement} introuvable dans nos données.`,
       )
     }
   }
@@ -64,7 +67,7 @@ function processNomRegion(numeroDepartement: string, slug: string) {
       return region.name
     } else {
       throw new Error(
-        `${slug}: Département ${numeroDepartement} introuvable dans nos données.`
+        `${slug}: Département ${numeroDepartement} introuvable dans nos données.`,
       )
     }
   }
@@ -138,7 +141,7 @@ export function MapDepute(depute: Types.External.NosDeputesFR.Depute): Depute {
           !isWebSiteTwitter(s) &&
           !isWebSiteFacebook(s) &&
           !isWebSiteInstagram(s) &&
-          !isWebSiteLinkedIn(s)
+          !isWebSiteLinkedIn(s),
       ),
     Emails: depute.emails.map((e) => e.email),
     Adresses: depute.adresses
@@ -147,7 +150,7 @@ export function MapDepute(depute: Types.External.NosDeputesFR.Depute): Depute {
         (a) =>
           !a.startsWith('Sur rendez-vous') &&
           !a.startsWith('Varsovie/Konstancin') &&
-          !a.startsWith('Allemagne et Autriche')
+          !a.startsWith('Allemagne et Autriche'),
       )
       .map((a) => MapAdresse(a)),
     Collaborateurs: depute.collaborateurs.map((c) =>
@@ -155,11 +158,11 @@ export function MapDepute(depute: Types.External.NosDeputesFR.Depute): Depute {
         split(c.collaborateur, ' ').map((mc) =>
           join(
             split(mc, '-').map((mcsplitted) => upperFirst(toLower(mcsplitted))),
-            '-'
-          )
+            '-',
+          ),
         ),
-        ' '
-      )
+        ' ',
+      ),
     ),
     GroupeParlementaire:
       isUndefined(depute.groupe_sigle) || isNull(depute.groupe_sigle)
@@ -182,7 +185,7 @@ export function MapDepute(depute: Types.External.NosDeputesFR.Depute): Depute {
     },
     AutreMandat: depute.autres_mandats.map((am) => MapAutreMandat(am.mandat)),
     AncienMandat: depute.anciens_mandats.map((am) =>
-      MapAncienMandat(am.mandat)
+      MapAncienMandat(am.mandat),
     ),
   }
 }
@@ -234,8 +237,9 @@ export function MapAutreMandat(autreMandat: string) {
 
 export function MapAncienMandat(ancienMandat: string) {
   const [dateDebut, dateFin, intitule] = ancienMandat
-    .split(' /')
+    .split(' / ')
     .map((s) => trim(s))
+
   return {
     AncienMandatComplet: ancienMandat,
     DateDeDebut:

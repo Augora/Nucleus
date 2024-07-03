@@ -1,4 +1,4 @@
-import { MapDepute } from './Mapping'
+import { MapAncienMandat, MapDepute } from './Mapping'
 
 const depute: Types.External.NosDeputesFR.Depute = {
   id: 1,
@@ -243,7 +243,10 @@ const depute: Types.External.NosDeputesFR.Depute = {
   ],
   autres_mandats: [],
   anciens_autres_mandats: [],
-  anciens_mandats: [{ mandat: '21/06/2017 /  / ' }],
+  anciens_mandats: [
+    { mandat: '21/06/2017 / 21/06/2022 / fin de législature' },
+    { mandat: '22/06/2022 / 09/06/2024 / fin de législature' },
+  ],
   profession: 'Conseiller en gestion de patrimoine ind\u00e9pendant',
   place_en_hemicycle: '309',
   url_an: 'http://www2.assemblee-nationale.fr/deputes/fiche/OMC_PA718902',
@@ -260,5 +263,19 @@ describe('MapDepute function', () => {
     const mappedDepute = MapDepute(depute)
     expect(mappedDepute.Slug).toBe('cedric-roussel')
     expect(mappedDepute.SitesWeb.length).toBe(2)
+  })
+})
+
+describe('MapAncienMandat function', () => {
+  it('should map the mandat and get correct result', async () => {
+    const mappedAncienMandat = MapAncienMandat(
+      '22/06/2022 / 09/06/2024 / fin de législature',
+    )
+    expect(mappedAncienMandat.AncienMandatComplet).toBe(
+      '22/06/2022 / 09/06/2024 / fin de législature',
+    )
+    expect(mappedAncienMandat.DateDeDebut).toBe('2022-06-22T00:00:00')
+    expect(mappedAncienMandat.DateDeFin).toBe('2024-06-09T00:00:00')
+    expect(mappedAncienMandat.Intitule).toBe('fin de législature')
   })
 })
