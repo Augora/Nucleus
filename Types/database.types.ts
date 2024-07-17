@@ -9,7 +9,7 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
-      Activite: {
+      newSource_Activite: {
         Row: {
           Id: string
           created_at: string | null
@@ -65,7 +65,7 @@ export interface Database {
           DeputeSlug?: string | null
         }
       }
-      Depute: {
+      newSource_Depute: {
         Row: {
           GroupeParlementaire: string | null
           Age: number | null
@@ -91,8 +91,6 @@ export interface Database {
           PlaceEnHemicycle: string | null
           URLAssembleeNationale: string | null
           IDAssembleeNationale: string | null
-          URLNosdeputes: string | null
-          URLNosdeputesAPI: string | null
           NombreMandats: number | null
           EstEnMandat: boolean | null
           URLPhotoAssembleeNationale: string | null
@@ -104,10 +102,12 @@ export interface Database {
           SitesWeb: string[] | null
           Emails: string[] | null
           Collaborateurs: string[] | null
+          Suppleant: string | null
           Adresses: Json[] | null
           AutreMandat: Json[] | null
           AncienMandat: Json[] | null
           ResponsabiliteGroupe: Json | null
+          URLGouvernement: string | null
         }
         Insert: {
           GroupeParlementaire?: string | null
@@ -134,8 +134,6 @@ export interface Database {
           PlaceEnHemicycle?: string | null
           URLAssembleeNationale?: string | null
           IDAssembleeNationale?: string | null
-          URLNosdeputes?: string | null
-          URLNosdeputesAPI?: string | null
           NombreMandats?: number | null
           EstEnMandat?: boolean | null
           URLPhotoAssembleeNationale?: string | null
@@ -147,10 +145,12 @@ export interface Database {
           SitesWeb?: string[] | null
           Emails?: string[] | null
           Collaborateurs?: string[] | null
+          Suppleant?: string | null
           Adresses?: Json[] | null
           AutreMandat?: Json[] | null
           AncienMandat?: Json[] | null
           ResponsabiliteGroupe?: Json | null
+          URLGouvernement?: string | null
         }
         Update: {
           GroupeParlementaire?: string | null
@@ -177,8 +177,6 @@ export interface Database {
           PlaceEnHemicycle?: string | null
           URLAssembleeNationale?: string | null
           IDAssembleeNationale?: string | null
-          URLNosdeputes?: string | null
-          URLNosdeputesAPI?: string | null
           NombreMandats?: number | null
           EstEnMandat?: boolean | null
           URLPhotoAssembleeNationale?: string | null
@@ -190,13 +188,15 @@ export interface Database {
           SitesWeb?: string[] | null
           Emails?: string[] | null
           Collaborateurs?: string[] | null
+          Suppleant?: string | null
           Adresses?: Json[] | null
           AutreMandat?: Json[] | null
           AncienMandat?: Json[] | null
           ResponsabiliteGroupe?: Json | null
+          URLGouvernement?: string | null
         }
       }
-      Depute_OrganismeParlementaire: {
+      newSource_Depute_OrganismeParlementaire: {
         Row: {
           OrganismeSlug: string | null
           Fonction: string | null
@@ -219,12 +219,13 @@ export interface Database {
           DeputeSlug?: string | null
         }
       }
-      GroupeParlementaire: {
+      newSource_GroupeParlementaire: {
         Row: {
           DescriptionWikipedia: string | null
           IDWikipedia: string | null
           IDAssembleeNationale: string | null
-          Sigle: string
+          Slug: string | null
+          Sigle: string | null
           created_at: string | null
           NomComplet: string | null
           Couleur: string | null
@@ -237,7 +238,8 @@ export interface Database {
           DescriptionWikipedia?: string | null
           IDWikipedia?: string | null
           IDAssembleeNationale?: string | null
-          Sigle: string
+          Slug: string | null
+          Sigle?: string | null
           created_at?: string | null
           NomComplet?: string | null
           Couleur?: string | null
@@ -250,7 +252,8 @@ export interface Database {
           DescriptionWikipedia?: string | null
           IDWikipedia?: string | null
           IDAssembleeNationale?: string | null
-          Sigle?: string
+          Slug: string | null
+          Sigle?: string | null
           created_at?: string | null
           NomComplet?: string | null
           Couleur?: string | null
@@ -306,33 +309,24 @@ export interface Database {
           NomDeFamille?: string | null
         }
       }
-      OrganismeParlementaire: {
+      newSource_OrganismeParlementaire: {
         Row: {
-          URLNosdeputesAPI: string | null
           EstPermanent: boolean | null
           Slug: string
           created_at: string | null
           Nom: string | null
-          Type: string | null
-          URLNosdeputes: string | null
         }
         Insert: {
-          URLNosdeputesAPI?: string | null
           EstPermanent?: boolean | null
           Slug: string
           created_at?: string | null
           Nom?: string | null
-          Type?: string | null
-          URLNosdeputes?: string | null
         }
         Update: {
-          URLNosdeputesAPI?: string | null
           EstPermanent?: boolean | null
           Slug?: string
           created_at?: string | null
           Nom?: string | null
-          Type?: string | null
-          URLNosdeputes?: string | null
         }
       }
       UserRole: {

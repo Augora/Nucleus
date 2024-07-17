@@ -28,7 +28,7 @@ if (options.groupes) {
     })
     .catch((err) => {
       GetLogger().error('Error while importing Groupes:', err)
-      SendWarningNotification('GroupeParlementaire')
+      SendWarningNotification('newSource_GroupeParlementaire')
     })
 }
 
@@ -39,7 +39,7 @@ if (options.deputes) {
     })
     .catch((err) => {
       GetLogger().error('Error while importing Deputes:', err)
-      SendWarningNotification('Depute')
+      SendWarningNotification('newSource_Depute')
     })
 }
 
@@ -71,7 +71,7 @@ if (options.organismesParlementaire) {
       GetLogger().info('Imported depute organismes')
     })
     .catch((err) => {
-      GetLogger().error('Error while importing Organismes Parlementaire:', err)
+      GetLogger().error('Error while importing Deputes Organismes:', err)
       SendWarningNotification('Deputes_OrganismeParlementaire')
     })
 }

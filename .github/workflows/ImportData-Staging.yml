@@ -47,48 +47,48 @@ jobs:
           SUPABASE_ENV: Staging
           GITHUB_RUN_URL: ${{ env.GITHUB_RUN_URL }}
 
-      - name: Import Activite
-        run: bun start -a
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          DISCORD_NOTIFICATION: ${{ secrets.DISCORD_NOTIFICATION }}
-          NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_STAGING }}
-          SUPABASE_ENV: Staging
-          GITHUB_RUN_URL: ${{ env.GITHUB_RUN_URL }}
+      # - name: Import Activite
+      #   run: bun start -a
+      #   env:
+      #     SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
+      #     SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
+      #     DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      #     DISCORD_NOTIFICATION: ${{ secrets.DISCORD_NOTIFICATION }}
+      #     NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_STAGING }}
+      #     SUPABASE_ENV: Staging
+      #     GITHUB_RUN_URL: ${{ env.GITHUB_RUN_URL }}
 
-      - name: Import OrganismeParlementaire
-        run: bun start -o
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          DISCORD_NOTIFICATION: ${{ secrets.DISCORD_NOTIFICATION }}
-          NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_STAGING }}
-          SUPABASE_ENV: Staging
-          GITHUB_RUN_URL: ${{ env.GITHUB_RUN_URL }}
+      # - name: Import OrganismeParlementaire
+      #   run: bun start -o
+      #   env:
+      #     SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
+      #     SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
+      #     DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      #     DISCORD_NOTIFICATION: ${{ secrets.DISCORD_NOTIFICATION }}
+      #     NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_STAGING }}
+      #     SUPABASE_ENV: Staging
+      #     GITHUB_RUN_URL: ${{ env.GITHUB_RUN_URL }}
 
-      - name: Import Deputes_OrganismeParlementaire
-        run: bun start -p
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          DISCORD_NOTIFICATION: ${{ secrets.DISCORD_NOTIFICATION }}
-          NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_STAGING }}
-          SUPABASE_ENV: Staging
-          GITHUB_RUN_URL: ${{ env.GITHUB_RUN_URL }}
+      # - name: Import Deputes_OrganismeParlementaire
+      #   run: bun start -p
+      #   env:
+      #     SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
+      #     SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
+      #     DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      #     DISCORD_NOTIFICATION: ${{ secrets.DISCORD_NOTIFICATION }}
+      #     NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_STAGING }}
+      #     SUPABASE_ENV: Staging
+      #     GITHUB_RUN_URL: ${{ env.GITHUB_RUN_URL }}
 
-      - name: Send message to Discord
-        uses: MineBartekSA/discord-webhook@v2
-        with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          username: 'GitHub Actions'
-          avatar_url: https://avatars.githubusercontent.com/u/44036562?s=200&v=4
-          embed: |
-            {
-              "title": "Nucleus Staging",
-              "description": ":white_check_mark: Data imported into Staging!",
-              "color": 8311585
-            }
+      # - name: Send message to Discord
+      #   uses: MineBartekSA/discord-webhook@v2
+      #   with:
+      #     webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      #     username: 'GitHub Actions'
+      #     avatar_url: https://avatars.githubusercontent.com/u/44036562?s=200&v=4
+      #     embed: |
+      #       {
+      #         "title": "Nucleus Staging",
+      #         "description": ":white_check_mark: Data imported into Staging!",
+      #         "color": 8311585
+      #       }
