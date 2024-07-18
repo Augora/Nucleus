@@ -101,7 +101,7 @@ export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequ
   const assembleeNationaleID = rowData.lienFiche
 
   // Informations générales
-  const sexe = rowData.sexe === "Mme" ? "F" : "M"
+  const sexe = rowData.civilite === "Mme" ? "F" : "H"
   const deputySurname = rowData.prenom
   const deputyName = rowData.nom
   const slug = slugify(`${deputySurname} ${deputyName}`)

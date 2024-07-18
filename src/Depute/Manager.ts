@@ -32,7 +32,7 @@ export async function ManageDeputes() {
     CompareGenericObjects,
     'Slug'
   )
-  // GetLogger().info('Processed diffs:', { diffCount: res.length, diffs: res })
+  GetLogger().info('Processed diffs:', { diffCount: res.length, diffs: res })
 
   return throttleAll(
     1,
