@@ -175,7 +175,7 @@ export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequ
   const responsabiliteGroupe = $('.pres-groupe').text().trim().split(' ')[0]
   const isMandat = $('.titre-bandeau-bleu p:contains("Mandat")').text().trim() === "Mandat en cours" ? true : false
   const mandatsBlock = $('h4:contains("Mandat de député")').next('ul').find('li').length
-  const nombreMandats = mandatsBlock === 0 ? 1 : mandatsBlock
+  const nombreMandats = mandatsBlock === 0 ? 1 : mandatsBlock + 1
   let ancienMandat = []
   $('h4:contains("Mandat de député")').next('ul').find('li').each((index, element) => {
     const mandat = $(element).text().trim()
