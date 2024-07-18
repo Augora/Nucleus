@@ -77,7 +77,7 @@ export async function GetDeputesFromGouvernementFR(): Promise<Deputes[]> {
     for (let i = 0; i < tableData.length; i++) {
       const rowData = tableData[i]
       const urlDeputy = `https://www2.assemblee-nationale.fr/deputes/fiche/OMC_PA${tableData[i].lienFiche}?force`
-      const deputeData = await GetDeputeFromGouvernementFR(urlDeputy, config, browser, rowData)
+      const deputeData = await GetDeputeFromGouvernementFR(urlDeputy, config, browser, rowData, i + 1, tableData.length)
       Deputes.push(deputeData)
     }
   }
@@ -90,8 +90,8 @@ export async function GetDeputesFromGouvernementFR(): Promise<Deputes[]> {
   return Promise.resolve(Deputes)
 }
 
-export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequestConfig, browser: Browser, rowData): Promise<Deputes> {
-  GetLogger().info(`Retrieving ${rowData.prenom} ${rowData.nom} from gouvernement.fr...`)
+export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequestConfig, browser: Browser, rowData, i: number, total: number): Promise<Deputes> {
+  GetLogger().info(`${i.toString().padStart(3, '0')}/${total} - Retrieving ${rowData.prenom} ${rowData.nom} from gouvernement.fr...`)
   const deputyContent = await browser.newPage()
   await retryGoto(deputyContent, url)
   await deputyContent.waitForSelector('#deputes-fiche')
@@ -174,7 +174,8 @@ export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequ
   const formattedDebutMandat = debutMandat !== "" ? dayjs(debutMandat, 'DD/MM/YYYY').format('YYYY-MM-DD') : ""
   const responsabiliteGroupe = $('.pres-groupe').text().trim().split(' ')[0]
   const isMandat = $('.titre-bandeau-bleu p:contains("Mandat")').text().trim() === "Mandat en cours" ? true : false
-  const nombreMandats = $('h4:contains("Mandat de député")').next('ul').find('li').length
+  const mandatsBlock = $('h4:contains("Mandat de député")').next('ul').find('li').length
+  const nombreMandats = mandatsBlock === 0 ? 1 : mandatsBlock
   let ancienMandat = []
   $('h4:contains("Mandat de député")').next('ul').find('li').each((index, element) => {
     const mandat = $(element).text().trim()
