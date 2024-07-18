@@ -58,7 +58,7 @@ export async function ManageGroupes() {
     canonicalgroupesFromGouvernementFRWithDesc
   )
   const res = CompareLists(
-    groupesFromGouvernementFR,
+    canonicalgroupesFromGouvernementFRWithDesc,
     groupesFromSupabase,
     CompareGenericObjects,
     'Slug'
