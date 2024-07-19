@@ -74,18 +74,25 @@ export async function GetDeputesFromGouvernementFR(): Promise<Deputes[]> {
       })
     })
 
-    for (let i = 0; i < tableData.length; i++) {
-      const rowData = tableData[i]
-      const urlDeputy = `https://www2.assemblee-nationale.fr/deputes/fiche/OMC_PA${tableData[i].lienFiche}?force`
-      const deputeData = await GetDeputeFromGouvernementFR(urlDeputy, config, browser, rowData, i + 1, tableData.length)
-      Deputes.push(deputeData)
+    const nbDeputy = tableData.length
+    if (nbDeputy === 577) {
+      for (let i = 0; i < nbDeputy; i++) {
+        const rowData = tableData[i]
+        const urlDeputy = `https://www2.assemblee-nationale.fr/deputes/fiche/OMC_PA${tableData[i].lienFiche}?force`
+        const deputeData = await GetDeputeFromGouvernementFR(urlDeputy, config, browser, rowData, i + 1, nbDeputy)
+        Deputes.push(deputeData)
+      }
+    } else {
+      throw new Error(
+        `Il n'y a pas 577 députés dans le tableau renvoyé par le site de l'Assemblée Nationale.`,
+      )
     }
   }
   catch (error) {
     GetLogger().error('Failed to retrieve deputies: ', error)
   }
   finally {
-    await browser.close();
+    await browser.close()
   }
   return Promise.resolve(Deputes)
 }
@@ -107,7 +114,7 @@ export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequ
   const slug = slugify(`${deputySurname} ${deputyName}`)
 
   const biographieContent = $('dt').filter(function () {
-    return $(this).text().trim() === 'Biographie';
+    return $(this).text().trim() === 'Biographie'
   }).next('dd').find('ul > li')
   const bioInfo = $(biographieContent[0]).text().replace(/[\s\n\t]+/g, ' ').trim()
   const bioInfoSplit = bioInfo.split(/\s+(à|au)\s+/)
@@ -121,8 +128,17 @@ export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequ
     return $(this).text().trim().match(/^Suppléant(e)?$/) !== null
   }).next('dd').find('ul > li').text()
 
+  // Contacts et réseaux sociaux
   let mails = []
-  mails.push($('h3:contains("Mél et site internet")').nextAll('dd').find('a.email').first().attr('href')?.replace('mailto:', ''))
+  const mailAN = $('h3:contains("Mél et site internet")').nextAll('dd').find('a.email').first().attr('href')?.replace('mailto:', '')
+  if (mailAN) {
+    mails.push(mailAN)
+  } else {
+    throw new Error(
+      `Le mail de l'Assemblée Nationale du député ${slug} n'est pas disponible.`,
+    )
+  }
+
   $('dd:contains("Autre mél")').each(function () {
     $(this).find('a.email').each(function () {
       const email = $(this).attr('href')?.replace('mailto:', '')
@@ -131,19 +147,27 @@ export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequ
       }
     })
   })
+
   let adresses = []
-  $('dl.adr').each((index, element) => {
-    const adresse = $(element)
-    const streetAddress = adresse.find('.street-address').text().trim()
-    const postalCode = adresse.find('.postal-code').text().trim()
-    const locality = adresse.find('.locality').text().trim()
-    const adressObj = {
-      Adresse: `${streetAddress}, ${postalCode} ${locality}`,
-      CodePostal: postalCode,
-      AdresseComplete: `${streetAddress} ${postalCode} ${locality}`
-    }
-    adresses.push(adressObj)
-  })
+  if ($('dl.adr')) {
+    $('dl.adr').each((index, element) => {
+      const adresse = $(element)
+      const streetAddress = adresse.find('.street-address').text().trim()
+      const postalCode = adresse.find('.postal-code').text().trim()
+      const locality = adresse.find('.locality').text().trim()
+      const adressObj = {
+        Adresse: `${streetAddress}, ${postalCode} ${locality}`,
+        CodePostal: postalCode,
+        AdresseComplete: `${streetAddress} ${postalCode} ${locality}`
+      }
+      adresses.push(adressObj)
+    })
+  } else {
+    throw new Error(
+      `L'adresse du député n'est pas disponible.`,
+    )
+  }
+
   let sites = []
   $('dd:contains("Site internet :")').each(function () {
     $(this).find('a.url').each(function () {
@@ -173,9 +197,24 @@ export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequ
   const debutMandat = $('ul.fonctions-liste-attributs li:first-child').text().trim().match(/Date de début de mandat\s*:\s*(\d{2}\/\d{2}\/\d{4})/)?.[1] ?? ""
   const formattedDebutMandat = debutMandat !== "" ? dayjs(debutMandat, 'DD/MM/YYYY').format('YYYY-MM-DD') : ""
   const responsabiliteGroupe = $('.pres-groupe').text().trim().split(' ')[0]
-  const isMandat = $('.titre-bandeau-bleu p:contains("Mandat")').text().trim() === "Mandat en cours" ? true : false
+  const contentMandatEnCours = $('.titre-bandeau-bleu p:contains("Mandat")').text().trim()
+  let isMandat
+  if (contentMandatEnCours) {
+    isMandat = contentMandatEnCours === "Mandat en cours" ? true : false
+  } else {
+    throw new Error(
+      `Impossible de savoir si le mandat du député est en cours ou non.`,
+    )
+  }
   const mandatsBlock = $('h4:contains("Mandat de député")').next('ul').find('li').length
-  const nombreMandats = mandatsBlock === 0 ? 1 : mandatsBlock + 1
+  let nombreMandats
+  if (mandatsBlock) {
+    nombreMandats = mandatsBlock === 0 ? 1 : mandatsBlock + 1
+  } else {
+    throw new Error(
+      `Le block de mandat n'est pas disponible pour le député ${slug}.`,
+    )
+  }
   let ancienMandat = []
   $('h4:contains("Mandat de député")').next('ul').find('li').each((index, element) => {
     const mandat = $(element).text().trim()
@@ -196,18 +235,33 @@ export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequ
 
   // Groupe parlementaire
   const groupeParlementaire = $('a[title="Accédez à la composition du groupe"]').text().trim()
-  const slugGroupe = slugify(groupeParlementaire === "Non inscrit" ? "Députés non inscrits" : groupeParlementaire)
-  const responsabiliteGroupeBlock = {
-    groupeParlementaire: {
-      "Slug": slugGroupe
-    },
-    Fonction: responsabiliteGroupe.match(/^Président(e)?$/) ? responsabiliteGroupe : "Membre",
-    DebutFonction: formattedDebutMandat
+  let responsabiliteGroupeBlock, slugGroupe
+  if (groupeParlementaire) {
+    const slugGroupe = slugify(groupeParlementaire === "Non inscrit" ? "Députés non inscrits" : groupeParlementaire)
+    responsabiliteGroupeBlock = {
+      groupeParlementaire: {
+        "Slug": slugGroupe
+      },
+      Fonction: responsabiliteGroupe.match(/^Président(e)?$/) ? responsabiliteGroupe : "Membre",
+      DebutFonction: formattedDebutMandat
+    }
+  } else {
+    throw new Error(
+      `Le nom du groupe parlementaire pour ${slug} n'est pas disponible.`,
+    )
   }
+
   const rattachementFinancierBlock = $('dt').filter(function () {
     return $(this).text().trim() === 'Rattachement au titre du financement de la vie politique'
   }).next('dd').find('ul > li').text().trim()
-  const rattachementFinancier = rattachementFinancierBlock ? rattachementFinancierBlock : sexe === 'F' ? 'Non rattachée' : 'Non rattaché'
+  let rattachementFinancier
+  if (rattachementFinancierBlock) {
+    rattachementFinancier = sexe === 'F' ? 'Non rattachée' : 'Non rattaché'
+  } else {
+    throw new Error(
+      `Le nom du groupe parlementaire pour ${slug} n'est pas disponible.`,
+    )
+  }
   const hemicycleContainer = $('#hemicycle-container')
   const placeHemicycle = hemicycleContainer.attr('data-place') ? hemicycleContainer.attr('data-place') : ""
   let collaborators = []
@@ -215,7 +269,7 @@ export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequ
     const collaboratorName = $(element).text().trim()
     collaborators.push(collaboratorName)
   })
-  await deputyContent.close();
+  await deputyContent.close()
 
   const Depute: Deputes = {
     Slug: slug,
