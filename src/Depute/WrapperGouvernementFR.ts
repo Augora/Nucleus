@@ -11,7 +11,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { processNumeroDepartement, processNumeroRegion } from './Mapping'
 import { retryGoto } from '../Tools/Promises'
 
-type Deputes = Database['public']['Tables']['newSource_Depute']['Insert']
+type Deputes = Database['public']['Tables']['Depute']['Insert']
 dayjs.locale("fr")
 dayjs.extend(customParseFormat)
 

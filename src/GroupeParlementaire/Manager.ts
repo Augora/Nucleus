@@ -16,12 +16,13 @@ import {
   GetGroupesFromSupabase,
   CreateGroupeParlementaireToSupabase,
   UpdateGroupeParlementaireToSupabase,
+  SetGroupeParlementaireInactifToSupabase,
 } from './WrapperSupabase'
 import { GetGroupeParlementaireExplainText } from './WrapperWikipedia'
 import { Database } from '../../Types/database.types'
 
 type GroupeParlementaire =
-  Database['public']['Tables']['newSource_GroupeParlementaire']['Row']
+  Database['public']['Tables']['GroupeParlementaire']['Row']
 
 export async function ManageGroupes() {
   const groupesFromGouvernementFR = await GetGroupesParlementairesFromGouvernementFR()
@@ -90,6 +91,11 @@ export async function ManageGroupes() {
             Slug: action.NewData.Slug,
           })
           return SendUpdateGroupeParlementaireNotification(action.NewData)
+        })
+      } else if (action.Action === Action.Remove) {
+        GetLogger().info('Updating GroupeParlementaire:', { Slug: action.PreviousData.Slug })
+        return SetGroupeParlementaireInactifToSupabase(action.PreviousData).then(() => {
+          GetLogger().info('Setting GroupeParlementaire to inactif:', { Slug: action.PreviousData.Slug })
         })
       } else {
         GetLogger().info('Nothing to do on GroupeParlementaire:', {

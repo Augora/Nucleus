@@ -3,7 +3,7 @@ const optionDefinitions = [
   { name: 'activites', alias: 'a', type: Boolean },
   { name: 'organismes', alias: 'o', type: Boolean },
   { name: 'deputes', alias: 'd', type: Boolean },
-  { name: 'organismesParlementaire', alias: 'p', type: Boolean },
+  { name: 'deputesOrganismesParlementaire', alias: 'p', type: Boolean },
   { name: 'ministeres', alias: 's', type: Boolean },
   { name: 'ministres', alias: 'm', type: Boolean },
 ]
@@ -28,7 +28,7 @@ if (options.groupes) {
     })
     .catch((err) => {
       GetLogger().error('Error while importing Groupes:', err)
-      SendWarningNotification('newSource_GroupeParlementaire')
+      SendWarningNotification('GroupeParlementaire')
     })
 }
 
@@ -39,7 +39,7 @@ if (options.deputes) {
     })
     .catch((err) => {
       GetLogger().error('Error while importing Deputes:', err)
-      SendWarningNotification('newSource_Depute')
+      SendWarningNotification('Depute')
     })
 }
 
@@ -65,7 +65,7 @@ if (options.organismes) {
     })
 }
 
-if (options.organismesParlementaire) {
+if (options.deputesOrganismesParlementaire) {
   ManageDeputeOrganismeParlementaire()
     .then(() => {
       GetLogger().info('Imported depute organismes')

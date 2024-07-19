@@ -19,7 +19,7 @@ import { Database } from '../../Types/database.types'
 import { GetDeputesFromGouvernementFR } from './WrapperGouvernementFR'
 import { SendDeputeChangeGroupNotification, SendNewDeputeNotification, SendStopDeputeMandatNotification } from '../Common/DiscordWrapper'
 
-type Depute = Database['public']['Tables']['newSource_Depute']['Insert']
+type Depute = Database['public']['Tables']['Depute']['Insert']
 
 export async function ManageDeputes() {
   const simpleDeputesFromGouvernementFR = await GetDeputesFromGouvernementFR()

@@ -9,7 +9,7 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
-      newSource_Activite: {
+      Activite: {
         Row: {
           Id: string
           created_at: string | null
@@ -65,7 +65,7 @@ export interface Database {
           DeputeSlug?: string | null
         }
       }
-      newSource_Depute: {
+      Depute: {
         Row: {
           GroupeParlementaire: string | null
           Age: number | null
@@ -193,7 +193,7 @@ export interface Database {
           URLGouvernement?: string | null
         }
       }
-      newSource_Depute_OrganismeParlementaire: {
+      Depute_OrganismeParlementaire: {
         Row: {
           OrganismeSlug: string | null
           Fonction: string | null
@@ -216,7 +216,7 @@ export interface Database {
           DeputeSlug?: string | null
         }
       }
-      newSource_GroupeParlementaire: {
+      GroupeParlementaire: {
         Row: {
           DescriptionWikipedia: string | null
           IDWikipedia: string | null
@@ -303,7 +303,7 @@ export interface Database {
           NomDeFamille?: string | null
         }
       }
-      newSource_OrganismeParlementaire: {
+      OrganismeParlementaire: {
         Row: {
           EstPermanent: boolean | null
           Slug: string

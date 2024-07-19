@@ -9,8 +9,8 @@ const colors = {
 }
 import { Database } from '../../Types/database.types'
 type GroupeParlementaire =
-  Database['public']['Tables']['newSource_GroupeParlementaire']['Insert']
-type Depute = Database['public']['Tables']['newSource_Depute']['Insert']
+  Database['public']['Tables']['GroupeParlementaire']['Insert']
+type Depute = Database['public']['Tables']['Depute']['Insert']
 
 const envFullName =
   process.env.SUPABASE_ENV === 'Production' ? 'Production' : 'Staging'

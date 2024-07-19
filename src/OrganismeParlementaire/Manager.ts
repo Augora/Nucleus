@@ -1,7 +1,5 @@
 import { throttleAll } from 'promise-throttle-all'
 
-import { GetOrganismesParlementairesFromNosDeputesFR } from './WrapperNosDeputesFR'
-import { MapOrganismeParlementaire } from './Mapping'
 import {
   CompareLists,
   Action,
@@ -15,25 +13,24 @@ import {
   UpdateOrganismeToSupabase,
 } from './WrapperSupabase'
 import { Database } from '../../Types/database.types'
+import { GetCommissionsListFromGouvernementFR, GetOrganismesParlementairesFromGouvernementFR } from './WrapperGouvernementFR'
 
 type OrganismeParlementaire =
   Database['public']['Tables']['OrganismeParlementaire']['Insert']
 
 export async function ManageOrganismes() {
-  const organismesFromNosDeputesFR =
-    await GetOrganismesParlementairesFromNosDeputesFR()
-  GetLogger().info('organismesFromNosDeputesFR:', organismesFromNosDeputesFR)
-  const canonicalOrganismesFromNosDeputesFR = organismesFromNosDeputesFR.map(
-    (op) => MapOrganismeParlementaire(op)
-  )
+  const organismesFromGouvernementFR =
+    await GetCommissionsListFromGouvernementFR()
+
   GetLogger().info(
-    'canonicalOrganismesFromNosDeputesFR:',
-    canonicalOrganismesFromNosDeputesFR
+    'GetOrganismesParlementairesFromGouvernementFR:',
+    organismesFromGouvernementFR
   )
   const organismesFromSupabase = await GetOrganismesFromSupabase()
+
   GetLogger().info('organismesFromSupabase:', organismesFromSupabase)
   const res = CompareLists(
-    canonicalOrganismesFromNosDeputesFR,
+    organismesFromGouvernementFR,
     organismesFromSupabase,
     CompareGenericObjects,
     'Slug'
@@ -51,7 +48,6 @@ export async function ManageOrganismes() {
           GetLogger().info('Created Organisme:', {
             Nom: action.NewData.Nom,
           })
-          // return SendNewOrganismeParlementaireNotification(action.NewData)
         })
       } else if (action.Action === Action.Update) {
         GetLogger().info('Updating OrganismeParlementaire:', {
@@ -62,7 +58,6 @@ export async function ManageOrganismes() {
             Nom: action.NewData.Nom,
             diffs: action.Diffs,
           })
-          // return SendNewGroupeParlementaireNotification(action.NewData)
         })
       } else {
         GetLogger().info('Nothing to do on OrganismeParlementaire:', {

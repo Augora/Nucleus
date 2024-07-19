@@ -6,7 +6,7 @@ import { slugify } from '../Tools/String'
 import { Database } from '../../Types/database.types'
 import { retryGoto } from '../Tools/Promises'
 
-type GroupeParlementaire = Database['public']['Tables']['newSource_GroupeParlementaire']['Insert']
+type GroupeParlementaire = Database['public']['Tables']['GroupeParlementaire']['Insert']
 
 export async function GetGroupesParlementairesFromGouvernementFR(): Promise<GroupeParlementaire[]> {
   GetLogger().info('Retrieving groupes parlementaires from gouvernement.fr...')
@@ -31,6 +31,7 @@ export async function GetGroupesParlementairesFromGouvernementFR(): Promise<Grou
           groupesParlementaires.push({
             Slug: slugify(nomGroupe),
             NomComplet: nomGroupe,
+            Actif: true,
             IDAssembleeNationale: IDAssembleeNationale
           })
         } else {
