@@ -21,14 +21,30 @@ export async function GetGroupesParlementairesFromGouvernementFR(): Promise<Grou
     await page.waitForSelector('.contenu.c-actif h3')
     const bodyHTML = await page.content()
     const $ = cheerio.load(bodyHTML)
+    const groupList = $('.contenu.c-actif h3')
 
-    $('.contenu.c-actif h3').map((i, groupe) => {
-      const nomGroupe = $(groupe).text().trim()
-      groupesParlementaires.push({
-        Slug: slugify(nomGroupe),
-        NomComplet: nomGroupe
+    if (groupList) {
+      groupList.map((i, groupe) => {
+        const nomGroupe = $(groupe).text().trim()
+        const IDAssembleeNationale = $(groupe).closest('.contenu.c-actif').find('a[title="Voir toute la page"]').first().attr('href').split('/').pop()
+        if (IDAssembleeNationale) {
+          groupesParlementaires.push({
+            Slug: slugify(nomGroupe),
+            NomComplet: nomGroupe,
+            IDAssembleeNationale: IDAssembleeNationale
+          })
+        } else {
+          throw new Error(
+            `L'ID de l'Assemblée Nationale pour le groupe ${nomGroupe} n'est pas disponible. Merci de relancer le déploiement ou de corriger le problème.`,
+          )
+        }
+
       })
-    })
+    } else {
+      throw new Error(
+        `Aucun groupe n'a été trouvé. Merci de relancer le déploiement.`,
+      )
+    }
 
   } catch (error) {
     GetLogger().error('Failed to retrieve groupes parlementaires: ', error)

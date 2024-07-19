@@ -229,7 +229,6 @@ export interface Database {
           created_at: string | null
           NomComplet: string | null
           Couleur: string | null
-          URLImage: string | null
           Ordre: number | null
           Actif: boolean | null
           CouleurDetail: Json | null
@@ -243,7 +242,6 @@ export interface Database {
           created_at?: string | null
           NomComplet?: string | null
           Couleur?: string | null
-          URLImage?: string | null
           Ordre?: number | null
           Actif?: boolean | null
           CouleurDetail?: Json | null
@@ -257,7 +255,6 @@ export interface Database {
           created_at?: string | null
           NomComplet?: string | null
           Couleur?: string | null
-          URLImage?: string | null
           Ordre?: number | null
           Actif?: boolean | null
           CouleurDetail?: Json | null

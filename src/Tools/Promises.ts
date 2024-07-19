@@ -25,7 +25,7 @@ export function retryOperation<T>(
   })
 }
 
-export async function retryGoto(page: Page, url: string, retries: number = 5, delay: number = 1000): Promise<Page> {
+export async function retryGoto(page: Page, url: string, retries: number = 10, delay: number = 1500): Promise<Page> {
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       await page.goto(url)
