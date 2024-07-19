@@ -75,7 +75,6 @@ export interface Database {
           Slug: string
           Nom: string | null
           created_at: string | null
-          NomDeFamille: string | null
           Prenom: string | null
           Sexe: string | null
           DateDeNaissance: string | null
@@ -118,7 +117,6 @@ export interface Database {
           Slug: string
           Nom?: string | null
           created_at?: string | null
-          NomDeFamille?: string | null
           Prenom?: string | null
           Sexe?: string | null
           DateDeNaissance?: string | null
@@ -161,7 +159,6 @@ export interface Database {
           Slug?: string
           Nom?: string | null
           created_at?: string | null
-          NomDeFamille?: string | null
           Prenom?: string | null
           Sexe?: string | null
           DateDeNaissance?: string | null
