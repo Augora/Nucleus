@@ -25,10 +25,13 @@ export function retryOperation<T>(
   })
 }
 
-export async function retryGoto(page: Page, url: string, retries: number = 10, delay: number = 1500): Promise<Page> {
+export async function retryGoto(page: Page, url: string, selector: string): Promise<Page> {
+  const delay = 1500
+  const retries = 10
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       await page.goto(url)
+      await page.waitForSelector(selector)
       return
     } catch (error) {
       if (attempt < retries) {

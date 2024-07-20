@@ -1,6 +1,6 @@
 import { throttleAll } from 'promise-throttle-all'
 
-import { GetDeputesInOrganisme } from './WrapperNosDeputesFR'
+import { GetDeputesInOrganismeByDeputySlug } from './WrapperGouvernementFR'
 import { MapDeputeOrganismeParlementaire } from './Mapping'
 import {
   CompareLists,
@@ -11,44 +11,33 @@ import {
 import { GetLogger } from '../Common/Logger'
 import {
   CreateDeputeOrganismeParlementaireToSupabase,
-  GetOrganismesFromSupabase,
   GetDeputeOrganismeParlementaireFromSupabase,
   UpdateDeputeOrganismeParlementaireToSupabase,
   DeleteDeputeOrganismeParlementaireToSupabase,
 } from './WrapperSupabase'
 import { Database } from '../../Types/database.types'
+import { GetDeputesFromSupabase } from '../Depute/WrapperSupabase'
+import { GetOrganismesFromSupabaseBySlug } from '../OrganismeParlementaire/WrapperSupabase'
+import { SendMissingOrganismeParlementaireNotification } from '../Common/DiscordWrapper'
 
 type Depute_OrganismeParlementaire =
   Database['public']['Tables']['Depute_OrganismeParlementaire']['Insert']
 
 export async function ManageDeputeOrganismeParlementaire() {
-  const organismesFromSupabase = await GetOrganismesFromSupabase()
-  const deputesInOrganisme = await Promise.all(
-    organismesFromSupabase.map((o) =>
-      GetDeputesInOrganisme(o.Slug).then((ds) => ({
-        organismeSlug: o.Slug,
-        deputes: ds,
-      }))
-    )
-  )
+  const organismesFromSupabase = await GetOrganismesFromSupabaseBySlug()
+  const deputesFromSupabase = await GetDeputesFromSupabase()
+  let deputesInOrganisme = []
+  let missingOrganismes = []
+  for (let i = 0; i < deputesFromSupabase.length; i++) {
+    const d = deputesFromSupabase[i]
+    const result = await GetDeputesInOrganismeByDeputySlug(d.Slug, d.URLGouvernement, organismesFromSupabase, i + 1, deputesFromSupabase.length, missingOrganismes)
+    deputesInOrganisme = deputesInOrganisme.concat(result)
+  }
   const deputeOrganismeParlementaireFromSupabase =
     await GetDeputeOrganismeParlementaireFromSupabase()
 
-  const deputeOrganismesCanonical: Depute_OrganismeParlementaire[] =
-    deputesInOrganisme
-      .flatMap((org) =>
-        org.deputes.map((d) => {
-          return MapDeputeOrganismeParlementaire(
-            org.organismeSlug,
-            d.slug,
-            d.fonction
-          )
-        })
-      )
-      .filter((d) => d.DeputeSlug !== undefined)
-
   const res = CompareLists(
-    deputeOrganismesCanonical,
+    deputesInOrganisme,
     deputeOrganismeParlementaireFromSupabase,
     CompareGenericObjects,
     'Id'
@@ -56,6 +45,15 @@ export async function ManageDeputeOrganismeParlementaire() {
   GetLogger().info('deputeOrganismeParlementaireFromSupabase:', {
     deputeOrganismeParlementaireFromSupabase,
   })
+
+  GetLogger().info('Processed diffs:', { diffCount: res.length, diffs: res })
+
+  if (missingOrganismes.length != 0) {
+    GetLogger().warn('List of all missing organismes.')
+    console.log(missingOrganismes)
+    SendMissingOrganismeParlementaireNotification()
+    GetLogger().info('Notification sent for missing organismes')
+  }
 
   return throttleAll(
     1,

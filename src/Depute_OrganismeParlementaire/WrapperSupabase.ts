@@ -13,38 +13,31 @@ async function handleSupabaseError<T>(response: PostgrestResponse<T>) {
   return Promise.resolve(response.data)
 }
 
-function handleSupabasePagination(from: number, to: number) {
-  return async (
-    res: Depute_OrganismeParlementaire[]
-  ): Promise<Depute_OrganismeParlementaire[]> => {
-    if (res.length === 1000) {
-      return GetDeputeOrganismeParlementaireFromSupabase(from, to).then(
-        (r: Depute_OrganismeParlementaire[]) => {
-          return Promise.resolve(concat<Depute_OrganismeParlementaire>(res, r))
-        }
-      )
-    }
-    return Promise.resolve(res)
-  }
-}
-
-export async function GetOrganismesFromSupabase() {
-  return supabaseClient
-    .from('OrganismeParlementaire')
-    .select()
-    .then(handleSupabaseError)
-}
+// function handleSupabasePagination(from: number, to: number) {
+//   return async (
+//     res: Depute_OrganismeParlementaire[]
+//   ): Promise<Depute_OrganismeParlementaire[]> => {
+//     if (res.length === 1000) {
+//       return GetDeputeOrganismeParlementaireFromSupabase(from, to).then(
+//         (r: Depute_OrganismeParlementaire[]) => {
+//           return Promise.resolve(concat<Depute_OrganismeParlementaire>(res, r))
+//         }
+//       )
+//     }
+//     return Promise.resolve(res)
+//   }
+// }
 
 export async function GetDeputeOrganismeParlementaireFromSupabase(
-  from: number = 0,
-  to: number = 1000
+  // from: number = 0,
+  // to: number = 1000
 ) {
   return supabaseClient
     .from('Depute_OrganismeParlementaire')
     .select()
-    .range(from, to)
+    // .range(from, to)
     .then(handleSupabaseError)
-    .then(handleSupabasePagination(from + 1000, to + 1000))
+  // .then(handleSupabasePagination(from + 1000, to + 1000))
 }
 
 export async function CreateDeputeOrganismeParlementaireToSupabase(

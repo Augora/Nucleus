@@ -15,6 +15,10 @@ type Deputes = Database['public']['Tables']['Depute']['Insert']
 dayjs.locale("fr")
 dayjs.extend(customParseFormat)
 
+function delay(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
 export async function GetDeputesFromGouvernementFR(): Promise<Deputes[]> {
   GetLogger().info('Retrieving deputies from gouvernement.fr...')
   const Deputes: Deputes[] = []
@@ -30,8 +34,7 @@ export async function GetDeputesFromGouvernementFR(): Promise<Deputes[]> {
     }
   }
   try {
-    await retryGoto(listDeputies, url)
-    await listDeputies.waitForSelector('#contenu-page')
+    await retryGoto(listDeputies, url, "#contenu-page")
     const bodyHTML = await listDeputies.content()
     let $ = cheerio.load(bodyHTML)
 
@@ -45,8 +48,18 @@ export async function GetDeputesFromGouvernementFR(): Promise<Deputes[]> {
     })
     const form = $(`form[action="${url}"]`)
     const actionUrl = form.attr('action') || ''
-    const postResponse = await axios.post(actionUrl, formData, config)
+    let postResponse = await axios.post(actionUrl, formData, config)
     $ = cheerio.load(postResponse.data)
+    for (let i = 0; i < 10; i++) {
+      if ($('table tbody tr').length < 577) {
+        postResponse = await axios.post(actionUrl, formData, config)
+        $ = cheerio.load(postResponse.data)
+        await delay(1000)
+      } else {
+        break
+      }
+    }
+
     let tableData = []
     $('table tbody tr').each((index, element) => {
       const lienFiche = $(element).find('td:nth-child(1) a').attr('href').match(/OMC_PA(\d+)/)[1]
@@ -100,8 +113,7 @@ export async function GetDeputesFromGouvernementFR(): Promise<Deputes[]> {
 export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequestConfig, browser: Browser, rowData, i: number, total: number): Promise<Deputes> {
   GetLogger().info(`${i.toString().padStart(3, '0')}/${total} - Retrieving ${rowData.prenom} ${rowData.nom} from gouvernement.fr...`)
   const deputyContent = await browser.newPage()
-  await retryGoto(deputyContent, url)
-  await deputyContent.waitForSelector('#deputes-fiche')
+  await retryGoto(deputyContent, url, "#deputes-fiche")
   const bodyHTML = await deputyContent.content()
   const $ = cheerio.load(bodyHTML)
 
@@ -207,14 +219,7 @@ export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequ
     )
   }
   const mandatsBlock = $('h4:contains("Mandat de député")').next('ul').find('li').length
-  let nombreMandats
-  if (mandatsBlock) {
-    nombreMandats = mandatsBlock === 0 ? 1 : mandatsBlock + 1
-  } else {
-    throw new Error(
-      `Le block de mandat n'est pas disponible pour le député ${slug}.`,
-    )
-  }
+  const nombreMandats = mandatsBlock ? mandatsBlock + 1 : 1
   let ancienMandat = []
   $('h4:contains("Mandat de député")').next('ul').find('li').each((index, element) => {
     const mandat = $(element).text().trim()
@@ -236,7 +241,7 @@ export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequ
   // Groupe parlementaire
   const groupeParlementaire = $('a[title="Accédez à la composition du groupe"]').text().trim()
   let responsabiliteGroupeBlock, slugGroupe
-  if (groupeParlementaire) {
+  if (groupeParlementaire && groupeParlementaire.length > 0) {
     const slugGroupe = slugify(groupeParlementaire === "Non inscrit" ? "Députés non inscrits" : groupeParlementaire)
     responsabiliteGroupeBlock = {
       groupeParlementaire: {
@@ -256,11 +261,9 @@ export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequ
   }).next('dd').find('ul > li').text().trim()
   let rattachementFinancier
   if (rattachementFinancierBlock) {
-    rattachementFinancier = sexe === 'F' ? 'Non rattachée' : 'Non rattaché'
+    rattachementFinancier = rattachementFinancierBlock
   } else {
-    throw new Error(
-      `Le nom du groupe parlementaire pour ${slug} n'est pas disponible.`,
-    )
+    rattachementFinancier = sexe === 'F' ? 'Non rattachée' : 'Non rattaché'
   }
   const hemicycleContainer = $('#hemicycle-container')
   const placeHemicycle = hemicycleContainer.attr('data-place') ? hemicycleContainer.attr('data-place') : ""

@@ -17,8 +17,7 @@ export async function GetGroupesParlementairesFromGouvernementFR(): Promise<Grou
   const url = "https://www2.assemblee-nationale.fr/17/les-groupes-politiques"
 
   try {
-    await retryGoto(page, url)
-    await page.waitForSelector('.contenu.c-actif h3')
+    await retryGoto(page, url, ".contenu.c-actif h3")
     const bodyHTML = await page.content()
     const $ = cheerio.load(bodyHTML)
     const groupList = $('.contenu.c-actif h3')

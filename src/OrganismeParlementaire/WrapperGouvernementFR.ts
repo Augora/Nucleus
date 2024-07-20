@@ -47,7 +47,7 @@ export async function GetCommissionsListFromGouvernementFR(): Promise<OrganismeP
 
     try {
         await page.goto(`${url}${uri}`)
-        await page.waitForSelector('#main')
+        await page.waitForSelector('#main', { timeout: 60000 })
         const bodyHTML = await page.content()
         const $ = cheerio.load(bodyHTML)
 
@@ -84,7 +84,7 @@ export async function GetCommissionsFromGouvernementFR(url: string, href: string
     let slug, replacedCommissionSlug
     try {
         await pageCommission.goto(commissionUrl)
-        await pageCommission.waitForSelector('.page-content')
+        await pageCommission.waitForSelector('.page-content', { timeout: 60000 })
         const bodyHTML = await pageCommission.content()
         const $ = cheerio.load(bodyHTML)
         commissionName = $('h1.h1').text().trim()
@@ -117,8 +117,7 @@ export async function GetOrganismesParlementairesFromGouvernementFR(): Promise<O
     const page = await browser.newPage()
     let commissionNames: Set<string> = new Set()
     try {
-        await retryGoto(page, url)
-        await page.waitForSelector('#contenu-page')
+        await retryGoto(page, url, "#contenu-page")
         const bodyHTML = await page.content()
         const $ = cheerio.load(bodyHTML)
 
@@ -133,8 +132,8 @@ export async function GetOrganismesParlementairesFromGouvernementFR(): Promise<O
             const offset = `(offset)/${page * resultsPerPage}/`
             let url = `https://www2.assemblee-nationale.fr/recherche/resultats_recherche/${offset}(tri)/date/(legislature)/${legislature}/(query)/eyJxIjoidHlwZURvY3VtZW50OlwiY29tcHRlIHJlbmR1XCIgYW5kIGNvbnRlbnU6YSIsInJvd3MiOjEwLCJzdGFydCI6MCwid3QiOiJwaHAiLCJobCI6ImZhbHNlIiwiZmwiOiJ1cmwsdGl0cmUsdXJsRG9zc2llckxlZ2lzbGF0aWYsdGl0cmVEb3NzaWVyTGVnaXNsYXRpZix0ZXh0ZVF1ZXN0aW9uLHR5cGVEb2N1bWVudCxzc1R5cGVEb2N1bWVudCxydWJyaXF1ZSx0ZXRlQW5hbHlzZSxtb3RzQ2xlcyxhdXRldXIsZGF0ZURlcG90LHNpZ25hdGFpcmVzQW1lbmRlbWVudCxkZXNpZ25hdGlvbkFydGljbGUsc29tbWFpcmUsc29ydCIsInNvcnQiOiIifQ==`
             const pageOffset = await browser.newPage()
-            await retryGoto(pageOffset, url)
-            await pageOffset.waitForSelector('#contenu-page')
+            await retryGoto(pageOffset, url, "#contenu-page")
+            await pageOffset.waitForSelector('#contenu-page', { timeout: 60000 })
             const bodyHTML = await pageOffset.content()
             const $ = cheerio.load(bodyHTML)
             $('a[title="Accédez au document"]').each((_, element) => {

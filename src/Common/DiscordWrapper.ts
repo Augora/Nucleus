@@ -146,3 +146,23 @@ export function SendWarningNotification(option: string) {
       .then((res) => res.data)
     : Promise.resolve()
 }
+
+export function SendMissingOrganismeParlementaireNotification() {
+  return process.env.DISCORD_NOTIFICATION === 'true'
+    ? axios
+      .post(process.env.DISCORD_WEBHOOK_URL, {
+        avatar_url:
+          'https://avatars.githubusercontent.com/u/44036562?s=200&v=4',
+        username: 'GitHub Actions',
+        embeds: [
+          {
+            title: `Organismes parlementaires manquants`,
+            description: `:warning: Error while importing responsability of deputies, please refer to [logs](${githubActionRunUrl}).`,
+            color: colors.warning,
+            timestamp: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+          },
+        ],
+      })
+      .then((res) => res.data)
+    : Promise.resolve()
+}
