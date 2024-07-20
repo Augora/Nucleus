@@ -44,8 +44,7 @@ export async function GetCommissionsListFromGouvernementFR(): Promise<OrganismeP
     const page = await browser.newPage()
 
     try {
-        await page.goto(`${url}${uri}`)
-        await page.waitForSelector('#main', { timeout: 60000 })
+        await retryGoto(page, `${url}${uri}`, "#main")
         const bodyHTML = await page.content()
         const $ = cheerio.load(bodyHTML)
 
