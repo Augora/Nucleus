@@ -1,7 +1,6 @@
 import { throttleAll } from 'promise-throttle-all'
 
 import { GetDeputesInOrganismeByDeputySlug } from './WrapperGouvernementFR'
-import { MapDeputeOrganismeParlementaire } from './Mapping'
 import {
   CompareLists,
   Action,
@@ -27,7 +26,7 @@ export async function ManageDeputeOrganismeParlementaire() {
   const organismesFromSupabase = await GetOrganismesFromSupabaseBySlug()
   const deputesFromSupabase = await GetDeputesFromSupabase()
   let deputesInOrganisme = []
-  let missingOrganismes = []
+  const missingOrganismes = []
   for (let i = 0; i < deputesFromSupabase.length; i++) {
     const d = deputesFromSupabase[i]
     const result = await GetDeputesInOrganismeByDeputySlug(d.Slug, d.URLGouvernement, organismesFromSupabase, i + 1, deputesFromSupabase.length, missingOrganismes)

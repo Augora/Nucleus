@@ -13,7 +13,7 @@ import {
   UpdateOrganismeToSupabase,
 } from './WrapperSupabase'
 import { Database } from '../../Types/database.types'
-import { GetCommissionsListFromGouvernementFR, GetOrganismesParlementairesFromGouvernementFR } from './WrapperGouvernementFR'
+import { GetCommissionsListFromGouvernementFR } from './WrapperGouvernementFR'
 
 type OrganismeParlementaire =
   Database['public']['Tables']['OrganismeParlementaire']['Insert']
@@ -23,7 +23,7 @@ export async function ManageOrganismes() {
     await GetCommissionsListFromGouvernementFR()
 
   GetLogger().info(
-    'GetOrganismesParlementairesFromGouvernementFR:',
+    'GetCommissionsListFromGouvernementFR:',
     organismesFromGouvernementFR
   )
   const organismesFromSupabase = await GetOrganismesFromSupabase()

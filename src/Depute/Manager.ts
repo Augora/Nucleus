@@ -12,7 +12,6 @@ import {
   GetDeputesFromSupabase,
   CreateDeputeToSupabase,
   UpdateDeputeToSupabase,
-  DeleteDeputeToSupabase,
 } from './WrapperSupabase'
 
 import { Database } from '../../Types/database.types'
@@ -82,12 +81,6 @@ export async function ManageDeputes() {
             })
           }
         })
-        // }
-        // else if (action.Action === Action.Remove) {
-        //   GetLogger().info('Deleting depute:', { Slug: action.NewData.Slug })
-        //   return DeleteDeputeToSupabase(action.NewData).then(() => {
-        //     GetLogger().info('Deleted Depute:', { Slug: action.NewData.Slug })
-        //   })
       } else if (action.Action === Action.None) {
         GetLogger().info('Nothing to do on Depute:', {
           Slug: action.NewData.Slug,

@@ -1,12 +1,10 @@
 import cheerio from 'cheerio'
 import puppeteer, { Browser } from 'puppeteer'
-import axios from 'axios'
 
 import { GetLogger } from '../Common/Logger'
 import { slugify } from '../Tools/String'
 import { Database } from '../../Types/database.types'
 import { retryGoto } from '../Tools/Promises'
-import fs from 'fs/promises'
 
 // Lien commissions
 //`https://www2.assemblee-nationale.fr/recherche/resultats_recherche/(offset)/10/(tri)/date/(legislature)/16/(query)/eyJxIjoidHlwZURvY3VtZW50OlwiY29tcHRlIHJlbmR1XCIgYW5kIGNvbnRlbnU6YSIsInJvd3MiOjEwLCJzdGFydCI6MCwid3QiOiJwaHAiLCJobCI6ImZhbHNlIiwiZmwiOiJ1cmwsdGl0cmUsdXJsRG9zc2llckxlZ2lzbGF0aWYsdGl0cmVEb3NzaWVyTGVnaXNsYXRpZix0ZXh0ZVF1ZXN0aW9uLHR5cGVEb2N1bWVudCxzc1R5cGVEb2N1bWVudCxydWJyaXF1ZSx0ZXRlQW5hbHlzZSxtb3RzQ2xlcyxhdXRldXIsZGF0ZURlcG90LHNpZ25hdGFpcmVzQW1lbmRlbWVudCxkZXNpZ25hdGlvbkFydGljbGUsc29tbWFpcmUsc29ydCIsInNvcnQiOiIifQ==`
@@ -51,7 +49,7 @@ export async function GetCommissionsListFromGouvernementFR(): Promise<OrganismeP
         const bodyHTML = await page.content()
         const $ = cheerio.load(bodyHTML)
 
-        let commissionUrl = []
+        const commissionUrl = []
         $('._gutter-xs .block-list--item').each((_, element) => {
             const href = $(element).find('a.inner').attr('href')
             if (href) {
@@ -105,79 +103,77 @@ export async function GetCommissionsFromGouvernementFR(url: string, href: string
     }
 }
 
-export async function GetOrganismesParlementairesFromGouvernementFR(): Promise<OrganismeParlementaire[]> {
-    GetLogger().info('Retrieving commissions from gouvernement.fr...')
-    const organismeParlementaire: OrganismeParlementaire[] = []
-    const legislature = "17"
-    const url = `https://www2.assemblee-nationale.fr/recherche/resultats_recherche/(tri)/date/(legislature)/${legislature}/(query)/eyJxIjoidHlwZURvY3VtZW50OlwiY29tcHRlIHJlbmR1XCIgYW5kIGNvbnRlbnU6YSIsInJvd3MiOjEwLCJzdGFydCI6MCwid3QiOiJwaHAiLCJobCI6ImZhbHNlIiwiZmwiOiJ1cmwsdGl0cmUsdXJsRG9zc2llckxlZ2lzbGF0aWYsdGl0cmVEb3NzaWVyTGVnaXNsYXRpZix0ZXh0ZVF1ZXN0aW9uLHR5cGVEb2N1bWVudCxzc1R5cGVEb2N1bWVudCxydWJyaXF1ZSx0ZXRlQW5hbHlzZSxtb3RzQ2xlcyxhdXRldXIsZGF0ZURlcG90LHNpZ25hdGFpcmVzQW1lbmRlbWVudCxkZXNpZ25hdGlvbkFydGljbGUsc29tbWFpcmUsc29ydCIsInNvcnQiOiIifQ==`
+// export async function GetOrganismesParlementairesFromGouvernementFR(): Promise<OrganismeParlementaire[]> {
+//     GetLogger().info('Retrieving commissions from gouvernement.fr...')
+//     const organismeParlementaire: OrganismeParlementaire[] = []
+//     const legislature = "17"
+//     const url = `https://www2.assemblee-nationale.fr/recherche/resultats_recherche/(tri)/date/(legislature)/${legislature}/(query)/eyJxIjoidHlwZURvY3VtZW50OlwiY29tcHRlIHJlbmR1XCIgYW5kIGNvbnRlbnU6YSIsInJvd3MiOjEwLCJzdGFydCI6MCwid3QiOiJwaHAiLCJobCI6ImZhbHNlIiwiZmwiOiJ1cmwsdGl0cmUsdXJsRG9zc2llckxlZ2lzbGF0aWYsdGl0cmVEb3NzaWVyTGVnaXNsYXRpZix0ZXh0ZVF1ZXN0aW9uLHR5cGVEb2N1bWVudCxzc1R5cGVEb2N1bWVudCxydWJyaXF1ZSx0ZXRlQW5hbHlzZSxtb3RzQ2xlcyxhdXRldXIsZGF0ZURlcG90LHNpZ25hdGFpcmVzQW1lbmRlbWVudCxkZXNpZ25hdGlvbkFydGljbGUsc29tbWFpcmUsc29ydCIsInNvcnQiOiIifQ==`
 
-    const browser = await puppeteer.launch()
-    const page = await browser.newPage()
-    let commissionNames: Set<string> = new Set()
-    try {
-        await retryGoto(page, url, "#contenu-page")
-        const bodyHTML = await page.content()
-        const $ = cheerio.load(bodyHTML)
+//     const browser = await puppeteer.launch()
+//     const page = await browser.newPage()
+//     const commissionNames: Set<string> = new Set()
+//     try {
+//         await retryGoto(page, url, "#contenu-page")
+//         const bodyHTML = await page.content()
+//         const $ = cheerio.load(bodyHTML)
 
-        const pElement = $('p:contains("résultats trouvés")').text().trim()
-        const match = pElement.match(/(\d+) résultats trouvés/)
-        const nombreResultats = match ? parseInt(match[1], 10) : undefined
-        page.close()
+//         const pElement = $('p:contains("résultats trouvés")').text().trim()
+//         const match = pElement.match(/(\d+) résultats trouvés/)
+//         const nombreResultats = match ? parseInt(match[1], 10) : undefined
+//         page.close()
 
-        const resultsPerPage = 10
-        const totalPages = Math.ceil(nombreResultats / resultsPerPage)
-        for (let page = 1; page < totalPages; page++) {
-            const offset = `(offset)/${page * resultsPerPage}/`
-            let url = `https://www2.assemblee-nationale.fr/recherche/resultats_recherche/${offset}(tri)/date/(legislature)/${legislature}/(query)/eyJxIjoidHlwZURvY3VtZW50OlwiY29tcHRlIHJlbmR1XCIgYW5kIGNvbnRlbnU6YSIsInJvd3MiOjEwLCJzdGFydCI6MCwid3QiOiJwaHAiLCJobCI6ImZhbHNlIiwiZmwiOiJ1cmwsdGl0cmUsdXJsRG9zc2llckxlZ2lzbGF0aWYsdGl0cmVEb3NzaWVyTGVnaXNsYXRpZix0ZXh0ZVF1ZXN0aW9uLHR5cGVEb2N1bWVudCxzc1R5cGVEb2N1bWVudCxydWJyaXF1ZSx0ZXRlQW5hbHlzZSxtb3RzQ2xlcyxhdXRldXIsZGF0ZURlcG90LHNpZ25hdGFpcmVzQW1lbmRlbWVudCxkZXNpZ25hdGlvbkFydGljbGUsc29tbWFpcmUsc29ydCIsInNvcnQiOiIifQ==`
-            const pageOffset = await browser.newPage()
-            await retryGoto(pageOffset, url, "#contenu-page")
-            await pageOffset.waitForSelector('#contenu-page', { timeout: 60000 })
-            const bodyHTML = await pageOffset.content()
-            const $ = cheerio.load(bodyHTML)
-            $('a[title="Accédez au document"]').each((_, element) => {
-                const name = $(element).find('strong').text().trim().split(' - ')[1]
-                const url = $(element).attr('href')
-                if (name) {
-                    if (!commissionNames.has(name)) {
-                        commissionNames.add(name)
-                        const slugCommission = slugify(name)
-                        const isPermanent = commissionsPermanentes.includes(slugCommission)
-                        organismeParlementaire.push({
-                            Slug: slugCommission,
-                            Nom: name,
-                            EstPermanent: isPermanent
-                        })
-                        // } else {
-                        //         commissionNamesMap.set(name, 1)
-                        //         console.log(name, page + 1)
-                        //     }
-                        // }
-                        // else {
-                        //     commissionAutres.add($(element).find('strong').text().trim())
-                        // }
-                    }
-                }
+//         const resultsPerPage = 10
+//         const totalPages = Math.ceil(nombreResultats / resultsPerPage)
+//         for (let page = 1; page < totalPages; page++) {
+//             const offset = `(offset)/${page * resultsPerPage}/`
+//             const url = `https://www2.assemblee-nationale.fr/recherche/resultats_recherche/${offset}(tri)/date/(legislature)/${legislature}/(query)/eyJxIjoidHlwZURvY3VtZW50OlwiY29tcHRlIHJlbmR1XCIgYW5kIGNvbnRlbnU6YSIsInJvd3MiOjEwLCJzdGFydCI6MCwid3QiOiJwaHAiLCJobCI6ImZhbHNlIiwiZmwiOiJ1cmwsdGl0cmUsdXJsRG9zc2llckxlZ2lzbGF0aWYsdGl0cmVEb3NzaWVyTGVnaXNsYXRpZix0ZXh0ZVF1ZXN0aW9uLHR5cGVEb2N1bWVudCxzc1R5cGVEb2N1bWVudCxydWJyaXF1ZSx0ZXRlQW5hbHlzZSxtb3RzQ2xlcyxhdXRldXIsZGF0ZURlcG90LHNpZ25hdGFpcmVzQW1lbmRlbWVudCxkZXNpZ25hdGlvbkFydGljbGUsc29tbWFpcmUsc29ydCIsInNvcnQiOiIifQ==`
+//             const pageOffset = await browser.newPage()
+//             await retryGoto(pageOffset, url, "#contenu-page")
+//             await pageOffset.waitForSelector('#contenu-page', { timeout: 60000 })
+//             const bodyHTML = await pageOffset.content()
+//             const $ = cheerio.load(bodyHTML)
+//             $('a[title="Accédez au document"]').each((_, element) => {
+//                 const name = $(element).find('strong').text().trim().split(' - ')[1]
+//                 const url = $(element).attr('href')
+//                 if (name) {
+//                     if (!commissionNames.has(name)) {
+//                         commissionNames.add(name)
+//                         const slugCommission = slugify(name)
+//                         const isPermanent = commissionsPermanentes.includes(slugCommission)
+//                         organismeParlementaire.push({
+//                             Slug: slugCommission,
+//                             Nom: name,
+//                             EstPermanent: isPermanent,
+//                             Url: url
+//                         })
+//                         // } else {
+//                         //         commissionNamesMap.set(name, 1)
+//                         //         console.log(name, page + 1)
+//                         //     }
+//                         // }
+//                         // else {
+//                         //     commissionAutres.add($(element).find('strong').text().trim())
+//                         // }
+//                     }
+//                 }
 
-            })
-            // sortedMap = new Map(Array.from(commissionNamesMap.entries()).sort((a, b) => { return b[1] - a[1] }))
-            // let sum = 0
-            // commissionNamesMap.forEach((value) => {
-            //     sum += value
-            // });
-            // console.log(sum)
-            pageOffset.close()
-        }
-        // Get Commission Speciales
-        // const commissionSpecialesUrl = `https://www.assemblee-nationale.fr/dyn/${legislature}/organes/autres-commissions/commissions-speciales?statut=en-cours&limit=12`
+//             })
+//             // sortedMap = new Map(Array.from(commissionNamesMap.entries()).sort((a, b) => { return b[1] - a[1] }))
+//             // let sum = 0
+//             // commissionNamesMap.forEach((value) => {
+//             //     sum += value
+//             // });
+//             // console.log(sum)
+//             pageOffset.close()
+//         }
+//         // Get Commission Speciales
+//         // const commissionSpecialesUrl = `https://www.assemblee-nationale.fr/dyn/${legislature}/organes/autres-commissions/commissions-speciales?statut=en-cours&limit=12`
 
-    } catch (error) {
-        GetLogger().error('Failed to retrieve commissions: ', error)
-    }
-    finally {
-        // await fs.writeFile("./organismes.txt", Array.from(sortedMap).join('\n') + '\n')
-        // await fs.writeFile("./organismes_names.txt", Array.from(commissionNames).join('\n') + '\n')
-        // await fs.writeFile("./organismes2.txt", Array.from(commissionAutres).join('\n') + '\n')
-        browser.close()
-        return Promise.resolve(organismeParlementaire)
-    }
-}
+//     } catch (error) {
+//         GetLogger().error('Failed to retrieve commissions: ', error)
+//     }
+//     finally {
+//         browser.close()
+//         return Promise.resolve(organismeParlementaire)
+//     }
+// }

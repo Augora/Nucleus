@@ -309,18 +309,21 @@ export interface Database {
           Slug: string
           created_at: string | null
           Nom: string | null
+          Url: string | null
         }
         Insert: {
           EstPermanent?: boolean | null
           Slug: string
           created_at?: string | null
           Nom?: string | null
+          Url?: string | null
         }
         Update: {
           EstPermanent?: boolean | null
           Slug?: string
           created_at?: string | null
           Nom?: string | null
+          Url?: string | null
         }
       }
       UserRole: {

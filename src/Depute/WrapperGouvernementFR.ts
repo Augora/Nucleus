@@ -60,7 +60,7 @@ export async function GetDeputesFromGouvernementFR(): Promise<Deputes[]> {
       }
     }
 
-    let tableData = []
+    const tableData = []
     $('table tbody tr').each((index, element) => {
       const lienFiche = $(element).find('td:nth-child(1) a').attr('href').match(/OMC_PA(\d+)/)[1]
       const civilite = $(element).find('td:nth-child(2)').text().trim()
@@ -141,7 +141,7 @@ export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequ
   }).next('dd').find('ul > li').text()
 
   // Contacts et réseaux sociaux
-  let mails = []
+  const mails = []
   const mailAN = $('h3:contains("Mél et site internet")').nextAll('dd').find('a.email').first().attr('href')?.replace('mailto:', '')
   if (mailAN) {
     mails.push(mailAN)
@@ -160,7 +160,7 @@ export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequ
     })
   })
 
-  let adresses = []
+  const adresses = []
   if ($('dl.adr')) {
     $('dl.adr').each((index, element) => {
       const adresse = $(element)
@@ -180,7 +180,7 @@ export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequ
     )
   }
 
-  let sites = []
+  const sites = []
   $('dd:contains("Site internet :")').each(function () {
     $(this).find('a.url').each(function () {
       const site = $(this).attr('href')
@@ -220,7 +220,7 @@ export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequ
   }
   const mandatsBlock = $('h4:contains("Mandat de député")').next('ul').find('li').length
   const nombreMandats = mandatsBlock ? mandatsBlock + 1 : 1
-  let ancienMandat = []
+  const ancienMandat = []
   $('h4:contains("Mandat de député")').next('ul').find('li').each((index, element) => {
     const mandat = $(element).text().trim()
     const regex = /Mandat du (\d{2}\/\d{2}\/\d{4}) \(.*?\) au (\d{2}\/\d{2}\/\d{4}) \((.*?)\)/
@@ -268,7 +268,7 @@ export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequ
   }
   const hemicycleContainer = $('#hemicycle-container')
   const placeHemicycle = hemicycleContainer.attr('data-place') ? hemicycleContainer.attr('data-place') : ""
-  let collaborators = []
+  const collaborators = []
   $('div.bloc-standard.plural-element-simple.clearfix div.corps-contenu ul li.allpadding').each((index, element) => {
     const collaboratorName = $(element).text().trim()
     collaborators.push(collaboratorName)
