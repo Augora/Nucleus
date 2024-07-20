@@ -81,7 +81,7 @@ export async function GetCommissionsFromGouvernementFR(url: string, href: string
     const commissionUrl = `${url}${href}`
     let commissionName = ""
     let isPermanent = false
-    let slug
+    let slug, replacedCommissionSlug
     try {
         await pageCommission.goto(commissionUrl)
         await pageCommission.waitForSelector('.page-content')
@@ -91,6 +91,7 @@ export async function GetCommissionsFromGouvernementFR(url: string, href: string
         console.log(commissionName)
         slug = slugify(commissionName)
         isPermanent = $('span:contains("Commission permanente")') ? true : false
+        replacedCommissionSlug = isPermanent ? commissionsPermanentes.find(o => o.includes(slug)) : slug
 
     } catch (error) {
         GetLogger().error('Failed to retrieve organismes parlementaires: ', error)
@@ -99,7 +100,7 @@ export async function GetCommissionsFromGouvernementFR(url: string, href: string
         await pageCommission.close()
         const commissionPermanente: OrganismeParlementaire = {
             EstPermanent: isPermanent,
-            Slug: slug,
+            Slug: replacedCommissionSlug,
             Nom: commissionName,
         }
         return commissionPermanente
