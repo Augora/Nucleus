@@ -241,7 +241,7 @@ export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequ
   // Groupe parlementaire
   const groupeParlementaire = $('a[title="Accédez à la composition du groupe"]').text().trim()
   let responsabiliteGroupeBlock, slugGroupe
-  if (groupeParlementaire && groupeParlementaire.length > 0) {
+  if (groupeParlementaire) {
     const slugGroupe = slugify(groupeParlementaire === "Non inscrit" ? "Députés non inscrits" : groupeParlementaire)
     responsabiliteGroupeBlock = {
       groupeParlementaire: {
