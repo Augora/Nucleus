@@ -69,7 +69,6 @@ export async function GetCommissionsListFromGouvernementFR(): Promise<OrganismeP
     }
     finally {
         await browser.close()
-        // console.log(organismeParlementaire)
         return Promise.resolve(organismeParlementaire)
     }
 }
@@ -88,7 +87,6 @@ export async function GetCommissionsFromGouvernementFR(url: string, href: string
         const bodyHTML = await pageCommission.content()
         const $ = cheerio.load(bodyHTML)
         commissionName = $('h1.h1').text().trim()
-        console.log(commissionName)
         slug = slugify(commissionName)
         isPermanent = $('span:contains("Commission permanente")') ? true : false
         replacedCommissionSlug = isPermanent ? commissionsPermanentes.find(o => o.includes(slug)) : slug
@@ -144,7 +142,6 @@ export async function GetOrganismesParlementairesFromGouvernementFR(): Promise<O
                         commissionNames.add(name)
                         const slugCommission = slugify(name)
                         const isPermanent = commissionsPermanentes.includes(slugCommission)
-                        console.log(name)
                         organismeParlementaire.push({
                             Slug: slugCommission,
                             Nom: name,
@@ -181,7 +178,6 @@ export async function GetOrganismesParlementairesFromGouvernementFR(): Promise<O
         // await fs.writeFile("./organismes_names.txt", Array.from(commissionNames).join('\n') + '\n')
         // await fs.writeFile("./organismes2.txt", Array.from(commissionAutres).join('\n') + '\n')
         browser.close()
-        console.log(organismeParlementaire)
         return Promise.resolve(organismeParlementaire)
     }
 }
