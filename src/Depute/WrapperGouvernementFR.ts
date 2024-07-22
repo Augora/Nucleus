@@ -294,7 +294,7 @@ export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequ
     Profession: profession,
     PlaceEnHemicycle: placeHemicycle,
     URLAssembleeNationale: url,
-    IDAssembleeNationale: assembleeNationaleID, // isUnique in Supabase
+    IDAssembleeNationale: assembleeNationaleID,
     NombreMandats: nombreMandats,
     Twitter: twitter,
     EstEnMandat: isMandat,
@@ -312,7 +312,7 @@ export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequ
     AncienMandat: ancienMandat,
     GroupeParlementaire: slugGroupe,
     ResponsabiliteGroupe: responsabiliteGroupeBlock,
-    URLGouvernement: url
+    URLGouvernement: `https://www.assemblee-nationale.fr/dyn/deputes/${assembleeNationaleID}`
   }
   return Depute
 }
