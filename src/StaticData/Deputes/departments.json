@@ -1,5 +1,11 @@
 [
-  { "id": 1, "region_code": "84", "code": "01", "name": "Ain", "slug": "ain" },
+  {
+    "id": 1,
+    "region_code": "84",
+    "code": "01",
+    "name": "Ain",
+    "slug": "ain"
+  },
   {
     "id": 2,
     "region_code": "32",
@@ -315,7 +321,13 @@
     "name": "Loiret",
     "slug": "loiret"
   },
-  { "id": 47, "region_code": "76", "code": "46", "name": "Lot", "slug": "lot" },
+  {
+    "id": 47,
+    "region_code": "76",
+    "code": "46",
+    "name": "Lot",
+    "slug": "lot"
+  },
   {
     "id": 48,
     "region_code": "75",
@@ -568,7 +580,13 @@
     "name": "Tarn-et-Garonne",
     "slug": "tarn et garonne"
   },
-  { "id": 84, "region_code": "93", "code": "83", "name": "Var", "slug": "var" },
+  {
+    "id": 84,
+    "region_code": "93",
+    "code": "83",
+    "name": "Var",
+    "slug": "var"
+  },
   {
     "id": 85,
     "region_code": "93",
@@ -678,7 +696,7 @@
     "id": 100,
     "region_code": "04",
     "code": "974",
-    "name": "La R\u00e9union",
+    "name": "Réunion",
     "slug": "la reunion"
   },
   {
@@ -699,15 +717,8 @@
     "id": 103,
     "region_code": "COM",
     "code": "977",
-    "name": "Saint-Barth\u00e9lemy",
-    "slug": "saint barthelemy"
-  },
-  {
-    "id": 104,
-    "region_code": "COM",
-    "code": "978",
-    "name": "Saint-Martin",
-    "slug": "saint martin"
+    "name": "Saint-Barthélemy et Saint-Martin",
+    "slug": "saint barthelemy et Saint-Martin"
   },
   {
     "id": 105,
@@ -720,14 +731,14 @@
     "id": 106,
     "region_code": "COM",
     "code": "986",
-    "name": "Wallis et Futuna",
+    "name": "Wallis-et-Futuna",
     "slug": "wallis et futuna"
   },
   {
     "id": 107,
     "region_code": "COM",
     "code": "987",
-    "name": "Polyn\u00e9sie fran\u00e7aise",
+    "name": "Polynésie Française",
     "slug": "polynesie francaise"
   },
   {

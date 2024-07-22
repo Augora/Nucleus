@@ -3,6 +3,7 @@ import {
   NormalizeArrayToObject,
   CompareLists,
   Action,
+  CompareGenericObjects,
 } from './Comparison'
 
 describe('RetrieveIdByPath function', () => {
@@ -67,52 +68,247 @@ describe('NormalizeArrayToObject function', () => {
 })
 
 describe('CompareLists function', () => {
-  interface SampleData {
-    id: string
-    a?: number
-  }
+  describe('Simple Model', () => {
+    interface SampleData {
+      id: string
+      a?: string
+    }
 
-  const compareFunction = (item1: SampleData, item2: SampleData) =>
-    item1.a === item2.a && item1.a === item2.a
+    it('should compare two empty lists, returns no diff', () => {
+      const listA = []
+      const listB = []
+      const res = CompareLists(listA, listB, CompareGenericObjects, '')
+      expect(res.length).toBe(0)
+    })
 
-  it('should compare two empty lists, returns no diff', () => {
-    const listA = []
-    const listB = []
-    const res = CompareLists(listA, listB, compareFunction, '')
-    expect(res.length).toBe(0)
+    it('should compare empty with 1 item, return one diff', () => {
+      const listA = [{ id: 'a' }]
+      const listB = []
+      const res = CompareLists<SampleData>(
+        listA,
+        listB,
+        CompareGenericObjects,
+        'id'
+      )
+      expect(res.length).toBe(1)
+      expect(res[0].Action).toBe(Action.Create)
+    })
+
+    it('should compare 2 identical lists, return no diff', () => {
+      const listA = [{ id: 'a' }]
+      const listB = [{ id: 'a' }]
+      const res = CompareLists<SampleData>(
+        listA,
+        listB,
+        CompareGenericObjects,
+        'id'
+      )
+      expect(res.length).toBe(0)
+    })
+
+    it('should compare 2 lists, return one update', () => {
+      const listA = [{ id: 'a', a: '5' }]
+      const listB = [{ id: 'a' }]
+      const res = CompareLists<SampleData>(
+        listA,
+        listB,
+        CompareGenericObjects,
+        'id'
+      )
+      expect(res.length).toBe(1)
+      expect(res[0].Action).toBe(Action.Update)
+      expect(res[0].NewData.a).toBe('5')
+    })
+
+    it('should compare 2 lists, return one remove', () => {
+      const listA = []
+      const listB = [{ id: 'a', a: '5' }]
+      const res = CompareLists<SampleData>(
+        listA,
+        listB,
+        CompareGenericObjects,
+        'id'
+      )
+      expect(res.length).toBe(1)
+      expect(res[0].Action).toBe(Action.Remove)
+      expect(res[0].NewData.id).toBe('a')
+      expect(res[0].PreviousData.id).toBe('a')
+    })
   })
 
-  it('should compare empty with 1 item, return one diff', () => {
-    const listA = [{ id: 'a' }]
-    const listB = []
-    const res = CompareLists<SampleData>(listA, listB, compareFunction, 'id')
-    expect(res.length).toBe(1)
-    expect(res[0].Action).toBe(Action.Create)
-  })
+  describe('Complex Model', () => {
+    it('should compare two empty lists, returns no diff', () => {
+      const listA = []
+      const listB = []
+      const res = CompareLists(listA, listB, CompareGenericObjects, '')
+      expect(res.length).toBe(0)
+    })
 
-  it('should compare 2 identical lists, return no diff', () => {
-    const listA = [{ id: 'a' }]
-    const listB = [{ id: 'a' }]
-    const res = CompareLists<SampleData>(listA, listB, compareFunction, 'id')
-    expect(res.length).toBe(0)
-  })
+    it('should compare two lists, returns one diff which is age', () => {
+      const listA = [
+        {
+          Slug: 'kbs',
+          Age: 29,
+        },
+      ]
+      const listB = [
+        {
+          Slug: 'kbs',
+          Age: 30,
+        },
+      ]
+      const res = CompareLists(listA, listB, CompareGenericObjects, 'Slug')
+      expect(res.length).toBe(1)
+      expect(res[0].Diffs.length > 0).toBe(true)
+      expect(res[0].Diffs[0].FieldName).toBe('Age')
+      expect(res[0].Diffs[0].IsSame).toBe(false)
+    })
 
-  it('should compare 2 lists, return one update', () => {
-    const listA = [{ id: 'a', a: 5 }]
-    const listB = [{ id: 'a' }]
-    const res = CompareLists<SampleData>(listA, listB, compareFunction, 'id')
-    expect(res.length).toBe(1)
-    expect(res[0].Action).toBe(Action.Update)
-    expect(res[0].NewData.a).toBe(5)
-  })
+    it('should compare two lists, but a field is missing in desination', () => {
+      const listA = [
+        {
+          Slug: 'kbs',
+          Age: null,
+        },
+      ]
+      const listB = [
+        {
+          Slug: 'kbs',
+        },
+      ]
+      const res = CompareLists(listA, listB, CompareGenericObjects, 'Slug')
+      expect(res.length).toBe(0)
+    })
 
-  it('should compare 2 lists, return one remove', () => {
-    const listA = []
-    const listB = [{ id: 'a', a: 5 }]
-    const res = CompareLists<SampleData>(listA, listB, compareFunction, 'id')
-    expect(res.length).toBe(1)
-    expect(res[0].Action).toBe(Action.Remove)
-    expect(res[0].NewData.id).toBe('a')
-    expect(res[0].PreviousData.id).toBe('a')
+    it('should compare two lists, returns one diff which is Mandat.DebutMandat', () => {
+      const listA = [
+        {
+          Slug: 'kbs',
+          Age: 30,
+          Mandat: {
+            DebutMandat: '01/01/1900',
+          },
+        },
+      ]
+      const listB = [
+        {
+          Slug: 'kbs',
+          Age: 30,
+          Mandat: {
+            DebutMandat: '02/01/1900',
+          },
+        },
+      ]
+      const res = CompareLists(listA, listB, CompareGenericObjects, 'Slug')
+      expect(res.length).toBe(1)
+      expect(res[0].Diffs.length > 0).toBe(true)
+      expect(res[0].Diffs[0].FieldName).toBe('Mandat.DebutMandat')
+      expect(res[0].Diffs[0].IsSame).toBe(false)
+    })
+
+    it('should compare two lists, returns one diff which is Mail[0]', () => {
+      const listA = [
+        {
+          Slug: 'kbs',
+          Mail: ['lel@oklm.fr'],
+        },
+      ]
+      const listB = [
+        {
+          Slug: 'kbs',
+          Mail: [],
+        },
+      ]
+      const res = CompareLists(listA, listB, CompareGenericObjects, '')
+      expect(res.length).toBe(1)
+      expect(res[0].Diffs.length > 0).toBe(true)
+      expect(res[0].Diffs[0].FieldName).toBe('Mail[0]')
+      expect(res[0].Diffs[0].IsSame).toBe(false)
+    })
+
+    it('should compare two lists, returns one diff which is Mail[1]', () => {
+      const listA = [
+        {
+          Slug: 'kbs',
+          Mail: ['lel@oklm.fr', 'test'],
+        },
+      ]
+      const listB = [
+        {
+          Slug: 'kbs',
+          Mail: ['lel@oklm.fr', 'pastest'],
+        },
+      ]
+      const res = CompareLists(listA, listB, CompareGenericObjects, '')
+      expect(res.length).toBe(1)
+      expect(res[0].Diffs.length > 0).toBe(true)
+      expect(res[0].Diffs[0].FieldName).toBe('Mail[1]')
+      expect(res[0].Diffs[0].IsSame).toBe(false)
+    })
+
+    it('should compare two lists, but the values are shuffled', () => {
+      const listA = [
+        {
+          Slug: 'kbs',
+          Mail: ['test', 'lel@oklm.fr'],
+        },
+      ]
+      const listB = [
+        {
+          Slug: 'kbs',
+          Mail: ['lel@oklm.fr', 'test'],
+        },
+      ]
+      const res = CompareLists(listA, listB, CompareGenericObjects, '')
+      expect(res.length).toBe(0)
+    })
+
+    it('should compare two lists, but the objects are shuffled', () => {
+      const listA = [
+        {
+          Slug: 'kbs',
+          AncienMandat: [
+            { AncienMandatComplet: 'testb' },
+            { AncienMandatComplet: 'test' },
+          ],
+        },
+      ]
+      const listB = [
+        {
+          Slug: 'kbs',
+          AncienMandat: [
+            { AncienMandatComplet: 'test' },
+            { AncienMandatComplet: 'testb' },
+          ],
+        },
+      ]
+      const res = CompareLists(listA, listB, CompareGenericObjects, '')
+      expect(res.length).toBe(0)
+    })
+
+    it('should compare two lists, but the objects are shuffled and different', () => {
+      const listA = [
+        {
+          Slug: 'kbs',
+          AncienMandat: [
+            { AncienMandatComplet: 'testb', otherField: 'ok' },
+            { AncienMandatComplet: 'test' },
+          ],
+        },
+      ]
+      const listB = [
+        {
+          Slug: 'kbs',
+          AncienMandat: [
+            { AncienMandatComplet: 'test' },
+            { AncienMandatComplet: 'testb', otherField: 'NOK' },
+          ],
+        },
+      ]
+      const res = CompareLists(listA, listB, CompareGenericObjects, '')
+      expect(res.length).toBe(1)
+      expect(res[0].Diffs.length).toBe(1)
+      expect(res[0].Diffs[0].FieldName).toBe('AncienMandat.otherField')
+    })
   })
 })

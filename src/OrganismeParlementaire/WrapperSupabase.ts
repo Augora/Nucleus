@@ -1,42 +1,52 @@
-import supabaseClient from '../Common/SupabaseClient'
+import { PostgrestResponse } from '@supabase/supabase-js'
 
-function handleSupabaseError({ error, ...rest }) {
-  if (error) {
-    throw error
+import supabaseClient from '../Common/SupabaseClient'
+import { Database } from '../../Types/database.types'
+
+type OrganismeParlementaire =
+  Database['public']['Tables']['OrganismeParlementaire']['Insert']
+
+async function handleSupabaseError<T>(response: PostgrestResponse<T>) {
+  if (response.error) {
+    return Promise.reject(response.error)
   }
-  return rest
+  return Promise.resolve(response.data)
 }
 
-export function GetOrganismesFromSupabase() {
+export async function GetOrganismesFromSupabase() {
   return supabaseClient
-    .from<Types.Canonical.OrganismeParlementaire>('OrganismeParlementaire')
+    .from('OrganismeParlementaire')
     .select()
     .then(handleSupabaseError)
-    .then((d) => d.body)
 }
 
-export function CreateOrganismeToSupabase(data: Types.Canonical.OrganismeParlementaire) {
+export async function GetOrganismesFromSupabaseBySlug() {
+  const client = await supabaseClient
+    .from('OrganismeParlementaire')
+    .select('Slug')
+    .then(handleSupabaseError)
+  return client.map(o => o.Slug)
+}
+
+export async function CreateOrganismeToSupabase(data: OrganismeParlementaire) {
   return supabaseClient
-    .from<Types.Canonical.OrganismeParlementaire>('OrganismeParlementaire')
+    .from('OrganismeParlementaire')
     .insert([data])
     .then(handleSupabaseError)
-    .then((d) => d.body)
 }
 
-export function UpdateOrganismeToSupabase(data: Types.Canonical.OrganismeParlementaire) {
+export async function UpdateOrganismeToSupabase(data: OrganismeParlementaire) {
   return supabaseClient
-    .from<Types.Canonical.OrganismeParlementaire>('OrganismeParlementaire')
+    .from('OrganismeParlementaire')
     .update(data)
     .match({ Slug: data.Slug })
     .then(handleSupabaseError)
-    .then((d) => d.body)
 }
 
-export function DeleteOrganismeToSupabase(data: Types.Canonical.OrganismeParlementaire) {
+export async function DeleteOrganismeToSupabase(data: OrganismeParlementaire) {
   return supabaseClient
-    .from<Types.Canonical.OrganismeParlementaire>('OrganismeParlementaire')
+    .from('OrganismeParlementaire')
     .delete()
     .match({ Slug: data.Slug })
     .then(handleSupabaseError)
-    .then((d) => d.body)
 }

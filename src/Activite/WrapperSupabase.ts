@@ -1,43 +1,44 @@
-import supabaseClient from '../Common/SupabaseClient'
+import { PostgrestResponse } from '@supabase/supabase-js'
 
-function handleSupabaseError({ error, ...rest }) {
-  if (error) {
-    throw error
+import supabaseClient from '../Common/SupabaseClient'
+import { Database } from '../../Types/database.types'
+
+type Activite = Database['public']['Tables']['Activite']['Insert']
+
+async function handleSupabaseError<T>(response: PostgrestResponse<T>) {
+  if (response.error) {
+    return Promise.reject(response.error)
   }
-  return rest
+  return Promise.resolve(response.data)
 }
 
-export function GetActivitesBySlugFromSupabase(slug: string) {
+export async function GetActivitesBySlugFromSupabase(slug: string) {
   return supabaseClient
-    .from<Types.Canonical.Activite>('Activite')
+    .from('Activite')
     .select()
     .eq('DeputeSlug', slug)
     .then(handleSupabaseError)
-    .then((d) => d.body)
 }
 
-export function CreateActiviteToSupabase(data: Types.Canonical.Activite) {
+export async function CreateActiviteToSupabase(data: Activite) {
   return supabaseClient
-    .from<Types.Canonical.Activite>('Activite')
+    .from('Activite')
     .insert([data])
     .then(handleSupabaseError)
-    .then((d) => d.body)
 }
 
-export function UpdateActiviteToSupabase(data: Types.Canonical.Activite) {
+export async function UpdateActiviteToSupabase(data: Activite) {
   return supabaseClient
-    .from<Types.Canonical.Activite>('Activite')
+    .from('Activite')
     .update(data)
     .match({ Id: data.Id })
     .then(handleSupabaseError)
-    .then((d) => d.body)
 }
 
-export function DeleteActiviteToSupabase(data: Types.Canonical.Activite) {
+export async function DeleteActiviteToSupabase(data: Activite) {
   return supabaseClient
-    .from<Types.Canonical.Activite>('Activite')
+    .from('Activite')
     .delete()
     .match({ Id: data.Id })
     .then(handleSupabaseError)
-    .then((d) => d.body)
 }

@@ -1,109 +1,108 @@
-import { from, lastValueFrom } from 'rxjs'
-import { mergeMap } from 'rxjs/operators'
+import { throttleAll } from 'promise-throttle-all'
 
-import { GetDeputesInOrganisme } from './WrapperNosDeputesFR'
-import { MapDeputeOrganismeParlementaire } from './Mapping'
-import { CompareLists, Action, DiffType } from '../Tools/Comparison'
+import { GetDeputesInOrganismeByDeputySlug } from './WrapperGouvernementFR'
+import {
+  CompareLists,
+  Action,
+  DiffType,
+  CompareGenericObjects,
+} from '../Tools/Comparison'
 import { GetLogger } from '../Common/Logger'
 import {
   CreateDeputeOrganismeParlementaireToSupabase,
-  GetOrganismesFromSupabase,
   GetDeputeOrganismeParlementaireFromSupabase,
   UpdateDeputeOrganismeParlementaireToSupabase,
   DeleteDeputeOrganismeParlementaireToSupabase,
 } from './WrapperSupabase'
+import { Database } from '../../Types/database.types'
+import { GetDeputesFromSupabase } from '../Depute/WrapperSupabase'
+import { GetOrganismesFromSupabaseBySlug } from '../OrganismeParlementaire/WrapperSupabase'
+import { SendMissingOrganismeParlementaireNotification } from '../Common/DiscordWrapper'
+
+type Depute_OrganismeParlementaire =
+  Database['public']['Tables']['Depute_OrganismeParlementaire']['Insert']
 
 export async function ManageDeputeOrganismeParlementaire() {
-  const organismesFromSupabase = await GetOrganismesFromSupabase()
-  const deputesInOrganisme = await Promise.all(
-    organismesFromSupabase.map((o) =>
-      GetDeputesInOrganisme(o.Slug).then((ds) => ({
-        organismeSlug: o.Slug,
-        deputes: ds,
-      }))
-    )
-  )
+  const organismesFromSupabase = await GetOrganismesFromSupabaseBySlug()
+  const deputesFromSupabase = await GetDeputesFromSupabase()
+  let deputesInOrganisme = []
+  const missingOrganismes = []
+  for (let i = 0; i < deputesFromSupabase.length; i++) {
+    const d = deputesFromSupabase[i]
+    const result = await GetDeputesInOrganismeByDeputySlug(d.Slug, d.URLGouvernement, organismesFromSupabase, i + 1, deputesFromSupabase.length, missingOrganismes)
+    deputesInOrganisme = deputesInOrganisme.concat(result)
+  }
   const deputeOrganismeParlementaireFromSupabase =
     await GetDeputeOrganismeParlementaireFromSupabase()
 
-  const deputeOrganismesCanonical: Types.Canonical.DeputeOrganismeParlementaire[] =
-    deputesInOrganisme
-      .flatMap((org) =>
-        org.deputes.map((d) => {
-          return MapDeputeOrganismeParlementaire(
-            org.organismeSlug,
-            d.slug,
-            d.fonction
-          )
-        })
-      )
-      .filter((d) => d.DeputeSlug !== undefined)
-
   const res = CompareLists(
-    deputeOrganismesCanonical,
+    deputesInOrganisme,
     deputeOrganismeParlementaireFromSupabase,
-    (a, b) =>
-      a.Id === b.Id &&
-      a.DeputeSlug === b.DeputeSlug &&
-      a.OrganismeSlug === b.OrganismeSlug &&
-      a.Fonction === b.Fonction,
-    'Id',
-    true
+    CompareGenericObjects,
+    'Id'
   )
+  GetLogger().info('deputeOrganismeParlementaireFromSupabase:', {
+    deputeOrganismeParlementaireFromSupabase,
+  })
 
-  return lastValueFrom(
-    from(res).pipe(
-      mergeMap(
-        (action: DiffType<Types.Canonical.DeputeOrganismeParlementaire>) => {
-          GetLogger().info('Processing DeputeOrganismeParlementaire:', {
+  GetLogger().info('Processed diffs:', { diffCount: res.length, diffs: res })
+
+  if (missingOrganismes.length != 0) {
+    GetLogger().warn('List of all missing organismes.')
+    console.log(missingOrganismes)
+    SendMissingOrganismeParlementaireNotification()
+    GetLogger().info('Notification sent for missing organismes')
+  }
+
+  return throttleAll(
+    1,
+    res.map((action: DiffType<Depute_OrganismeParlementaire>) => () => {
+      GetLogger().info('Processing DeputeOrganismeParlementaire:', {
+        Id: action.NewData.Id,
+        Action: action.Action,
+      })
+      if (action.Action === Action.Create) {
+        GetLogger().info(
+          'Creating DeputeOrganismeParlementaire:',
+          action.NewData
+        )
+        return CreateDeputeOrganismeParlementaireToSupabase(
+          action.NewData
+        ).then(() => {
+          GetLogger().info('Created DeputeOrganismeParlementaire:', {
             Id: action.NewData.Id,
-            Action: action.Action,
           })
-          if (action.Action === Action.Create) {
-            GetLogger().info(
-              'Creating DeputeOrganismeParlementaire:',
-              action.NewData
-            )
-            return CreateDeputeOrganismeParlementaireToSupabase(
-              action.NewData
-            ).then(() => {
-              GetLogger().info('Created DeputeOrganismeParlementaire:', {
-                Id: action.NewData.Id,
-              })
-            })
-          } else if (action.Action === Action.Update) {
-            GetLogger().info(
-              'Updating DeputeOrganismeParlementaire:',
-              action.NewData
-            )
-            return UpdateDeputeOrganismeParlementaireToSupabase(
-              action.NewData
-            ).then(() => {
-              GetLogger().info('Updated DeputeOrganismeParlementaire:', {
-                Id: action.NewData.Id,
-              })
-            })
-          } else if (action.Action === Action.Remove) {
-            GetLogger().info(
-              'Removing DeputeOrganismeParlementaire:',
-              action.NewData
-            )
-            return DeleteDeputeOrganismeParlementaireToSupabase(
-              action.NewData
-            ).then(() => {
-              GetLogger().info('Removed DeputeOrganismeParlementaire:', {
-                Id: action.NewData.Id,
-              })
-            })
-          } else if (action.Action === Action.None) {
-            GetLogger().info('Nothing to do on: ', action.NewData)
-            return Promise.resolve()
-          } else {
-            return Promise.resolve()
-          }
-        },
-        1
-      )
-    )
+        })
+      } else if (action.Action === Action.Update) {
+        GetLogger().info('Updating DeputeOrganismeParlementaire:', {
+          Id: action.NewData.Id,
+          diffs: action.Diffs,
+        })
+        return UpdateDeputeOrganismeParlementaireToSupabase(
+          action.NewData
+        ).then(() => {
+          GetLogger().info('Updated DeputeOrganismeParlementaire:', {
+            Id: action.NewData.Id,
+          })
+        })
+      } else if (action.Action === Action.Remove) {
+        GetLogger().info(
+          'Removing DeputeOrganismeParlementaire:',
+          action.NewData
+        )
+        return DeleteDeputeOrganismeParlementaireToSupabase(
+          action.NewData
+        ).then(() => {
+          GetLogger().info('Removed DeputeOrganismeParlementaire:', {
+            Id: action.NewData.Id,
+          })
+        })
+      } else if (action.Action === Action.None) {
+        GetLogger().info('Nothing to do on: ', action.NewData)
+        return Promise.resolve()
+      } else {
+        return Promise.resolve()
+      }
+    })
   )
 }

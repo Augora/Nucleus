@@ -1,37 +1,49 @@
+import { PostgrestResponse } from '@supabase/supabase-js'
 import supabaseClient from '../Common/SupabaseClient'
+import { Database } from '../../Types/database.types'
 
-function handleSupabaseError({ error, ...rest }) {
-  if (error) {
-    throw error
+type GroupeParlementaire =
+  Database['public']['Tables']['GroupeParlementaire']['Insert']
+
+async function handleSupabaseError<T>(response: PostgrestResponse<T>) {
+  if (response.error) {
+    return Promise.reject(response.error)
   }
-  return rest
+  return Promise.resolve(response.data)
 }
 
-export function GetGroupesFromSupabase() {
+export async function GetGroupesFromSupabase() {
   return supabaseClient
-    .from<Types.Canonical.GroupeParlementaire>('GroupeParlementaire')
+    .from('GroupeParlementaire')
     .select()
     .then(handleSupabaseError)
-    .then((d) => d.body)
 }
 
-export function CreateGroupeParlementaireToSupabase(
-  data: Types.Canonical.GroupeParlementaire
+export async function CreateGroupeParlementaireToSupabase(
+  data: GroupeParlementaire
 ) {
   return supabaseClient
-    .from<Types.Canonical.GroupeParlementaire>('GroupeParlementaire')
+    .from('GroupeParlementaire')
     .insert([data])
     .then(handleSupabaseError)
-    .then((d) => d.body)
 }
 
-export function UpdateGroupeParlementaireToSupabase(
-  data: Types.Canonical.GroupeParlementaire
+export async function UpdateGroupeParlementaireToSupabase(
+  data: GroupeParlementaire
 ) {
   return supabaseClient
-    .from<Types.Canonical.GroupeParlementaire>('GroupeParlementaire')
+    .from('GroupeParlementaire')
     .update(data)
-    .match({ Sigle: data.Sigle })
+    .match({ Slug: data.Slug })
     .then(handleSupabaseError)
-    .then((d) => d.body)
+}
+
+export async function SetGroupeParlementaireInactifToSupabase(
+  data: GroupeParlementaire
+) {
+  return supabaseClient
+    .from('GroupeParlementaire')
+    .update({ Slug: data.Slug, Actif: false })
+    .match({ Slug: data.Slug })
+    .then(handleSupabaseError)
 }

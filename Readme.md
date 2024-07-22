@@ -36,4 +36,6 @@ Ci-dessous la liste des tables que nous utilisons :
 - Depute
 - Depute_OrganismeParlementaire
 - GroupeParlementaire
+- Ministre
+- Ministere
 - OrganismeParlementaire

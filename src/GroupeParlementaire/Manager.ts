@@ -1,117 +1,108 @@
-import { from, lastValueFrom } from 'rxjs'
-import { delay, mergeMap, toArray, retry } from 'rxjs/operators'
+import { throttleAll } from 'promise-throttle-all'
 
-import { GetDeputesFromNosDeputesFR } from './WrapperNosDeputesFR'
-import { MapGroupeParlementaire } from './Mapping'
-import { CompareLists, Action, DiffType } from '../Tools/Comparison'
-import { GetLogger } from '../Common/Logger'
+import { GetGroupesParlementairesFromGouvernementFR } from './WrapperGouvernementFR'
 import {
   SendNewGroupeParlementaireNotification,
   SendUpdateGroupeParlementaireNotification,
-} from '../Common/SlackWrapper'
+} from '../Common/DiscordWrapper'
+import {
+  CompareLists,
+  Action,
+  DiffType,
+  CompareGenericObjects,
+} from '../Tools/Comparison'
+import { GetLogger } from '../Common/Logger'
 import {
   GetGroupesFromSupabase,
   CreateGroupeParlementaireToSupabase,
   UpdateGroupeParlementaireToSupabase,
+  SetGroupeParlementaireInactifToSupabase,
 } from './WrapperSupabase'
 import { GetGroupeParlementaireExplainText } from './WrapperWikipedia'
+import { Database } from '../../Types/database.types'
 
-function delayedResolve<T>(ms, value: T): Promise<T> {
-  return new Promise((resolve) => setTimeout(() => resolve(value), ms))
-}
+type GroupeParlementaire =
+  Database['public']['Tables']['GroupeParlementaire']['Row']
 
 export async function ManageGroupes() {
-  const groupesFromSupabase: Types.Canonical.GroupeParlementaire[] =
-    await GetGroupesFromSupabase()
-  GetLogger().info('groupesFromSupabase:', groupesFromSupabase)
-  const groupesFromNosDeputesFR = await GetDeputesFromNosDeputesFR()
-  GetLogger().info('groupesFromNosDeputesFR:', groupesFromNosDeputesFR)
-  const canonicalGroupesFromNosDeputesFR = groupesFromNosDeputesFR.map((gp) =>
-    MapGroupeParlementaire(
-      gp,
-      groupesFromSupabase.find((g) => g.Sigle === gp.acronyme)
-    )
-  )
-  GetLogger().info(
-    'canonicalGroupesFromNosDeputesFR:',
-    canonicalGroupesFromNosDeputesFR
-  )
-  const groupeDescriptions = await lastValueFrom(
-    from(groupesFromSupabase).pipe(
-      mergeMap(async (gp) => {
-        if (gp.IDWikipedia === null) {
-          return Promise.resolve({ title: gp.Sigle, desc: '' })
-        }
+  const groupesFromGouvernementFR = await GetGroupesParlementairesFromGouvernementFR()
+  GetLogger().info('groupesFromGouvernementFR:', groupesFromGouvernementFR)
 
-        return delayedResolve(1000, {
-          title: gp.Sigle,
-          desc: await GetGroupeParlementaireExplainText(
-            encodeURI(gp.IDWikipedia)
-          ),
-        })
-      }, 1),
-      toArray()
-    )
+  const groupesFromSupabase = await GetGroupesFromSupabase()
+  GetLogger().info('groupesFromSupabase:', groupesFromSupabase)
+
+  const groupeDescriptions = await throttleAll(
+    1,
+    groupesFromSupabase.map((gp: GroupeParlementaire) => async () => {
+      if (gp.IDWikipedia === null) {
+        return { title: gp.Slug, desc: '' }
+      }
+
+      return {
+        title: gp.Slug,
+        desc: await GetGroupeParlementaireExplainText(gp.IDWikipedia),
+      }
+    })
   )
+
   GetLogger().info('groupeDescriptions:', groupeDescriptions)
-  const canonicalGroupesFromNosDeputesFRWithDesc =
-    canonicalGroupesFromNosDeputesFR.map((gp, i) =>
+  const canonicalgroupesFromGouvernementFRWithDesc =
+    groupesFromGouvernementFR.map((gp) =>
       Object.assign({}, gp, {
         DescriptionWikipedia: groupeDescriptions.find(
-          (gpd) => gpd.title === gp.Sigle
-        ).desc,
+          (gpd) => gpd.title === gp.Slug
+        )?.desc,
       })
     )
   GetLogger().info(
-    'canonicalGroupesFromNosDeputesFRWithDesc:',
-    canonicalGroupesFromNosDeputesFRWithDesc
+    'canonicalgroupesFromGouvernementFRWithDesc:',
+    canonicalgroupesFromGouvernementFRWithDesc
   )
   const res = CompareLists(
-    canonicalGroupesFromNosDeputesFRWithDesc,
+    canonicalgroupesFromGouvernementFRWithDesc,
     groupesFromSupabase,
-    (a, b) =>
-      a.Sigle === b.Sigle &&
-      a.Actif === b.Actif &&
-      a.DescriptionWikipedia === b.DescriptionWikipedia,
-    'Sigle',
-    true
+    CompareGenericObjects,
+    'Slug'
   )
   GetLogger().info('Comparison:', res)
-  return from(res)
-    .pipe(
-      mergeMap((action: DiffType<Types.Canonical.GroupeParlementaire>) => {
-        GetLogger().info('Processing GroupeParlementaire:', {
-          Sigle: action.NewData.Sigle,
+  return throttleAll(
+    1,
+    res.map((action: DiffType<GroupeParlementaire>) => () => {
+      GetLogger().info('Processing GroupeParlementaire:', {
+        Slug: action.NewData.Slug,
+      })
+      if (action.Action === Action.Create) {
+        GetLogger().info('Creating Groupe:', { Slug: action.NewData.Slug })
+        return CreateGroupeParlementaireToSupabase(action.NewData).then(
+          () => {
+            GetLogger().info('Created Groupe:', {
+              Slug: action.NewData.Slug,
+            })
+            return SendNewGroupeParlementaireNotification(action.NewData)
+          }
+        )
+      } else if (action.Action === Action.Update) {
+        GetLogger().info('Updating GroupeParlementaire:', {
+          Slug: action.NewData.Slug,
+          diffs: action.Diffs,
         })
-        if (action.Action === Action.Create) {
-          GetLogger().info('Creating Groupe:', { Sigle: action.NewData.Sigle })
-          return CreateGroupeParlementaireToSupabase(action.NewData).then(
-            (data) => {
-              GetLogger().info('Created Groupe:', {
-                Sigle: action.NewData.Sigle,
-              })
-              return SendNewGroupeParlementaireNotification(action.NewData)
-            }
-          )
-        } else if (action.Action === Action.Update) {
-          GetLogger().info('Updating GroupeParlementaire:', {
-            Sigle: action.NewData.Sigle,
+        return UpdateGroupeParlementaireToSupabase(action.NewData).then(() => {
+          GetLogger().info('Updated GroupeParlementaire', {
+            Slug: action.NewData.Slug,
           })
-          return UpdateGroupeParlementaireToSupabase(action.NewData).then(
-            () => {
-              GetLogger().info('Updated GroupeParlementaire', {
-                Sigle: action.NewData.Sigle,
-              })
-              // return SendNewGroupeParlementaireNotification(action.NewData)
-            }
-          )
-        } else {
-          GetLogger().info('Nothing to do on GroupeParlementaire:', {
-            Sigle: action.NewData.Sigle,
-          })
-          return Promise.resolve()
-        }
-      }, 1)
-    )
-    .toPromise()
+          return SendUpdateGroupeParlementaireNotification(action.NewData)
+        })
+      } else if (action.Action === Action.Remove) {
+        GetLogger().info('Updating GroupeParlementaire:', { Slug: action.PreviousData.Slug })
+        return SetGroupeParlementaireInactifToSupabase(action.PreviousData).then(() => {
+          GetLogger().info('Setting GroupeParlementaire to inactif:', { Slug: action.PreviousData.Slug })
+        })
+      } else {
+        GetLogger().info('Nothing to do on GroupeParlementaire:', {
+          Slug: action.NewData.Slug,
+        })
+        return Promise.resolve()
+      }
+    })
+  )
 }
