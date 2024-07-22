@@ -25,7 +25,7 @@ export function GetGroupeParlementaireExplainText(
     })
     .then(
       (res) =>
-        res.data.query.pages[Object.keys(res.data.query.pages)[0]].extract
+        res.data.query.pages[Object.keys(res.data.query.pages)[0]].extract.split('\n').slice(0, 2).join('\n')
     )
     .then((res) => trim(res))
     .catch((e) => {

@@ -7,39 +7,26 @@ import {
   CompareGenericObjects,
 } from '../Tools/Comparison'
 import { GetLogger } from '../Common/Logger'
-import {
-  SendNewDeputeNotification,
-  SendDeputeChangeGroupNotification,
-  SendStopDeputeMandatNotification,
-} from '../Common/SlackWrapper'
 
-import { MapDepute } from './Mapping'
-import {
-  GetDeputesFromNosDeputesFR,
-  GetDeputesBySlugFromNosDeputesFR,
-} from './WrapperNosDeputesFR'
 import {
   GetDeputesFromSupabase,
   CreateDeputeToSupabase,
   UpdateDeputeToSupabase,
-  DeleteDeputeToSupabase,
 } from './WrapperSupabase'
 
 import { Database } from '../../Types/database.types'
+import { GetDeputesFromGouvernementFR } from './WrapperGouvernementFR'
+import { SendDeputeChangeGroupNotification, SendNewDeputeNotification, SendStopDeputeMandatNotification } from '../Common/DiscordWrapper'
 
 type Depute = Database['public']['Tables']['Depute']['Insert']
 
 export async function ManageDeputes() {
-  const simpleDeputesFromNosDeputesFR = await GetDeputesFromNosDeputesFR()
-  const slugs = simpleDeputesFromNosDeputesFR.map((d) => d.slug)
-  const deputesFromNosDeputesFR = await GetDeputesBySlugFromNosDeputesFR(slugs)
-  const canonicalDeputesFromNosDeputesFR = deputesFromNosDeputesFR.map((d) =>
-    MapDepute(d)
-  )
+  const simpleDeputesFromGouvernementFR = await GetDeputesFromGouvernementFR()
+
   const deputesFromSupabase = await GetDeputesFromSupabase()
   GetLogger().info('Processing diffs...')
   const res = CompareLists(
-    canonicalDeputesFromNosDeputesFR,
+    simpleDeputesFromGouvernementFR,
     deputesFromSupabase,
     CompareGenericObjects,
     'Slug'
@@ -93,11 +80,6 @@ export async function ManageDeputes() {
               )
             })
           }
-        })
-      } else if (action.Action === Action.Remove) {
-        GetLogger().info('Deleting depute:', { Slug: action.NewData.Slug })
-        return DeleteDeputeToSupabase(action.NewData).then(() => {
-          GetLogger().info('Deleted Depute:', { Slug: action.NewData.Slug })
         })
       } else if (action.Action === Action.None) {
         GetLogger().info('Nothing to do on Depute:', {

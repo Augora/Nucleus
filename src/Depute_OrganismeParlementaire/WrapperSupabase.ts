@@ -1,4 +1,3 @@
-import concat from 'lodash/concat'
 import supabaseClient from '../Common/SupabaseClient'
 import { PostgrestResponse } from '@supabase/supabase-js'
 import { Database } from '../../Types/database.types'
@@ -26,13 +25,6 @@ function handleSupabasePagination(from: number, to: number) {
     }
     return Promise.resolve(res)
   }
-}
-
-export async function GetOrganismesFromSupabase() {
-  return supabaseClient
-    .from('OrganismeParlementaire')
-    .select()
-    .then(handleSupabaseError)
 }
 
 export async function GetDeputeOrganismeParlementaireFromSupabase(

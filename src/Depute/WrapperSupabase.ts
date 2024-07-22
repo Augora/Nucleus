@@ -13,7 +13,10 @@ async function handleSupabaseError<T>(response: PostgrestResponse<T>) {
 }
 
 export async function GetDeputesFromSupabase() {
-  return supabaseClient.from('Depute').select().then(handleSupabaseError)
+  return supabaseClient
+    .from('Depute')
+    .select()
+    .then(handleSupabaseError)
 }
 
 export async function CreateDeputeToSupabase(data: Depute) {

@@ -3,7 +3,7 @@ const optionDefinitions = [
   { name: 'activites', alias: 'a', type: Boolean },
   { name: 'organismes', alias: 'o', type: Boolean },
   { name: 'deputes', alias: 'd', type: Boolean },
-  { name: 'organismesParlementaire', alias: 'p', type: Boolean },
+  { name: 'deputesOrganismesParlementaire', alias: 'p', type: Boolean },
   { name: 'ministeres', alias: 's', type: Boolean },
   { name: 'ministres', alias: 'm', type: Boolean },
 ]
@@ -65,13 +65,13 @@ if (options.organismes) {
     })
 }
 
-if (options.organismesParlementaire) {
+if (options.deputesOrganismesParlementaire) {
   ManageDeputeOrganismeParlementaire()
     .then(() => {
       GetLogger().info('Imported depute organismes')
     })
     .catch((err) => {
-      GetLogger().error('Error while importing Organismes Parlementaire:', err)
+      GetLogger().error('Error while importing Deputes Organismes:', err)
       SendWarningNotification('Deputes_OrganismeParlementaire')
     })
 }

@@ -20,6 +20,14 @@ export async function GetOrganismesFromSupabase() {
     .then(handleSupabaseError)
 }
 
+export async function GetOrganismesFromSupabaseBySlug() {
+  const client = await supabaseClient
+    .from('OrganismeParlementaire')
+    .select('Slug')
+    .then(handleSupabaseError)
+  return client.map(o => o.Slug)
+}
+
 export async function CreateOrganismeToSupabase(data: OrganismeParlementaire) {
   return supabaseClient
     .from('OrganismeParlementaire')

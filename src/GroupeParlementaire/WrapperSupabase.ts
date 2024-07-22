@@ -34,6 +34,16 @@ export async function UpdateGroupeParlementaireToSupabase(
   return supabaseClient
     .from('GroupeParlementaire')
     .update(data)
-    .match({ Sigle: data.Sigle })
+    .match({ Slug: data.Slug })
+    .then(handleSupabaseError)
+}
+
+export async function SetGroupeParlementaireInactifToSupabase(
+  data: GroupeParlementaire
+) {
+  return supabaseClient
+    .from('GroupeParlementaire')
+    .update({ Slug: data.Slug, Actif: false })
+    .match({ Slug: data.Slug })
     .then(handleSupabaseError)
 }
