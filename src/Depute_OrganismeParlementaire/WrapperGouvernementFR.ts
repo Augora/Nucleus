@@ -19,7 +19,7 @@ export async function GetDeputesInOrganismeByDeputySlug(
   const page = await browser.newPage()
 
   try {
-    await retryGoto(page, deputeURL, "#deputes-fiche")
+    await retryGoto(page, `${deputeURL}?force`, "#deputes-fiche")
     const bodyHTML = await page.content()
     const $ = cheerio.load(bodyHTML)
     $('h4:contains("Commissions")').next('ul.fonctions-liste-attributs').find('span.dt').map((index, element) => {

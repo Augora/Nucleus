@@ -312,7 +312,7 @@ export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequ
     AncienMandat: ancienMandat,
     GroupeParlementaire: slugGroupe,
     ResponsabiliteGroupe: responsabiliteGroupeBlock,
-    URLGouvernement: `https://www.assemblee-nationale.fr/dyn/deputes/${assembleeNationaleID}`
+    URLGouvernement: `https://www2.assemblee-nationale.fr/deputes/fiche/OMC_PA${assembleeNationaleID}`
   }
   return Depute
 }

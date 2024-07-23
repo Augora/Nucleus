@@ -42,15 +42,15 @@ jobs:
           NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_PROD }}
           SUPABASE_ENV: Production
 
-      - name: Import Activite
-        run: bun start -a
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL_PRODUCTION }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_PRODUCTION }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_NOTIFICATION: ${{ secrets.SLACK_NOTIFICATION }}
-          NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_PROD }}
-          SUPABASE_ENV: Production
+      # - name: Import Activite
+      #   run: bun start -a
+      #   env:
+      #     SUPABASE_URL: ${{ secrets.SUPABASE_URL_PRODUCTION }}
+      #     SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_PRODUCTION }}
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #     SLACK_NOTIFICATION: ${{ secrets.SLACK_NOTIFICATION }}
+      #     NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_PROD }}
+      #     SUPABASE_ENV: Production
 
       - name: Import OrganismeParlementaire
         run: bun start -o

@@ -47,16 +47,16 @@ jobs:
           SUPABASE_ENV: Staging
           GITHUB_RUN_URL: ${{ env.GITHUB_RUN_URL }}
 
-      - name: Import Activite
-        run: bun start -a
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          DISCORD_NOTIFICATION: ${{ secrets.DISCORD_NOTIFICATION }}
-          NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_STAGING }}
-          SUPABASE_ENV: Staging
-          GITHUB_RUN_URL: ${{ env.GITHUB_RUN_URL }}
+      # - name: Import Activite
+      #   run: bun start -a
+      #   env:
+      #     SUPABASE_URL: ${{ secrets.SUPABASE_URL_STAGING }}
+      #     SUPABASE_KEY: ${{ secrets.SUPABASE_KEY_STAGING }}
+      #     DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      #     DISCORD_NOTIFICATION: ${{ secrets.DISCORD_NOTIFICATION }}
+      #     NOSDEPUTES_BASE_URL: ${{ secrets.NOSDEPUTES_BASE_URL_STAGING }}
+      #     SUPABASE_ENV: Staging
+      #     GITHUB_RUN_URL: ${{ env.GITHUB_RUN_URL }}
 
       - name: Import OrganismeParlementaire
         run: bun start -o
