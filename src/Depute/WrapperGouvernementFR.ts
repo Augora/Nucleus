@@ -269,7 +269,7 @@ export async function GetDeputeFromGouvernementFR(url: string, config: AxiosRequ
   const hemicycleContainer = $('#hemicycle-container')
   const placeHemicycle = hemicycleContainer.attr('data-place') ? hemicycleContainer.attr('data-place') : ""
   const collaborators = []
-  $('div.bloc-standard.plural-element-simple.clearfix div.corps-contenu ul li.allpadding').each((index, element) => {
+  $('div.bloc-standard.plusieurs-element-simple.clearfix div.corps-contenu ul li.allpadding').each((index, element) => {
     const collaboratorName = $(element).text().trim()
     collaborators.push(collaboratorName)
   })
